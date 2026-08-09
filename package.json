@@ -2,6 +2,7 @@
   "name": "studyhub",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Production-grade SaaS Learning Management Platform",
   "license": "UNLICENSED",
   "workspaces": [
@@ -16,10 +17,23 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "npm run clean --workspaces --if-present"
+    "clean": "npm run clean --workspaces --if-present",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=24.0.0",
     "npm": ">=11.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "21.2.1",
+    "@commitlint/config-conventional": "21.2.0",
+    "@eslint/js": "10.0.1",
+    "eslint": "10.8.1",
+    "globals": "17.9.0",
+    "husky": "9.1.7",
+    "lint-staged": "17.3.0",
+    "prettier": "3.9.6",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.66.0"
   }
 }
