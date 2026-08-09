@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Next.js
+.next/
+out/
+
+# Build
+dist/
+build/
+
+# Testing
+coverage/
+
+# Logs
+*.log
+logs/
+
+# Runtime
+*.pid
+*.pid.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+.idea/
+
+# Prisma
+*.db
+*.db-journal
+
+# Turbo
+.turbo/
+
+# Cache
+.cache/
+
+# Temporary
+tmp/
+temp/
+
+# Uploads
+uploads/
+
+# Secrets
+*.pem
+*.key
