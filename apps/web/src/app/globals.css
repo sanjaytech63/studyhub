@@ -1,0 +1,380 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+/* =========================================================
+   DARK MODE
+   Tailwind/shadcn utilities such as dark:bg-background
+   activate when .dark exists on an ancestor/root element.
+========================================================= */
+
+@custom-variant dark (&:is(.dark *));
+
+/* =========================================================
+   TAILWIND THEME MAPPING
+   Semantic CSS variables -> Tailwind utilities
+========================================================= */
+
+@theme inline {
+  /* Typography */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-geist-sans);
+
+  /* Core */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Card */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  /* Popover */
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* Brand */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-primary-hover: var(--primary-hover);
+
+  /* Secondary */
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  /* Muted */
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  /* Accent */
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  /* Destructive */
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  /* Form / borders */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Semantic status */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* =========================================================
+   LIGHT THEME
+   StudyHub visual direction:
+   - White cards
+   - Soft lavender background
+   - Purple/indigo brand
+   - Very subtle borders
+========================================================= */
+
+:root {
+  /* -------------------------------------------------------
+     Brand
+  ------------------------------------------------------- */
+
+  --primary: #5b3df5;
+  --primary-hover: #4c2fe0;
+  --primary-foreground: #ffffff;
+
+  /* -------------------------------------------------------
+     Application background
+  ------------------------------------------------------- */
+
+  --background: #f8f8ff;
+  --foreground: #171827;
+
+  /* -------------------------------------------------------
+     Cards
+  ------------------------------------------------------- */
+
+  --card: #ffffff;
+  --card-foreground: #171827;
+
+  /* -------------------------------------------------------
+     Popovers / dropdowns / dialogs
+  ------------------------------------------------------- */
+
+  --popover: #ffffff;
+  --popover-foreground: #171827;
+
+  /* -------------------------------------------------------
+     Secondary
+  ------------------------------------------------------- */
+
+  --secondary: #eef0f8;
+  --secondary-foreground: #292b3a;
+
+  /* -------------------------------------------------------
+     Muted surfaces
+  ------------------------------------------------------- */
+
+  --muted: #f2f2fa;
+  --muted-foreground: #73778a;
+
+  /* -------------------------------------------------------
+     Accent
+  ------------------------------------------------------- */
+
+  --accent: #f0edff;
+  --accent-foreground: #4c2fe0;
+
+  /* -------------------------------------------------------
+     Destructive
+  ------------------------------------------------------- */
+
+  --destructive: #e5484d;
+  --destructive-foreground: #ffffff;
+
+  /* -------------------------------------------------------
+     Borders / inputs
+  ------------------------------------------------------- */
+
+  --border: #e4e5ef;
+  --input: #dfe1eb;
+  --ring: #5b3df5;
+
+  /* -------------------------------------------------------
+     Semantic status
+  ------------------------------------------------------- */
+
+  --success: #16a36a;
+  --success-foreground: #ffffff;
+
+  --warning: #e59b17;
+  --warning-foreground: #ffffff;
+
+  --info: #3478f6;
+  --info-foreground: #ffffff;
+
+  /* -------------------------------------------------------
+     Charts
+  ------------------------------------------------------- */
+
+  --chart-1: #5b3df5;
+  --chart-2: #3478f6;
+  --chart-3: #16a36a;
+  --chart-4: #e59b17;
+  --chart-5: #e5484d;
+
+  /* -------------------------------------------------------
+     Radius
+  ------------------------------------------------------- */
+
+  --radius: 0.625rem;
+
+  /* -------------------------------------------------------
+     Sidebar - user dashboard
+  ------------------------------------------------------- */
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #292b3a;
+
+  --sidebar-primary: #5b3df5;
+  --sidebar-primary-foreground: #ffffff;
+
+  --sidebar-accent: #f0edff;
+  --sidebar-accent-foreground: #4c2fe0;
+
+  --sidebar-border: #e4e5ef;
+  --sidebar-ring: #5b3df5;
+}
+
+/* =========================================================
+   DARK THEME
+   Deep navy + purple SaaS dashboard
+========================================================= */
+
+.dark {
+  /* -------------------------------------------------------
+     Brand
+  ------------------------------------------------------- */
+
+  --primary: #735cff;
+  --primary-hover: #856fff;
+  --primary-foreground: #ffffff;
+
+  /* -------------------------------------------------------
+     Application background
+  ------------------------------------------------------- */
+
+  --background: #0b1020;
+  --foreground: #f7f8fc;
+
+  /* -------------------------------------------------------
+     Cards
+  ------------------------------------------------------- */
+
+  --card: #11182a;
+  --card-foreground: #f7f8fc;
+
+  /* -------------------------------------------------------
+     Popovers
+  ------------------------------------------------------- */
+
+  --popover: #141c30;
+  --popover-foreground: #f7f8fc;
+
+  /* -------------------------------------------------------
+     Secondary
+  ------------------------------------------------------- */
+
+  --secondary: #1b2438;
+  --secondary-foreground: #f0f2f8;
+
+  /* -------------------------------------------------------
+     Muted
+  ------------------------------------------------------- */
+
+  --muted: #171f32;
+  --muted-foreground: #9ca4b8;
+
+  /* -------------------------------------------------------
+     Accent
+  ------------------------------------------------------- */
+
+  --accent: #241d4d;
+  --accent-foreground: #a999ff;
+
+  /* -------------------------------------------------------
+     Destructive
+  ------------------------------------------------------- */
+
+  --destructive: #f2555b;
+  --destructive-foreground: #ffffff;
+
+  /* -------------------------------------------------------
+     Borders / inputs
+  ------------------------------------------------------- */
+
+  --border: #273149;
+  --input: #2a344d;
+  --ring: #735cff;
+
+  /* -------------------------------------------------------
+     Semantic status
+  ------------------------------------------------------- */
+
+  --success: #35c98b;
+  --success-foreground: #06150e;
+
+  --warning: #f2b84b;
+  --warning-foreground: #1b1203;
+
+  --info: #5c9aff;
+  --info-foreground: #071225;
+
+  /* -------------------------------------------------------
+     Charts
+  ------------------------------------------------------- */
+
+  --chart-1: #735cff;
+  --chart-2: #5c9aff;
+  --chart-3: #35c98b;
+  --chart-4: #f2b84b;
+  --chart-5: #f2555b;
+
+  /* -------------------------------------------------------
+     Sidebar - dark dashboard
+  ------------------------------------------------------- */
+
+  --sidebar: #0d1324;
+  --sidebar-foreground: #f2f4fa;
+
+  --sidebar-primary: #735cff;
+  --sidebar-primary-foreground: #ffffff;
+
+  --sidebar-accent: #1b2140;
+  --sidebar-accent-foreground: #a999ff;
+
+  --sidebar-border: #252e46;
+  --sidebar-ring: #735cff;
+}
+
+/* =========================================================
+   GLOBAL BASE STYLES
+========================================================= */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+
+    margin: 0;
+
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img,
+  svg {
+    display: block;
+  }
+}
