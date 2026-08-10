@@ -15,13 +15,9 @@ export default function MarketingLayout({ children }: MarketingLayoutProps) {
     <MobileNavigationProvider>
       <div className="min-h-dvh bg-background">
         <Navbar />
-
         <main className="flex-1 pb-24 md:pb-0">{children}</main>
-
         <Footer />
-
         <MobileBottomNav />
-
         <MobileMoreMenu />
       </div>
     </MobileNavigationProvider>
