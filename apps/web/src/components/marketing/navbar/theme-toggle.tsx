@@ -16,16 +16,14 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       aria-label="Toggle theme"
       className={[
-        'relative inline-flex size-9 items-center justify-center',
-        'rounded-full',
-        'border border-border',
-        'bg-background',
+        'relative flex size-9 items-center justify-center rounded-lg',
         'text-muted-foreground',
-        'backdrop-blur-xl',
-        'transition-all duration-200',
-        'hover:bg-accent',
-        'hover:text-foreground',
-        'active:scale-95',
+        'transition-colors',
+        'bg-muted hover:text-foreground',
+        'focus-visible:outline-none',
+        'focus-visible:ring-2',
+        'focus-visible:ring-primary/40',
+        'focus-visible:ring-offset-2',
       ].join(' ')}
     >
       {/* Sun */}

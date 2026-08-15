@@ -10,13 +10,21 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspaces --if-present",
+    "dev": "npm run dev --workspace=@studyhub/web",
+    "dev:web": "npm run dev --workspace=@studyhub/web",
+    "dev:admin": "npm run dev --workspace=@studyhub/admin",
+    "dev:api": "npm run dev --workspace=@studyhub/api",
     "build": "npm run build --workspaces --if-present",
+    "build:web": "npm run build --workspace=@studyhub/web",
+    "build:admin": "npm run build --workspace=@studyhub/admin",
+    "build:api": "npm run build --workspace=@studyhub/api",
     "lint": "npm run lint --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "check": "npm run typecheck && npm run lint && npm run format:check",
+    "verify": "npm run check && npm run test && npm run build",
     "clean": "npm run clean --workspaces --if-present",
     "prepare": "husky"
   },
