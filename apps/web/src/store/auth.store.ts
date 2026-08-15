@@ -1,52 +1,25 @@
 'use client';
 
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface AuthState {
-  readonly accessToken: string | null;
   readonly isAuthenticated: boolean;
-
-  setAccessToken: (token: string) => void;
+  setAuthenticated: (value: boolean) => void;
   clearAuth: () => void;
 }
 
-const initialState: Pick<AuthState, 'accessToken' | 'isAuthenticated'> = {
-  accessToken: null,
+export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
-};
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      ...initialState,
+  setAuthenticated: (value) => {
+    set({
+      isAuthenticated: value,
+    });
+  },
 
-      setAccessToken: (token) => {
-        const normalizedToken = token.trim();
-
-        if (!normalizedToken) {
-          return;
-        }
-
-        set({
-          accessToken: normalizedToken,
-          isAuthenticated: true,
-        });
-      },
-
-      clearAuth: () => {
-        set(initialState);
-      },
-    }),
-
-    {
-      name: 'studyhub-auth',
-
-      storage: createJSONStorage(() => localStorage),
-
-      partialize: (state) => ({
-        accessToken: state.accessToken,
-      }),
-    },
-  ),
-);
+  clearAuth: () => {
+    set({
+      isAuthenticated: false,
+    });
+  },
+}));

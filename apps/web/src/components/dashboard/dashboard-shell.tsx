@@ -16,7 +16,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
       <div className="min-h-svh bg-background">
         <DashboardSidebar />
 
-        <div className="min-w-0 md:pl-64">
+        <div className="min-w-0 lg:pl-64 md:pl-48">
           <DashboardHeader />
 
           <main className="min-h-[calc(100svh-4rem)]">

@@ -2,15 +2,19 @@
 
 import { useId } from 'react';
 import Link from 'next/link';
+import { X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+
 import { cn } from '@/lib/utils';
 import { dashboardNavigation } from '@/lib/dashboard/dashboard.constants';
 import { isActiveRoute } from '@/lib/dashboard/dashboard.utils';
+
 import { DashboardUserMenu } from './dashboard-user-menu';
 import { useDashboardSidebar } from './dashboard-mobile-menu';
 
 export function DashboardSidebar() {
   const pathname = usePathname();
+
   const { isMobileOpen, closeMobileSidebar } = useDashboardSidebar();
 
   return (
@@ -29,13 +33,19 @@ export function DashboardSidebar() {
           isMobileOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
-        <SidebarBrand onNavigate={closeMobileSidebar} />
+        <SidebarBrand onNavigate={closeMobileSidebar} onClose={closeMobileSidebar} />
+
         <SidebarNavigation pathname={pathname} onNavigate={closeMobileSidebar} />
+
         <SidebarUser />
       </aside>
     </>
   );
 }
+
+/* =========================================================
+   MOBILE OVERLAY
+   ========================================================= */
 
 interface MobileSidebarOverlayProps {
   readonly isOpen: boolean;
@@ -57,15 +67,20 @@ function MobileSidebarOverlay({ isOpen, onClose }: MobileSidebarOverlayProps) {
   );
 }
 
+/* =========================================================
+   BRAND
+   ========================================================= */
+
 interface SidebarBrandProps {
   readonly onNavigate: () => void;
+  readonly onClose: () => void;
 }
 
-function SidebarBrand({ onNavigate }: SidebarBrandProps) {
+function SidebarBrand({ onNavigate, onClose }: SidebarBrandProps) {
   return (
-    <div className="flex h-16 shrink-0 items-center border-b border-border/70 px-4">
+    <div className="flex h-16 shrink-0 items-center justify-between border-b border-border/70 px-4">
       <Link
-        href="/dashboard"
+        href="/"
         onClick={onNavigate}
         className={cn(
           'flex items-center gap-3 rounded-lg px-2 py-1.5',
@@ -84,9 +99,33 @@ function SidebarBrand({ onNavigate }: SidebarBrandProps) {
 
         <span className="text-sm font-semibold tracking-tight">StudyHub</span>
       </Link>
+
+      {/* Mobile close button */}
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close navigation menu"
+        className={cn(
+          'flex size-9 shrink-0 items-center justify-center rounded-lg',
+          'text-muted-foreground',
+          'transition-colors',
+          'hover:bg-muted hover:text-foreground',
+          'focus-visible:outline-none',
+          'focus-visible:ring-2',
+          'focus-visible:ring-primary/40',
+          'focus-visible:ring-offset-2',
+          'md:hidden',
+        )}
+      >
+        <X aria-hidden="true" className="size-5" />
+      </button>
     </div>
   );
 }
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
 
 interface SidebarNavigationProps {
   readonly pathname: string;
@@ -110,6 +149,10 @@ function SidebarNavigation({ pathname, onNavigate }: SidebarNavigationProps) {
     </nav>
   );
 }
+
+/* =========================================================
+   SIDEBAR SECTION
+   ========================================================= */
 
 interface SidebarSectionProps {
   readonly label: string;
@@ -138,6 +181,10 @@ function SidebarSection({ label, items, pathname, onNavigate }: SidebarSectionPr
     </section>
   );
 }
+
+/* =========================================================
+   NAVIGATION ITEM
+   ========================================================= */
 
 interface SidebarNavItemProps {
   readonly item: (typeof dashboardNavigation)[number]['items'][number];
@@ -180,6 +227,10 @@ function SidebarNavItem({ item, pathname, onNavigate }: SidebarNavItemProps) {
     </Link>
   );
 }
+
+/* =========================================================
+   USER
+   ========================================================= */
 
 function SidebarUser() {
   return (

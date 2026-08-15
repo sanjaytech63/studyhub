@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useAuthStore } from '@/store/auth.store';
 import { normalizeApiError } from './api-error';
 import { apiConfig } from './api-config';
 
@@ -15,24 +14,10 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 
-apiClient.interceptors.request.use(
-  (config) => {
-    const token = useAuthStore.getState().accessToken;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(normalizeApiError(error)),
-);
-
 apiClient.interceptors.response.use(
   (response) => response,
+
   (error) => {
-    const normalizedError = normalizeApiError(error);
-    if (normalizedError.statusCode === 401) {
-      useAuthStore.getState().clearAuth();
-    }
-    return Promise.reject(normalizedError);
+    return Promise.reject(normalizeApiError(error));
   },
 );
