@@ -1,4 +1,4 @@
-import { clientConfig } from '@studyhub/config';
+import { clientConfig } from '@studyhub/config/client';
 
 export const apiConfig = Object.freeze({
   baseURL: clientConfig.api.baseURL,
