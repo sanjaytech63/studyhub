@@ -24,13 +24,23 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check": "npm run typecheck && npm run lint && npm run format:check",
-    "verify": "npm run check && npm run test && npm run build",
+    "verify": "node scripts/verify.mjs",
+    "precommit": "lint-staged",
+    "commitlint": "commitlint --edit",
     "clean": "npm run clean --workspaces --if-present",
     "prepare": "husky"
   },
   "engines": {
     "node": ">=24.0.0",
     "npm": ">=11.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,cjs}": [
+      "eslint --fix"
+    ],
+    "*.{json,jsonc,md,mdx,css,scss,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.1",
