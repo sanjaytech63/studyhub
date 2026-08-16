@@ -81,7 +81,7 @@ export function Navbar() {
                   'border border-border',
                   'text-muted-foreground',
                   'transition-colors duration-200',
-                  'hover:bg-accent',
+                  'hover:bg-primary',
                   'hover:text-foreground',
                 ].join(' ')}
               >
