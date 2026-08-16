@@ -1,24 +1,27 @@
 version: 1
 
-frontend:
-  phases:
-    preBuild:
-      commands:
-        - nvm use 24
-        - node --version
-        - npm --version
-        - HUSKY=0 npm ci --cache .npm --prefer-offline
+applications:
+  - appRoot: apps/web
 
-    build:
-      commands:
-        - npm run build
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - nvm use 24
+            - node --version
+            - npm --version
+            - HUSKY=0 npm ci --cache .npm --prefer-offline
 
-  artifacts:
-    baseDirectory: .next
-    files:
-      - '**/*'
+        build:
+          commands:
+            - npm run build
 
-  cache:
-    paths:
-      - .npm/**/*
-      - node_modules/**/*
+      artifacts:
+        baseDirectory: .next
+        files:
+          - '**/*'
+
+      cache:
+        paths:
+          - node_modules/**/*
+          - .npm/**/*
