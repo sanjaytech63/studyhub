@@ -12,11 +12,15 @@ applications:
             - nvm use 24
             - node --version
             - npm --version
-            - HUSKY=0 npm ci --cache .npm --prefer-offline
+            - echo "=== START npm ci ==="
+            - HUSKY=0 npm ci --ignore-scripts
+            - echo "=== npm ci COMPLETE ==="
 
         build:
           commands:
+            - echo "=== START WEB BUILD ==="
             - npm run build:web
+            - echo "=== WEB BUILD COMPLETE ==="
 
       artifacts:
         baseDirectory: apps/web/.next
