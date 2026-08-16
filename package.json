@@ -28,7 +28,7 @@
     "precommit": "lint-staged",
     "commitlint": "commitlint --edit",
     "clean": "npm run clean --workspaces --if-present",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "engines": {
     "node": ">=24.0.0",
