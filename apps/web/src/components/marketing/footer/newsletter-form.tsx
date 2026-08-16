@@ -28,7 +28,7 @@ export function NewsletterForm() {
           className="flex-1"
         />
 
-        <Button type="submit" className="h-10  px-5">
+        <Button type="submit" className="h-9  px-5">
           Subscribe
           <ArrowRight aria-hidden="true" className="size-4" />
         </Button>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { AuthCard, AuthFooter, PasswordField, SocialAuth } from '@/components/auth';
@@ -97,14 +97,20 @@ export default function RegisterPage() {
         />
 
         <div className="flex items-start gap-3">
-          <Checkbox
-            id="terms"
-            checked={form.watch('terms')}
-            onCheckedChange={(checked) =>
-              form.setValue('terms', checked === true, {
-                shouldValidate: true,
-              })
-            }
+          <Controller
+            name="terms"
+            control={form.control}
+            render={({ field }) => (
+              <Checkbox
+                id="terms"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+                onBlur={field.onBlur}
+                name={field.name}
+                ref={field.ref}
+                disabled={mutation.isPending}
+              />
+            )}
           />
 
           <div className="space-y-1">
