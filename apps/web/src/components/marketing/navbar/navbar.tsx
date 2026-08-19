@@ -1,15 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu } from 'lucide-react';
+// import { Menu } from 'lucide-react';
 
 import { MarketingContainer } from '../shared/marketing-container';
-import { useMobileNavigation } from './mobile-navigation-provider';
+// import { useMobileNavigation } from './mobile-navigation-provider';
 import { navItems } from './navigation';
 import { ThemeToggle } from './theme-toggle';
 
 export function Navbar() {
-  const { openMore } = useMobileNavigation();
+  // const { openMore } = useMobileNavigation();
 
   return (
     <header
@@ -112,7 +112,7 @@ export function Navbar() {
               Opens the SAME More modal used by MobileBottomNav.
               ========================================================= */}
 
-            <button
+            {/* <button
               type="button"
               onClick={openMore}
               aria-label="Open navigation menu"
@@ -130,7 +130,7 @@ export function Navbar() {
               ].join(' ')}
             >
               <Menu aria-hidden="true" className="size-5" />
-            </button>
+            </button> */}
           </div>
         </div>
       </MarketingContainer>
