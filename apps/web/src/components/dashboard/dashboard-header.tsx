@@ -16,7 +16,7 @@ export function DashboardHeader() {
 
   return (
     <header className="sticky top-0 z-30 h-16 border-b border-border/70 bg-background/85 backdrop-blur-xl">
-      <div className="flex h-full items-center gap-3 px-4 sm:px-6 lg:px-8">
+      <div className="flex h-full items-center gap-0 px-4 sm:px-6 lg:px-8">
         <MobileMenuButton onClick={openMobileSidebar} />
         <DashboardBreadcrumbs pathname={pathname} />
         <div className="ml-auto flex items-center gap-4">
@@ -40,7 +40,7 @@ function MobileMenuButton({ onClick }: MobileMenuButtonProps) {
       aria-label="Open navigation menu"
       onClick={onClick}
       className={cn(
-        'flex size-9 shrink-0 items-center justify-center rounded-lg',
+        'flex size-9 shrink-0 items-center justify-start rounded-lg',
         'text-muted-foreground',
         'transition-colors',
         'hover:bg-muted hover:text-foreground',
