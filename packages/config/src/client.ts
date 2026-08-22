@@ -11,7 +11,6 @@ const getRequiredPublicEnv = (name: string, value: string | undefined): string =
 };
 
 const apiUrl = getRequiredPublicEnv('NEXT_PUBLIC_API_URL', process.env.NEXT_PUBLIC_API_URL);
-
 const appUrl = getRequiredPublicEnv('NEXT_PUBLIC_APP_URL', process.env.NEXT_PUBLIC_APP_URL);
 
 export const clientConfig = Object.freeze({
@@ -21,7 +20,9 @@ export const clientConfig = Object.freeze({
   },
 
   api: {
-    baseURL: apiUrl.replace(/\/+$/, ''),
+    baseUrl: apiUrl.replace(/\/+$/, ''),
     timeout: 15_000,
   },
-} as const);
+});
+
+export type ClientConfig = typeof clientConfig;
