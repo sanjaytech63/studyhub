@@ -5,7 +5,14 @@ const getPermissionCacheKey = (roleId: string): string => `rbac:role:${roleId}:p
 
 export const getCachedRolePermissions = async (roleId: string): Promise<string[] | null> => {
   const key = getPermissionCacheKey(roleId);
-  const cached = await withRedisTimeout(redis.get(key));
+
+  let cached: string | null;
+
+  try {
+    cached = await withRedisTimeout(redis.get(key));
+  } catch {
+    return null;
+  }
 
   if (cached === null) {
     return null;
@@ -18,13 +25,15 @@ export const getCachedRolePermissions = async (roleId: string): Promise<string[]
       !Array.isArray(permissions) ||
       !permissions.every((permission): permission is string => typeof permission === 'string')
     ) {
-      await withRedisTimeout(redis.del(key));
+      await withRedisTimeout(redis.del(key)).catch(() => undefined);
+
       return null;
     }
 
     return permissions;
   } catch {
-    await withRedisTimeout(redis.del(key));
+    await withRedisTimeout(redis.del(key)).catch(() => undefined);
+
     return null;
   }
 };

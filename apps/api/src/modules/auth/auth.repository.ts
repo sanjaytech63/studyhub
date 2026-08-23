@@ -1,4 +1,5 @@
 import { prisma, type Prisma } from '@studyhub/database';
+import { OtpPurpose } from '@studyhub/database/src/generated/enums';
 
 /**
  * ============================================================================
@@ -256,24 +257,9 @@ export const rotateRefreshToken = async ({
 };
 
 /**
- * ============================================================================
- * OTP
- * ============================================================================
- */
-
-export const createOtpVerification = async (data: Prisma.OtpVerificationCreateInput) => {
-  return prisma.otpVerification.create({
-    data,
-  });
-};
-
-/**
  * Find the newest pending OTP for a user and purpose.
  */
-export const findLatestPendingOtp = async (
-  userId: string,
-  purpose: 'EMAIL_VERIFICATION' | 'PASSWORD_RESET' | 'LOGIN_VERIFICATION',
-) => {
+export const findLatestPendingOtp = async (userId: string, purpose: OtpPurpose) => {
   return prisma.otpVerification.findFirst({
     where: {
       userId,
@@ -622,5 +608,269 @@ export const markEmailVerificationOtpVerified = async ({
     });
 
     return true;
+  });
+};
+
+export const consumePasswordResetOtpAtomically = async ({
+  otpId,
+  userId,
+  passwordHash,
+  now = new Date(),
+}: {
+  otpId: string;
+  userId: string;
+  passwordHash: string;
+  now?: Date;
+}): Promise<boolean> => {
+  return prisma.$transaction(async (tx) => {
+    const otpResult = await tx.otpVerification.updateMany({
+      where: {
+        id: otpId,
+        userId,
+        purpose: 'PASSWORD_RESET',
+        status: 'PENDING',
+        expiresAt: {
+          gt: now,
+        },
+      },
+      data: {
+        status: 'VERIFIED',
+        verifiedAt: now,
+      },
+    });
+
+    /**
+     * Zero rows means the OTP was already consumed,
+     * expired, blocked, or does not belong to this user.
+     */
+    if (otpResult.count !== 1) {
+      return false;
+    }
+
+    await tx.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        passwordHash,
+      },
+    });
+
+    /**
+     * Invalidate all existing sessions and refresh tokens.
+     * Password reset is a security boundary.
+     */
+    await tx.session.updateMany({
+      where: {
+        userId,
+        status: 'ACTIVE',
+      },
+      data: {
+        status: 'REVOKED',
+        revokedAt: now,
+      },
+    });
+
+    await tx.refreshToken.updateMany({
+      where: {
+        userId,
+        revokedAt: null,
+      },
+      data: {
+        revokedAt: now,
+      },
+    });
+
+    return true;
+  });
+};
+
+export const expirePendingPasswordResetOtps = async (userId: string): Promise<void> => {
+  await prisma.otpVerification.updateMany({
+    where: {
+      userId,
+      purpose: 'PASSWORD_RESET',
+      status: 'PENDING',
+    },
+    data: {
+      status: 'EXPIRED',
+    },
+  });
+};
+
+export const createOtpVerification = async ({
+  userId,
+  purpose,
+  codeHash,
+  targetEmail,
+  expiresAt,
+}: {
+  userId: string;
+  purpose: OtpPurpose;
+  codeHash: string;
+  targetEmail?: string;
+  expiresAt: Date;
+}) => {
+  return prisma.otpVerification.create({
+    data: {
+      userId,
+      purpose,
+      codeHash,
+      targetEmail,
+      expiresAt,
+    },
+  });
+};
+
+export const resetPasswordAtomically = async ({
+  otpId,
+  userId,
+  passwordHash,
+}: {
+  otpId: string;
+  userId: string;
+  passwordHash: string;
+}): Promise<boolean> => {
+  const now = new Date();
+
+  return prisma.$transaction(async (tx) => {
+    const otpResult = await tx.otpVerification.updateMany({
+      where: {
+        id: otpId,
+        userId,
+        purpose: 'PASSWORD_RESET',
+        status: 'PENDING',
+        expiresAt: {
+          gt: now,
+        },
+      },
+      data: {
+        status: 'VERIFIED',
+        verifiedAt: now,
+      },
+    });
+
+    if (otpResult.count !== 1) {
+      return false;
+    }
+
+    await tx.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        passwordHash,
+      },
+    });
+
+    await tx.session.updateMany({
+      where: {
+        userId,
+        status: 'ACTIVE',
+      },
+      data: {
+        status: 'REVOKED',
+        revokedAt: now,
+      },
+    });
+
+    await tx.refreshToken.updateMany({
+      where: {
+        userId,
+        revokedAt: null,
+      },
+      data: {
+        revokedAt: now,
+      },
+    });
+
+    return true;
+  });
+};
+
+export const updateUserPassword = async (userId: string, passwordHash: string): Promise<void> => {
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      passwordHash,
+    },
+  });
+};
+
+export const revokeOtherUserSessions = async (
+  userId: string,
+  currentSessionId: string,
+): Promise<void> => {
+  const now = new Date();
+
+  await prisma.$transaction([
+    prisma.session.updateMany({
+      where: {
+        userId,
+        status: 'ACTIVE',
+        id: {
+          not: currentSessionId,
+        },
+      },
+      data: {
+        status: 'REVOKED',
+        revokedAt: now,
+      },
+    }),
+
+    prisma.refreshToken.updateMany({
+      where: {
+        userId,
+        sessionId: {
+          not: currentSessionId,
+        },
+        revokedAt: null,
+      },
+      data: {
+        revokedAt: now,
+      },
+    }),
+  ]);
+};
+
+export const expirePendingEmailChangeOtps = async (userId: string): Promise<void> => {
+  await prisma.otpVerification.updateMany({
+    where: {
+      userId,
+      purpose: 'EMAIL_CHANGE',
+      status: 'PENDING',
+    },
+    data: {
+      status: 'EXPIRED',
+    },
+  });
+};
+
+export const findLatestPendingEmailChangeOtp = async (userId: string) => {
+  return prisma.otpVerification.findFirst({
+    where: {
+      userId,
+      purpose: 'EMAIL_CHANGE',
+      status: 'PENDING',
+      expiresAt: {
+        gt: new Date(),
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+};
+
+export const blockOtpVerification = async (otpId: string): Promise<void> => {
+  await prisma.otpVerification.update({
+    where: {
+      id: otpId,
+    },
+    data: {
+      status: 'BLOCKED',
+    },
   });
 };

@@ -36,6 +36,7 @@ export const OtpPurpose = {
   EMAIL_VERIFICATION: 'EMAIL_VERIFICATION',
   PASSWORD_RESET: 'PASSWORD_RESET',
   LOGIN_VERIFICATION: 'LOGIN_VERIFICATION',
+  EMAIL_CHANGE: 'EMAIL_CHANGE',
 } as const;
 
 export type OtpPurpose = (typeof OtpPurpose)[keyof typeof OtpPurpose];

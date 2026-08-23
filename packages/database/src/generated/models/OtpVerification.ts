@@ -42,6 +42,7 @@ export type OtpVerificationMinAggregateOutputType = {
   purpose: $Enums.OtpPurpose | null;
   status: $Enums.OtpStatus | null;
   codeHash: string | null;
+  targetEmail: string | null;
   expiresAt: Date | null;
   verifiedAt: Date | null;
   attempts: number | null;
@@ -56,6 +57,7 @@ export type OtpVerificationMaxAggregateOutputType = {
   purpose: $Enums.OtpPurpose | null;
   status: $Enums.OtpStatus | null;
   codeHash: string | null;
+  targetEmail: string | null;
   expiresAt: Date | null;
   verifiedAt: Date | null;
   attempts: number | null;
@@ -70,6 +72,7 @@ export type OtpVerificationCountAggregateOutputType = {
   purpose: number;
   status: number;
   codeHash: number;
+  targetEmail: number;
   expiresAt: number;
   verifiedAt: number;
   attempts: number;
@@ -95,6 +98,7 @@ export type OtpVerificationMinAggregateInputType = {
   purpose?: true;
   status?: true;
   codeHash?: true;
+  targetEmail?: true;
   expiresAt?: true;
   verifiedAt?: true;
   attempts?: true;
@@ -109,6 +113,7 @@ export type OtpVerificationMaxAggregateInputType = {
   purpose?: true;
   status?: true;
   codeHash?: true;
+  targetEmail?: true;
   expiresAt?: true;
   verifiedAt?: true;
   attempts?: true;
@@ -123,6 +128,7 @@ export type OtpVerificationCountAggregateInputType = {
   purpose?: true;
   status?: true;
   codeHash?: true;
+  targetEmail?: true;
   expiresAt?: true;
   verifiedAt?: true;
   attempts?: true;
@@ -229,6 +235,7 @@ export type OtpVerificationGroupByOutputType = {
   purpose: $Enums.OtpPurpose;
   status: $Enums.OtpStatus;
   codeHash: string;
+  targetEmail: string | null;
   expiresAt: Date;
   verifiedAt: Date | null;
   attempts: number;
@@ -264,6 +271,7 @@ export type OtpVerificationWhereInput = {
   purpose?: Prisma.EnumOtpPurposeFilter<'OtpVerification'> | $Enums.OtpPurpose;
   status?: Prisma.EnumOtpStatusFilter<'OtpVerification'> | $Enums.OtpStatus;
   codeHash?: Prisma.StringFilter<'OtpVerification'> | string;
+  targetEmail?: Prisma.StringNullableFilter<'OtpVerification'> | string | null;
   expiresAt?: Prisma.DateTimeFilter<'OtpVerification'> | Date | string;
   verifiedAt?: Prisma.DateTimeNullableFilter<'OtpVerification'> | Date | string | null;
   attempts?: Prisma.IntFilter<'OtpVerification'> | number;
@@ -279,6 +287,7 @@ export type OtpVerificationOrderByWithRelationInput = {
   purpose?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   codeHash?: Prisma.SortOrder;
+  targetEmail?: Prisma.SortOrderInput | Prisma.SortOrder;
   expiresAt?: Prisma.SortOrder;
   verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   attempts?: Prisma.SortOrder;
@@ -298,6 +307,7 @@ export type OtpVerificationWhereUniqueInput = Prisma.AtLeast<
     purpose?: Prisma.EnumOtpPurposeFilter<'OtpVerification'> | $Enums.OtpPurpose;
     status?: Prisma.EnumOtpStatusFilter<'OtpVerification'> | $Enums.OtpStatus;
     codeHash?: Prisma.StringFilter<'OtpVerification'> | string;
+    targetEmail?: Prisma.StringNullableFilter<'OtpVerification'> | string | null;
     expiresAt?: Prisma.DateTimeFilter<'OtpVerification'> | Date | string;
     verifiedAt?: Prisma.DateTimeNullableFilter<'OtpVerification'> | Date | string | null;
     attempts?: Prisma.IntFilter<'OtpVerification'> | number;
@@ -315,6 +325,7 @@ export type OtpVerificationOrderByWithAggregationInput = {
   purpose?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   codeHash?: Prisma.SortOrder;
+  targetEmail?: Prisma.SortOrderInput | Prisma.SortOrder;
   expiresAt?: Prisma.SortOrder;
   verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   attempts?: Prisma.SortOrder;
@@ -341,6 +352,7 @@ export type OtpVerificationScalarWhereWithAggregatesInput = {
   purpose?: Prisma.EnumOtpPurposeWithAggregatesFilter<'OtpVerification'> | $Enums.OtpPurpose;
   status?: Prisma.EnumOtpStatusWithAggregatesFilter<'OtpVerification'> | $Enums.OtpStatus;
   codeHash?: Prisma.StringWithAggregatesFilter<'OtpVerification'> | string;
+  targetEmail?: Prisma.StringNullableWithAggregatesFilter<'OtpVerification'> | string | null;
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<'OtpVerification'> | Date | string;
   verifiedAt?:
     Prisma.DateTimeNullableWithAggregatesFilter<'OtpVerification'> | Date | string | null;
@@ -355,6 +367,7 @@ export type OtpVerificationCreateInput = {
   purpose: $Enums.OtpPurpose;
   status?: $Enums.OtpStatus;
   codeHash: string;
+  targetEmail?: string | null;
   expiresAt: Date | string;
   verifiedAt?: Date | string | null;
   attempts?: number;
@@ -370,6 +383,7 @@ export type OtpVerificationUncheckedCreateInput = {
   purpose: $Enums.OtpPurpose;
   status?: $Enums.OtpStatus;
   codeHash: string;
+  targetEmail?: string | null;
   expiresAt: Date | string;
   verifiedAt?: Date | string | null;
   attempts?: number;
@@ -383,6 +397,7 @@ export type OtpVerificationUpdateInput = {
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose;
   status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus;
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  targetEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   attempts?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -398,6 +413,7 @@ export type OtpVerificationUncheckedUpdateInput = {
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose;
   status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus;
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  targetEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   attempts?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -412,6 +428,7 @@ export type OtpVerificationCreateManyInput = {
   purpose: $Enums.OtpPurpose;
   status?: $Enums.OtpStatus;
   codeHash: string;
+  targetEmail?: string | null;
   expiresAt: Date | string;
   verifiedAt?: Date | string | null;
   attempts?: number;
@@ -425,6 +442,7 @@ export type OtpVerificationUpdateManyMutationInput = {
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose;
   status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus;
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  targetEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   attempts?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -439,6 +457,7 @@ export type OtpVerificationUncheckedUpdateManyInput = {
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose;
   status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus;
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  targetEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   attempts?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -463,6 +482,7 @@ export type OtpVerificationCountOrderByAggregateInput = {
   purpose?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   codeHash?: Prisma.SortOrder;
+  targetEmail?: Prisma.SortOrder;
   expiresAt?: Prisma.SortOrder;
   verifiedAt?: Prisma.SortOrder;
   attempts?: Prisma.SortOrder;
@@ -482,6 +502,7 @@ export type OtpVerificationMaxOrderByAggregateInput = {
   purpose?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   codeHash?: Prisma.SortOrder;
+  targetEmail?: Prisma.SortOrder;
   expiresAt?: Prisma.SortOrder;
   verifiedAt?: Prisma.SortOrder;
   attempts?: Prisma.SortOrder;
@@ -496,6 +517,7 @@ export type OtpVerificationMinOrderByAggregateInput = {
   purpose?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   codeHash?: Prisma.SortOrder;
+  targetEmail?: Prisma.SortOrder;
   expiresAt?: Prisma.SortOrder;
   verifiedAt?: Prisma.SortOrder;
   attempts?: Prisma.SortOrder;
@@ -616,6 +638,7 @@ export type OtpVerificationCreateWithoutUserInput = {
   purpose: $Enums.OtpPurpose;
   status?: $Enums.OtpStatus;
   codeHash: string;
+  targetEmail?: string | null;
   expiresAt: Date | string;
   verifiedAt?: Date | string | null;
   attempts?: number;
@@ -629,6 +652,7 @@ export type OtpVerificationUncheckedCreateWithoutUserInput = {
   purpose: $Enums.OtpPurpose;
   status?: $Enums.OtpStatus;
   codeHash: string;
+  targetEmail?: string | null;
   expiresAt: Date | string;
   verifiedAt?: Date | string | null;
   attempts?: number;
@@ -687,6 +711,7 @@ export type OtpVerificationScalarWhereInput = {
   purpose?: Prisma.EnumOtpPurposeFilter<'OtpVerification'> | $Enums.OtpPurpose;
   status?: Prisma.EnumOtpStatusFilter<'OtpVerification'> | $Enums.OtpStatus;
   codeHash?: Prisma.StringFilter<'OtpVerification'> | string;
+  targetEmail?: Prisma.StringNullableFilter<'OtpVerification'> | string | null;
   expiresAt?: Prisma.DateTimeFilter<'OtpVerification'> | Date | string;
   verifiedAt?: Prisma.DateTimeNullableFilter<'OtpVerification'> | Date | string | null;
   attempts?: Prisma.IntFilter<'OtpVerification'> | number;
@@ -700,6 +725,7 @@ export type OtpVerificationCreateManyUserInput = {
   purpose: $Enums.OtpPurpose;
   status?: $Enums.OtpStatus;
   codeHash: string;
+  targetEmail?: string | null;
   expiresAt: Date | string;
   verifiedAt?: Date | string | null;
   attempts?: number;
@@ -713,6 +739,7 @@ export type OtpVerificationUpdateWithoutUserInput = {
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose;
   status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus;
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  targetEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   attempts?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -726,6 +753,7 @@ export type OtpVerificationUncheckedUpdateWithoutUserInput = {
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose;
   status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus;
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  targetEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   attempts?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -739,6 +767,7 @@ export type OtpVerificationUncheckedUpdateManyWithoutUserInput = {
   purpose?: Prisma.EnumOtpPurposeFieldUpdateOperationsInput | $Enums.OtpPurpose;
   status?: Prisma.EnumOtpStatusFieldUpdateOperationsInput | $Enums.OtpStatus;
   codeHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  targetEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   attempts?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -756,6 +785,7 @@ export type OtpVerificationSelect<
     purpose?: boolean;
     status?: boolean;
     codeHash?: boolean;
+    targetEmail?: boolean;
     expiresAt?: boolean;
     verifiedAt?: boolean;
     attempts?: boolean;
@@ -776,6 +806,7 @@ export type OtpVerificationSelectCreateManyAndReturn<
     purpose?: boolean;
     status?: boolean;
     codeHash?: boolean;
+    targetEmail?: boolean;
     expiresAt?: boolean;
     verifiedAt?: boolean;
     attempts?: boolean;
@@ -796,6 +827,7 @@ export type OtpVerificationSelectUpdateManyAndReturn<
     purpose?: boolean;
     status?: boolean;
     codeHash?: boolean;
+    targetEmail?: boolean;
     expiresAt?: boolean;
     verifiedAt?: boolean;
     attempts?: boolean;
@@ -813,6 +845,7 @@ export type OtpVerificationSelectScalar = {
   purpose?: boolean;
   status?: boolean;
   codeHash?: boolean;
+  targetEmail?: boolean;
   expiresAt?: boolean;
   verifiedAt?: boolean;
   attempts?: boolean;
@@ -829,6 +862,7 @@ export type OtpVerificationOmit<
   | 'purpose'
   | 'status'
   | 'codeHash'
+  | 'targetEmail'
   | 'expiresAt'
   | 'verifiedAt'
   | 'attempts'
@@ -867,6 +901,7 @@ export type $OtpVerificationPayload<
       purpose: $Enums.OtpPurpose;
       status: $Enums.OtpStatus;
       codeHash: string;
+      targetEmail: string | null;
       expiresAt: Date;
       verifiedAt: Date | null;
       attempts: number;
@@ -1464,6 +1499,7 @@ export interface OtpVerificationFieldRefs {
   readonly purpose: Prisma.FieldRef<'OtpVerification', 'OtpPurpose'>;
   readonly status: Prisma.FieldRef<'OtpVerification', 'OtpStatus'>;
   readonly codeHash: Prisma.FieldRef<'OtpVerification', 'String'>;
+  readonly targetEmail: Prisma.FieldRef<'OtpVerification', 'String'>;
   readonly expiresAt: Prisma.FieldRef<'OtpVerification', 'DateTime'>;
   readonly verifiedAt: Prisma.FieldRef<'OtpVerification', 'DateTime'>;
   readonly attempts: Prisma.FieldRef<'OtpVerification', 'Int'>;

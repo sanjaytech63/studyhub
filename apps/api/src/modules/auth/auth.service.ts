@@ -18,17 +18,25 @@ import {
   findRefreshTokenWithSession,
   revokeSessionWithRefreshTokens,
   markEmailVerificationOtpVerified,
+  createOtpVerification,
+  expirePendingPasswordResetOtps,
+  resetPasswordAtomically,
+  updateUserPassword,
+  revokeOtherUserSessions,
+  findUserById,
 } from './auth.repository';
 
-import { generateOtp, hashOtp, verifyOtpHash } from './auth.otp';
+import { generateOtp, getOtpExpiration, hashOtp, verifyOtpHash } from './auth.otp';
 
 import { hashPassword, verifyPassword } from './auth.password';
 
 import type {
+  ChangePasswordInput,
   LoginInput,
   RefreshTokenInput,
   RegisterInput,
   ResendOtpInput,
+  ResetPasswordInput,
   VerifyEmailOtpInput,
 } from './auth.schema';
 import {
@@ -40,6 +48,7 @@ import {
 } from './auth.jwt';
 import { getExpirationDate } from '@/utils/duration';
 import { prisma } from '@studyhub/database';
+import { sendPasswordResetOtpEmail } from './auth.email';
 
 /**
  * ============================================================================
@@ -541,4 +550,164 @@ export const verifyEmailOtp = async (input: VerifyEmailOtpInput) => {
     email: user.email,
     emailVerified: true,
   };
+};
+
+export const forgotPassword = async (email: string): Promise<void> => {
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const user = await findUserByEmail(normalizedEmail);
+
+  /*
+   * Never reveal whether the account exists.
+   */
+  if (!user) {
+    return;
+  }
+
+  /*
+   * Do not issue password-reset OTPs
+   * to inactive/suspended/deleted users.
+   */
+  if (user.status !== 'ACTIVE') {
+    return;
+  }
+
+  /*
+   * Only the latest password-reset OTP
+   * should remain valid.
+   */
+  await expirePendingPasswordResetOtps(user.id);
+
+  /*
+   * Generate a cryptographically secure
+   * 6-digit OTP.
+   */
+  const otp = generateOtp();
+
+  /*
+   * Store only the hash.
+   */
+  const codeHash = hashOtp(otp);
+
+  /*
+   * Persist OTP.
+   */
+  await createOtpVerification({
+    userId: user.id,
+    purpose: 'PASSWORD_RESET',
+    codeHash,
+    expiresAt: getOtpExpiration(),
+  });
+
+  /*
+   * Send the raw OTP to the user's email.
+   */
+  await sendPasswordResetOtpEmail({
+    email: user.email,
+    firstName: user.firstName,
+    otp,
+  });
+};
+
+export const resetPassword = async (input: ResetPasswordInput): Promise<void> => {
+  const email = input.email.trim().toLowerCase();
+
+  const user = await findUserByEmail(email);
+
+  if (!user || user.status !== 'ACTIVE') {
+    throw new AppError(
+      HTTP_STATUS.BAD_REQUEST,
+      ERROR_CODES.INVALID_OTP,
+      'Invalid or expired password reset OTP.',
+    );
+  }
+
+  const otp = await findLatestPendingOtp(user.id, 'PASSWORD_RESET');
+
+  if (!otp) {
+    throw new AppError(
+      HTTP_STATUS.BAD_REQUEST,
+      ERROR_CODES.INVALID_OTP,
+      'Invalid or expired password reset OTP.',
+    );
+  }
+
+  const now = new Date();
+
+  if (otp.expiresAt <= now) {
+    await markOtpExpired(otp.id);
+
+    throw new AppError(HTTP_STATUS.BAD_REQUEST, ERROR_CODES.OTP_EXPIRED, 'OTP has expired.');
+  }
+
+  if (otp.attempts >= otp.maxAttempts) {
+    await blockOtp(otp.id);
+
+    throw new AppError(
+      HTTP_STATUS.TOO_MANY_REQUESTS,
+      ERROR_CODES.OTP_TOO_MANY_ATTEMPTS,
+      'Too many invalid OTP attempts.',
+    );
+  }
+
+  const valid = verifyOtpHash(input.otp, otp.codeHash);
+
+  if (!valid) {
+    const nextAttempts = otp.attempts + 1;
+
+    await incrementOtpAttempts(otp.id);
+
+    if (nextAttempts >= otp.maxAttempts) {
+      await blockOtp(otp.id);
+
+      throw new AppError(
+        HTTP_STATUS.TOO_MANY_REQUESTS,
+        ERROR_CODES.OTP_TOO_MANY_ATTEMPTS,
+        'Too many invalid OTP attempts.',
+      );
+    }
+
+    throw new AppError(HTTP_STATUS.BAD_REQUEST, ERROR_CODES.INVALID_OTP, 'Invalid OTP.');
+  }
+
+  const passwordHash = await hashPassword(input.newPassword);
+  const success = await resetPasswordAtomically({
+    otpId: otp.id,
+    userId: user.id,
+    passwordHash,
+  });
+
+  if (!success) {
+    throw new AppError(HTTP_STATUS.BAD_REQUEST, ERROR_CODES.INVALID_OTP, 'OTP is no longer valid.');
+  }
+};
+
+export const changePassword = async (
+  userId: string,
+  sessionId: string,
+  input: ChangePasswordInput,
+): Promise<void> => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AppError(
+      HTTP_STATUS.UNAUTHORIZED,
+      ERROR_CODES.UNAUTHORIZED,
+      'Authentication required.',
+    );
+  }
+
+  const valid = await verifyPassword(user.passwordHash, input.currentPassword);
+
+  if (!valid) {
+    throw new AppError(
+      HTTP_STATUS.BAD_REQUEST,
+      ERROR_CODES.INVALID_PASSWORD,
+      'Current password is incorrect.',
+    );
+  }
+
+  const passwordHash = await hashPassword(input.newPassword);
+  await updateUserPassword(userId, passwordHash);
+  await revokeOtherUserSessions(userId, sessionId);
 };

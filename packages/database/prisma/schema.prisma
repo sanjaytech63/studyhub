@@ -29,6 +29,7 @@ enum OtpPurpose {
   EMAIL_VERIFICATION
   PASSWORD_RESET
   LOGIN_VERIFICATION
+  EMAIL_CHANGE
 }
 
 enum OtpStatus {
@@ -160,8 +161,11 @@ model OtpVerification {
 
   codeHash String @db.VarChar(128)
 
+  targetEmail String? @db.VarChar(320)
+
   expiresAt DateTime
   verifiedAt DateTime?
+
   attempts Int @default(0)
   maxAttempts Int @default(5)
 

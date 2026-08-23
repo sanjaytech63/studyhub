@@ -155,6 +155,7 @@ export const OtpVerificationScalarFieldEnum = {
   purpose: 'purpose',
   status: 'status',
   codeHash: 'codeHash',
+  targetEmail: 'targetEmail',
   expiresAt: 'expiresAt',
   verifiedAt: 'verifiedAt',
   attempts: 'attempts',
