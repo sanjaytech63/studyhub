@@ -8,6 +8,7 @@ import {
   assignPermissionToRole,
   findPermissionsByRoleId,
   removePermissionFromRole,
+  replacePermissionsForRole,
 } from './role-permission.repository';
 import { findRoleById } from './role.repository';
 import { HTTP_STATUS } from '@/utils/http-status';
@@ -40,4 +41,26 @@ export const getRolePermissions = async (roleId: string): Promise<string[]> => {
   const permissions = permissionRecords.map(({ permission }) => permission.name);
   await setCachedRolePermissions(roleId, permissions);
   return permissions;
+};
+
+export const replaceRolePermissions = async (
+  roleId: string,
+  permissionIds: string[],
+): Promise<void> => {
+  const role = await findRoleById(roleId);
+
+  if (!role) {
+    throw new AppError(HTTP_STATUS.NOT_FOUND, ERROR_CODES.RESOURCE_NOT_FOUND, 'Role not found.');
+  }
+
+  if (role.type === 'SYSTEM') {
+    throw new AppError(
+      HTTP_STATUS.FORBIDDEN,
+      ERROR_CODES.FORBIDDEN,
+      'System role permissions cannot be modified.',
+    );
+  }
+
+  await replacePermissionsForRole(roleId, permissionIds);
+  await invalidateRolePermissionCache(roleId);
 };

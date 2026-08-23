@@ -41,3 +41,15 @@ router.delete(
 );
 
 export default router;
+
+// GET     /api/v1/roles
+// GET     /api/v1/roles/:roleId
+// POST    /api/v1/roles
+// PATCH   /api/v1/roles/:roleId
+// DELETE  /api/v1/roles/:roleId
+
+// GET     /api/v1/roles/:roleId/permissions
+// POST    /api/v1/roles/:roleId/permissions
+// DELETE  /api/v1/roles/:roleId/permissions/:permissionId
+
+// GET     /api/v1/permissions

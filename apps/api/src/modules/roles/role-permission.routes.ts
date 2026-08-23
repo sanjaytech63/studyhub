@@ -7,6 +7,7 @@ import {
   assignPermissionController,
   getRolePermissionsController,
   removePermissionController,
+  replaceRolePermissionsController,
 } from './role-permission.controller';
 
 const router = Router();
@@ -30,6 +31,13 @@ router.get(
   requireAuth,
   requirePermission('ROLE_PERMISSION_MANAGE'),
   getRolePermissionsController,
+);
+
+router.put(
+  '/roles/:roleId/permissions',
+  requireAuth,
+  requirePermission('ROLE_PERMISSION_MANAGE'),
+  replaceRolePermissionsController,
 );
 
 export default router;

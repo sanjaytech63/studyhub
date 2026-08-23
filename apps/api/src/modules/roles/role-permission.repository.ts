@@ -64,3 +64,40 @@ export const findAllPermissions = async () => {
     },
   });
 };
+
+export const replacePermissionsForRole = async (
+  roleId: string,
+  permissionIds: string[],
+): Promise<void> => {
+  await prisma.$transaction(async (tx) => {
+    const permissionCount = await tx.permission.count({
+      where: {
+        id: {
+          in: permissionIds,
+        },
+      },
+    });
+
+    if (permissionCount !== permissionIds.length) {
+      throw new Error('One or more permissions do not exist.');
+    }
+
+    await tx.rolePermission.deleteMany({
+      where: {
+        roleId,
+      },
+    });
+
+    if (permissionIds.length === 0) {
+      return;
+    }
+
+    await tx.rolePermission.createMany({
+      data: permissionIds.map((permissionId) => ({
+        roleId,
+        permissionId,
+      })),
+      skipDuplicates: true,
+    });
+  });
+};

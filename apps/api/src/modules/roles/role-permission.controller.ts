@@ -5,12 +5,14 @@ import { asyncHandler } from '@/utils/async-handler';
 import {
   assignPermissionSchema,
   permissionIdParamSchema,
+  replaceRolePermissionsSchema,
   roleIdParamSchema,
 } from './role-permission.schema';
 import {
   assignRolePermission,
   getRolePermissions,
   removeRolePermission,
+  replaceRolePermissions,
 } from './role-permission.service';
 
 export const assignPermissionController: RequestHandler = asyncHandler(async (req, res) => {
@@ -47,5 +49,16 @@ export const getRolePermissionsController: RequestHandler = asyncHandler(async (
   return ApiResponse.ok(res, {
     roleId,
     permissions,
+  });
+});
+
+export const replaceRolePermissionsController: RequestHandler = asyncHandler(async (req, res) => {
+  const { roleId } = roleIdParamSchema.parse(req.params);
+  const { permissionIds } = replaceRolePermissionsSchema.parse(req.body);
+  await replaceRolePermissions(roleId, permissionIds);
+
+  return ApiResponse.ok(res, {
+    roleId,
+    permissionIds,
   });
 });
