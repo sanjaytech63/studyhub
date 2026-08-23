@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "argon2": "0.45.1",
     "compression": "1.8.1",
     "cookie-parser": "1.4.7",
     "cors": "2.8.6",
