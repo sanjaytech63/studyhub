@@ -3,12 +3,12 @@ import type { RequestHandler } from 'express';
 import { HTTP_STATUS } from '@/utils/http-status';
 import { AppError } from '@/errors/app-error';
 import { ERROR_CODES } from '@/errors/error-codes';
-import { findPermissionsByRoleId } from '@/modules/roles/role.repository';
 import {
   getCachedRolePermissions,
   setCachedRolePermissions,
 } from '@/modules/roles/role-permission.cache';
 import { logger } from '@/config/logger';
+import { findPermissionsByRoleId } from '@/modules/roles/role-permission.repository';
 
 export const requireRole = (...allowedRoleIds: string[]): RequestHandler => {
   return (req, _res, next) => {

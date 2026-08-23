@@ -1,12 +1,11 @@
 import { prisma } from '@studyhub/database';
 
-export const findAllRoles = async () => {
-  return prisma.role.findMany({
+export const findAllPermissions = async () => {
+  return prisma.permission.findMany({
     select: {
       id: true,
       name: true,
       description: true,
-      type: true,
       createdAt: true,
       updatedAt: true,
     },

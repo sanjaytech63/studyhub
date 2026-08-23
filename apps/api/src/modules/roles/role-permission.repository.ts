@@ -1,7 +1,25 @@
 import { prisma } from '@studyhub/database';
 
-export const assignPermissionToRole = async (roleId: string, permissionId: string) => {
-  return prisma.rolePermission.upsert({
+export const findPermissionsByRoleId = async (roleId: string) => {
+  return prisma.rolePermission.findMany({
+    where: {
+      roleId,
+    },
+    select: {
+      permission: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+};
+
+export const assignPermissionToRole = async (
+  roleId: string,
+  permissionId: string,
+): Promise<void> => {
+  await prisma.rolePermission.upsert({
     where: {
       roleId_permissionId: {
         roleId,
@@ -20,12 +38,29 @@ export const removePermissionFromRole = async (
   roleId: string,
   permissionId: string,
 ): Promise<void> => {
-  await prisma.rolePermission.delete({
+  const result = await prisma.rolePermission.deleteMany({
     where: {
-      roleId_permissionId: {
-        roleId,
-        permissionId,
-      },
+      roleId,
+      permissionId,
+    },
+  });
+
+  if (result.count === 0) {
+    return;
+  }
+};
+
+export const findAllPermissions = async () => {
+  return prisma.permission.findMany({
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    orderBy: {
+      name: 'asc',
     },
   });
 };

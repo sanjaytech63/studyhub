@@ -1,3 +1,4 @@
+import { logger } from '../../../apps/api/src/config/logger';
 import { prisma } from '../src/client';
 
 const roles = [
@@ -127,6 +128,10 @@ const permissions = [
     name: 'audit-log:read',
     description: 'View audit logs',
   },
+  {
+    name: 'ROLE_PERMISSION_MANAGE',
+    description: 'Manage role permissions',
+  },
 ] as const;
 
 const rolePermissions = {
@@ -241,24 +246,40 @@ const seedRolePermissions = async (
 };
 
 const main = async (): Promise<void> => {
-  console.log('Starting StudyHub database seed...');
+  logger.info('Starting StudyHub database seed...');
 
   const permissionMap = await seedPermissions();
 
-  console.log(`Seeded ${permissionMap.size} permissions.`);
+  logger.info(
+    {
+      count: permissionMap.size,
+    },
+    'Permissions seeded',
+  );
 
   const roleMap = await seedRoles();
 
-  console.log(`Seeded ${roleMap.size} roles.`);
+  logger.info(
+    {
+      count: roleMap.size,
+    },
+    'Roles seeded',
+  );
 
   await seedRolePermissions(roleMap, permissionMap);
 
-  console.log('StudyHub RBAC seed completed successfully.');
+  logger.info('StudyHub RBAC seed completed successfully');
 };
 
 main()
   .catch((error: unknown) => {
-    console.error('StudyHub database seed failed:', error);
+    logger.error(
+      {
+        error,
+      },
+      'StudyHub database seed failed',
+    );
+
     process.exitCode = 1;
   })
   .finally(async () => {
