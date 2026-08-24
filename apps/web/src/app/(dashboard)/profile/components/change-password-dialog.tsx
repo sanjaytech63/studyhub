@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { KeyRound } from 'lucide-react';
-import { Form, FormField } from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
+import { FormField } from '@/components/ui/form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -88,7 +88,7 @@ export function ChangePasswordDialog() {
           </DialogDescription>
         </DialogHeader>
 
-        <Form {...form}>
+        <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5" noValidate>
             <FormField
               control={form.control}
@@ -149,7 +149,7 @@ export function ChangePasswordDialog() {
               </Button>
             </DialogFooter>
           </form>
-        </Form>
+        </FormProvider>
       </DialogContent>
     </Dialog>
   );

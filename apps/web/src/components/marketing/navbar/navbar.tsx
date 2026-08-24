@@ -10,6 +10,7 @@ import { ThemeToggle } from './theme-toggle';
 
 import { useAuthStore } from '@/store/auth.store';
 import { useLogoutMutation } from '@/lib/auth/auth.mutations';
+import { toast } from 'sonner';
 
 export function Navbar() {
   const router = useRouter();
@@ -20,8 +21,9 @@ export function Navbar() {
   async function handleLogout() {
     try {
       await logoutMutation.mutateAsync();
+      toast.success('You have been logged out.');
     } finally {
-      router.replace('/');
+      router.replace('/login');
     }
   }
 

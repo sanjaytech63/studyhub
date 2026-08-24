@@ -35,14 +35,6 @@ function isBrowser(): boolean {
   return typeof window !== 'undefined';
 }
 
-function readStorage(key: string): string | null {
-  if (!isBrowser()) {
-    return null;
-  }
-
-  return sessionStorage.getItem(key);
-}
-
 function writeStorage(key: string, value: string | null): void {
   if (!isBrowser()) {
     return;
