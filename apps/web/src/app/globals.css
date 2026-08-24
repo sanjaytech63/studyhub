@@ -483,7 +483,7 @@ select,
 @layer base {
   * {
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--muted-foreground) 45%, transparent) transparent;
+    scrollbar-color: var(--primary) transparent;
   }
 
   *::-webkit-scrollbar {
@@ -496,18 +496,19 @@ select,
   }
 
   *::-webkit-scrollbar-thumb {
-    background: color-mix(in srgb, var(--muted-foreground) 38%, transparent);
-
-    border-radius: 999px;
-
+    background: var(--primary);
     border: 2px solid transparent;
+    border-radius: 9999px;
     background-clip: padding-box;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in srgb, var(--muted-foreground) 62%, transparent);
-
+    background: var(--primary);
     background-clip: padding-box;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
   }
 }
 

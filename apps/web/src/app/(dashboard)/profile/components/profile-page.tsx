@@ -58,7 +58,7 @@ export function ProfilePage() {
   }
 
   return (
-    <section aria-labelledby="profile-title" className="mx-auto w-full max-w-5xl space-y-8">
+    <section aria-labelledby="profile-title" className="space-y-6">
       <PageHeader />
 
       <div className="grid gap-6">

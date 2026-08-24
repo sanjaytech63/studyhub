@@ -17,7 +17,7 @@ export function NewsletterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md">
-      <div className="flex flex-col gap-2 sm:flex-row">
+      <div className="flex  gap-2 sm:flex-row">
         <Input
           type="email"
           name="email"
@@ -28,7 +28,7 @@ export function NewsletterForm() {
           className="flex-1"
         />
 
-        <Button type="submit" className="h-9  px-5">
+        <Button type="submit" className="h-9  px-3">
           Subscribe
           <ArrowRight aria-hidden="true" className="size-4" />
         </Button>

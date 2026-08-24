@@ -6,7 +6,9 @@ import { dashboardQueryOptions } from '@/lib/dashboard/dashboard.queries';
 import { ContinueLearning } from './components/continue-learning';
 import { DashboardHeader } from './components/dashboard-header';
 import { DashboardMetrics } from './components/dashboard-metrics';
-import { DashboardSkeleton } from '@/components/dashboard/dashboard-skeleton';
+import { QuickActions } from './components/quick-actions';
+import { RecentActivity } from './components/recent-activity';
+import { DashboardSkeleton } from './components/dashboard-skeleton';
 
 export default function DashboardPage() {
   const dashboardQuery = useQuery(dashboardQueryOptions);
@@ -29,10 +31,14 @@ export default function DashboardPage() {
   const dashboard = dashboardQuery.data;
 
   return (
-    <section aria-labelledby="dashboard-title" className="space-y-8">
+    <section aria-labelledby="dashboard-title" className="mx-auto w-full max-w-7xl space-y-8">
       <DashboardHeader />
       <DashboardMetrics metrics={dashboard.metrics} />
-      <ContinueLearning courses={dashboard.continueLearning} />
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <ContinueLearning courses={dashboard.continueLearning} />
+        <QuickActions />
+      </div>
+      <RecentActivity />
     </section>
   );
 }
@@ -44,7 +50,7 @@ interface DashboardErrorProps {
 
 function DashboardError({ error, onRetry }: DashboardErrorProps) {
   return (
-    <section className="space-y-6">
+    <section className="mx-auto w-full max-w-7xl space-y-6">
       <DashboardHeader />
       <ApiErrorState error={error} title="Unable to load your dashboard" onRetry={onRetry} />
     </section>

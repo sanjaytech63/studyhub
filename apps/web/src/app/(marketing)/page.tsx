@@ -20,10 +20,12 @@ export default function MarketingHomePage() {
             development workflows.
           </p>
 
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button size="lg">Explore Courses</Button>
+          <div className="mt-8 flex  justify-center gap-3">
+            <Button size="lg" className="px-4">
+              Explore Courses
+            </Button>
 
-            <Button size="lg" variant="outline">
+            <Button size="lg" variant="outline" className="px-4">
               View Pricing
             </Button>
           </div>

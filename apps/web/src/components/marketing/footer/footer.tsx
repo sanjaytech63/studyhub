@@ -46,7 +46,7 @@ export function Footer() {
           className={[
             'grid gap-10',
             'py-12 md:py-16',
-            'sm:grid-cols-2',
+            'sm:grid-cols-3',
             'lg:grid-cols-[1.5fr_repeat(4,1fr)]',
             'lg:gap-8',
           ].join(' ')}

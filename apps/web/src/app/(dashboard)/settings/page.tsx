@@ -1,32 +1,36 @@
+import { Settings } from 'lucide-react';
+import { AccountSettings } from './components/account-settings';
+import { AppearanceSettings } from './components/appearance-settings';
+import { DangerZone } from './components/danger-zone';
+import { LearningSettings } from './components/learning-settings';
+import { NotificationSettings } from './components/notification-settings';
+
 export default function SettingsPage() {
   return (
-    <section aria-labelledby="settings-title" className="space-y-6">
-      <div>
-        <h1 id="settings-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">
-          Settings
-        </h1>
+    <section aria-labelledby="settings-title" className="space-y-8">
+      {/* Page header */}
+      <div className="flex items-start gap-4">
+        <div className="hidden size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary sm:flex">
+          <Settings className="size-5" />
+        </div>
 
-        <p className="mt-1.5 text-sm text-muted-foreground sm:text-base">
-          Manage your account and application preferences.
-        </p>
+        <div>
+          <h1 id="settings-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+            Settings
+          </h1>
+          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
+            Manage your account, appearance, notifications, and learning preferences.
+          </p>
+        </div>
       </div>
 
-      <div className="max-w-2xl space-y-4">
-        <div className="rounded-xl border border-border/70 bg-card p-5 shadow-sm">
-          <h2 className="text-sm font-semibold">Account settings</h2>
-
-          <p className="mt-1 text-sm text-muted-foreground">
-            Account preferences will be available here.
-          </p>
-        </div>
-
-        <div className="rounded-xl border border-border/70 bg-card p-5 shadow-sm">
-          <h2 className="text-sm font-semibold">Notifications</h2>
-
-          <p className="mt-1 text-sm text-muted-foreground">
-            Configure how StudyHub communicates with you.
-          </p>
-        </div>
+      {/* Settings content */}
+      <div className="max-w-4xl space-y-6">
+        <AccountSettings />
+        <AppearanceSettings />
+        <NotificationSettings />
+        <LearningSettings />
+        <DangerZone />
       </div>
     </section>
   );

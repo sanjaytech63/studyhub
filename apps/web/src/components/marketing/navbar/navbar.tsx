@@ -11,6 +11,7 @@ import { ThemeToggle } from './theme-toggle';
 import { useAuthStore } from '@/store/auth.store';
 import { useLogoutMutation } from '@/lib/auth/auth.mutations';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 export function Navbar() {
   const router = useRouter();
@@ -130,21 +131,12 @@ export function Navbar() {
                       Dashboard
                     </Link>
 
-                    <button
+                    <Button
                       type="button"
+                      variant={'destructive'}
+                      size={'lg'}
                       onClick={handleLogout}
                       disabled={logoutMutation.isPending}
-                      className={[
-                        'inline-flex h-9 items-center justify-center',
-                        'gap-2 rounded-lg border border-border px-4',
-                        'text-sm font-medium',
-                        'text-muted-foreground',
-                        'transition-colors',
-                        'hover:bg-destructive/10',
-                        'hover:text-destructive',
-                        'disabled:pointer-events-none',
-                        'disabled:opacity-60',
-                      ].join(' ')}
                     >
                       {logoutMutation.isPending ? (
                         <Loader2 aria-hidden="true" className="size-4 animate-spin" />
@@ -153,7 +145,7 @@ export function Navbar() {
                       )}
 
                       {logoutMutation.isPending ? 'Signing out...' : 'Logout'}
-                    </button>
+                    </Button>
                   </>
                 )}
               </div>
