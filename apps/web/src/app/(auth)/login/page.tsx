@@ -1,25 +1,28 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AuthCard, AuthFooter, SocialAuth } from '@/components/auth';
+import { LoadingButton } from '@/components/ui/loading-button';
 import { loginSchema, type LoginFormValues } from '@/lib/auth/auth.schemas';
 import { useLoginMutation } from '@/lib/auth/auth.mutations';
 import { getApiErrorMessage } from '@/lib/api/api-error';
-import { AuthCard, AuthFooter, SocialAuth } from '@/components/auth';
-import { LoadingButton } from '@/components/ui/loading-button';
 
 export default function LoginPage() {
   const router = useRouter();
   const mutation = useLoginMutation();
-  // const callbackUrl = searchParams.get('callbackUrl') ?? '/dashboard';
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+
     defaultValues: {
       email: '',
       password: '',
@@ -28,13 +31,11 @@ export default function LoginPage() {
 
   async function onSubmit(values: LoginFormValues) {
     try {
-      await mutation.mutateAsync(values);
-      toast.success('Welcome back!');
-      // router.replace(callbackUrl);
-      router.replace('/dashboard');
-      router.refresh();
+      const response = await mutation.mutateAsync(values);
+      toast.success(`Welcome back, ${response.user.firstName}!`);
+      router.replace(callbackUrl);
     } catch (error) {
-      toast.error(getApiErrorMessage(error, 'Unable to sign in. Please check your credentials.'));
+      toast.error(getApiErrorMessage(error, 'Unable to sign in.'));
     }
   }
 
@@ -57,9 +58,9 @@ export default function LoginPage() {
             aria-invalid={Boolean(form.formState.errors.email)}
           />
 
-          {form.formState.errors.email ? (
+          {form.formState.errors.email && (
             <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
-          ) : null}
+          )}
         </div>
 
         <div className="space-y-2">
@@ -83,9 +84,9 @@ export default function LoginPage() {
             aria-invalid={Boolean(form.formState.errors.password)}
           />
 
-          {form.formState.errors.password ? (
+          {form.formState.errors.password && (
             <p className="text-xs text-destructive">{form.formState.errors.password.message}</p>
-          ) : null}
+          )}
         </div>
 
         <LoadingButton

@@ -1,15 +1,31 @@
 'use client';
 
 import Link from 'next/link';
-// import { Menu } from 'lucide-react';
+import { Loader2, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import { MarketingContainer } from '../shared/marketing-container';
-// import { useMobileNavigation } from './mobile-navigation-provider';
 import { navItems } from './navigation';
 import { ThemeToggle } from './theme-toggle';
 
+import { useAuthStore } from '@/store/auth.store';
+import { useLogoutMutation } from '@/lib/auth/auth.mutations';
+
 export function Navbar() {
-  // const { openMore } = useMobileNavigation();
+  const router = useRouter();
+  const user = useAuthStore((state) => state.user);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
+  const logoutMutation = useLogoutMutation();
+
+  async function handleLogout() {
+    try {
+      await logoutMutation.mutateAsync();
+    } finally {
+      router.replace('/');
+    }
+  }
+
+  const isAuthenticated = Boolean(user);
 
   return (
     <header
@@ -23,19 +39,13 @@ export function Navbar() {
     >
       <MarketingContainer>
         <div className="flex h-16 items-center justify-between">
-          {/* =========================================================
-              BRAND
-              ========================================================= */}
-
           <Link href="/" aria-label="StudyHub home" className="flex items-center gap-2">
             <span
               className={[
                 'flex size-8 items-center justify-center',
-                'rounded-lg',
-                'bg-primary',
+                'rounded-lg bg-primary',
                 'text-sm font-bold',
                 'text-primary-foreground',
-                'shadow-sm',
               ].join(' ')}
             >
               S
@@ -43,10 +53,6 @@ export function Navbar() {
 
             <span className="text-lg font-semibold tracking-tight">StudyHub</span>
           </Link>
-
-          {/* =========================================================
-              DESKTOP NAVIGATION
-              ========================================================= */}
 
           <nav aria-label="Main navigation" className="hidden items-center gap-6 md:flex">
             {navItems.map((item) => (
@@ -56,7 +62,7 @@ export function Navbar() {
                 className={[
                   'text-sm font-medium',
                   'text-muted-foreground',
-                  'transition-colors duration-200',
+                  'transition-colors',
                   'hover:text-foreground',
                 ].join(' ')}
               >
@@ -65,72 +71,91 @@ export function Navbar() {
             ))}
           </nav>
 
-          {/* =========================================================
-              DESKTOP ACTIONS
-              ========================================================= */}
-          <div className="flex items-center md:gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <ThemeToggle />
 
-            <div className="hidden items-center gap-4 md:flex">
-              <Link
-                href="/login"
-                className={[
-                  'inline-flex h-9 items-center justify-center',
-                  'rounded-lg px-4',
-                  'text-sm font-medium',
-                  'border border-border',
-                  'text-muted-foreground',
-                  'transition-colors duration-200',
-                  'hover:bg-primary',
-                  'hover:text-foreground',
-                ].join(' ')}
-              >
-                Login
-              </Link>
+            {!isInitialized ? (
+              <div aria-hidden="true" className="hidden h-9 w-32 rounded-lg bg-muted/50 md:block" />
+            ) : (
+              <div className="hidden items-center gap-3 md:flex">
+                {!isAuthenticated ? (
+                  <>
+                    <Link
+                      href="/login"
+                      className={[
+                        'inline-flex h-9 items-center justify-center',
+                        'rounded-lg border border-border px-4',
+                        'text-sm font-medium',
+                        'text-muted-foreground',
+                        'transition-colors',
+                        'hover:bg-accent',
+                        'hover:text-foreground',
+                      ].join(' ')}
+                    >
+                      Login
+                    </Link>
 
-              <Link
-                href="/register"
-                className={[
-                  'inline-flex h-9 items-center justify-center',
-                  'rounded-lg px-4',
-                  'bg-primary',
-                  'text-sm font-medium',
-                  'text-primary-foreground',
-                  'shadow-sm',
-                  'transition-all duration-200',
-                  'hover:bg-primary/90',
-                  'active:scale-[0.98]',
-                ].join(' ')}
-              >
-                Get Started
-              </Link>
-            </div>
+                    <Link
+                      href="/register"
+                      className={[
+                        'inline-flex h-9 items-center justify-center',
+                        'rounded-lg bg-primary px-4',
+                        'text-sm font-medium',
+                        'text-primary-foreground',
+                        'shadow-sm',
+                        'transition-all',
+                        'hover:bg-primary/90',
+                        'active:scale-[0.98]',
+                      ].join(' ')}
+                    >
+                      Get Started
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/dashboard"
+                      className={[
+                        'inline-flex h-9 items-center justify-center',
+                        'rounded-lg border border-border px-4',
+                        'text-sm font-medium',
+                        'text-muted-foreground',
+                        'transition-colors',
+                        'hover:bg-accent',
+                        'hover:text-foreground',
+                      ].join(' ')}
+                    >
+                      Dashboard
+                    </Link>
 
-            {/* =========================================================
-              MOBILE MENU BUTTON
-              
-              Opens the SAME More modal used by MobileBottomNav.
-              ========================================================= */}
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      disabled={logoutMutation.isPending}
+                      className={[
+                        'inline-flex h-9 items-center justify-center',
+                        'gap-2 rounded-lg border border-border px-4',
+                        'text-sm font-medium',
+                        'text-muted-foreground',
+                        'transition-colors',
+                        'hover:bg-destructive/10',
+                        'hover:text-destructive',
+                        'disabled:pointer-events-none',
+                        'disabled:opacity-60',
+                      ].join(' ')}
+                    >
+                      {logoutMutation.isPending ? (
+                        <Loader2 aria-hidden="true" className="size-4 animate-spin" />
+                      ) : (
+                        <LogOut aria-hidden="true" className="size-4" />
+                      )}
 
-            {/* <button
-              type="button"
-              onClick={openMore}
-              aria-label="Open navigation menu"
-              aria-haspopup="dialog"
-              className={[
-                'inline-flex size-10 items-center justify-center',
-                'rounded-full',
-                'bg-background/70',
-                'text-foreground',
-                'backdrop-blur-xl',
-                'transition-all duration-200',
-                'hover:bg-accent',
-                'active:scale-95',
-                'md:hidden',
-              ].join(' ')}
-            >
-              <Menu aria-hidden="true" className="size-5" />
-            </button> */}
+                      {logoutMutation.isPending ? 'Signing out...' : 'Logout'}
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </MarketingContainer>

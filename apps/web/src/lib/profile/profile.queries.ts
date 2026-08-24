@@ -5,4 +5,6 @@ import { profileKeys } from './profile.keys';
 export const profileQueryOptions = queryOptions({
   queryKey: profileKeys.current(),
   queryFn: getProfile,
+  staleTime: 5 * 60 * 1000,
+  retry: false,
 });

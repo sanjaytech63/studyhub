@@ -9,10 +9,10 @@ import { AuthCard, AuthFooter } from '@/components/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { LoadingButton } from '@/components/ui/loading-button';
 import { forgotPasswordSchema, type ForgotPasswordFormValues } from '@/lib/auth/auth.schemas';
 import { useForgotPasswordMutation } from '@/lib/auth/auth.mutations';
 import { getApiErrorMessage } from '@/lib/api/api-error';
-import { LoadingButton } from '@/components/ui/loading-button';
 
 export default function ForgotPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -20,6 +20,7 @@ export default function ForgotPasswordPage() {
 
   const form = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
+
     defaultValues: {
       email: '',
     },
@@ -29,7 +30,7 @@ export default function ForgotPasswordPage() {
     try {
       await mutation.mutateAsync(values);
       setSubmitted(true);
-      toast.success('If an account exists, password reset instructions have been sent.');
+      toast.success('If an account exists, a password reset OTP has been sent.');
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Unable to process your request.'));
     }
@@ -39,7 +40,7 @@ export default function ForgotPasswordPage() {
     return (
       <AuthCard
         title="Check your email"
-        description="If an account exists for this email address, you will receive password reset instructions shortly."
+        description="If an account exists for this email address, a password reset OTP has been sent."
         footer={<AuthFooter message="Remember your password?" label="Login" href="/login" />}
       >
         <div className="space-y-4 text-center">
@@ -48,14 +49,18 @@ export default function ForgotPasswordPage() {
           </div>
 
           <p className="text-sm text-muted-foreground">
-            Check your inbox and follow the instructions to reset your password.
+            Check your inbox for the 6-digit verification code. You will need this code on the
+            password reset screen.
           </p>
 
           <Button
             type="button"
             variant="outline"
             className="w-full"
-            onClick={() => setSubmitted(false)}
+            onClick={() => {
+              setSubmitted(false);
+              form.reset();
+            }}
           >
             Try another email
           </Button>
@@ -67,7 +72,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthCard
       title="Reset your password"
-      description="Enter your email address and we'll send you a secure password reset link."
+      description="Enter your email address and we'll send you a secure password reset OTP."
       footer={<AuthFooter message="Remember your password?" label="Back to login" href="/login" />}
     >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5" noValidate>
@@ -80,20 +85,21 @@ export default function ForgotPasswordPage() {
             autoComplete="email"
             placeholder="you@example.com"
             {...form.register('email')}
+            aria-invalid={Boolean(form.formState.errors.email)}
           />
 
-          {form.formState.errors.email ? (
+          {form.formState.errors.email && (
             <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
-          ) : null}
+          )}
         </div>
 
         <LoadingButton
           type="submit"
           loading={mutation.isPending}
-          loadingText="Sending.."
+          loadingText="Sending OTP..."
           className="w-full"
         >
-          Send reset link
+          Send reset OTP
         </LoadingButton>
 
         <Link

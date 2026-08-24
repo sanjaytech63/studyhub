@@ -16,6 +16,22 @@ const getOptionalEnv = (value: string | undefined): string | undefined => {
   return normalizedValue || undefined;
 };
 
+export const getOptionalBoolean = (name: string, value: string | undefined): boolean => {
+  if (value === undefined || value === '') {
+    return false;
+  }
+
+  if (value === 'true') {
+    return true;
+  }
+
+  if (value === 'false') {
+    return false;
+  }
+
+  throw new Error(`${name} must be either "true" or "false".`);
+};
+
 const getRequiredNumber = (name: string, value: string | undefined): number => {
   const normalizedValue = getRequiredEnv(name, value);
   const parsedValue = Number(normalizedValue);
@@ -89,6 +105,7 @@ export const serverConfig = Object.freeze({
     user: getOptionalEnv(process.env.SMTP_USER),
     password: getOptionalEnv(process.env.SMTP_PASSWORD),
     from: getOptionalEnv(process.env.SMTP_FROM),
+    secure: getOptionalBoolean('SMTP_SECURE', process.env.SMTP_SECURE),
   },
 
   cloudinary: {

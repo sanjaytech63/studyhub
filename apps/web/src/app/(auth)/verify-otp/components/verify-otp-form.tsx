@@ -6,12 +6,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-
 import { AuthCard, AuthFooter } from '@/components/auth';
 import { OtpInput } from '@/components/auth/otp-input';
 import { Button } from '@/components/ui/button';
 import { LoadingButton } from '@/components/ui/loading-button';
-
 import { getApiErrorMessage } from '@/lib/api/api-error';
 import { useResendOtpMutation, useVerifyOtpMutation } from '@/lib/auth/auth.mutations';
 import { verifyOtpSchema, type VerifyOtpFormValues } from '@/lib/auth/auth.schemas';
@@ -22,13 +20,9 @@ const OTP_LENGTH = 6;
 export default function VerifyOtpForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const email = searchParams.get('email')?.trim() ?? '';
-
   const [countdown, setCountdown] = useState(RESEND_SECONDS);
-
   const verifyMutation = useVerifyOtpMutation();
-
   const resendMutation = useResendOtpMutation();
 
   const form = useForm<VerifyOtpFormValues>({
@@ -48,9 +42,9 @@ export default function VerifyOtpForm() {
   });
 
   /*
-   * =========================================================
+   * ==========================================================================
    * RESEND COUNTDOWN
-   * =========================================================
+   * ==========================================================================
    */
 
   useEffect(() => {
@@ -68,9 +62,9 @@ export default function VerifyOtpForm() {
   }, [countdown]);
 
   /*
-   * =========================================================
+   * ==========================================================================
    * VERIFY OTP
-   * =========================================================
+   * ==========================================================================
    */
 
   async function onSubmit(values: VerifyOtpFormValues) {
@@ -96,9 +90,9 @@ export default function VerifyOtpForm() {
   }
 
   /*
-   * =========================================================
+   * ==========================================================================
    * RESEND OTP
-   * =========================================================
+   * ==========================================================================
    */
 
   async function handleResend() {
@@ -122,9 +116,9 @@ export default function VerifyOtpForm() {
   }
 
   /*
-   * =========================================================
+   * ==========================================================================
    * DERIVED STATE
-   * =========================================================
+   * ==========================================================================
    */
 
   const isOtpComplete = otp.length === OTP_LENGTH;
@@ -134,9 +128,9 @@ export default function VerifyOtpForm() {
   const isResendDisabled = countdown > 0 || resendMutation.isPending || !email;
 
   /*
-   * =========================================================
+   * ==========================================================================
    * RENDER
-   * =========================================================
+   * ==========================================================================
    */
 
   return (
@@ -150,28 +144,18 @@ export default function VerifyOtpForm() {
       footer={<AuthFooter message="Already verified?" label="Back to login" href="/login" />}
     >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5" noValidate>
-        {/* =================================================
-            OTP INPUT
-            ================================================= */}
-
         <Controller
           name="otp"
           control={form.control}
           render={({ field, fieldState }) => (
             <OtpInput
               value={field.value}
-              onChange={(value) => {
-                field.onChange(value);
-              }}
+              onChange={field.onChange}
               disabled={verifyMutation.isPending}
               error={fieldState.error?.message}
             />
           )}
         />
-
-        {/* =================================================
-            VERIFY CTA
-            ================================================= */}
 
         <LoadingButton
           type="submit"
@@ -182,10 +166,6 @@ export default function VerifyOtpForm() {
         >
           Verify email
         </LoadingButton>
-
-        {/* =================================================
-            RESEND
-            ================================================= */}
 
         <div className="space-y-1 text-center">
           <p className="text-xs text-muted-foreground">Didn&apos;t receive the code?</p>
@@ -204,10 +184,6 @@ export default function VerifyOtpForm() {
                 : 'Resend code'}
           </Button>
         </div>
-
-        {/* =================================================
-            CHANGE EMAIL
-            ================================================= */}
 
         <Link
           href="/register"

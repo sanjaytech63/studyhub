@@ -1,10 +1,11 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
+
+import { ThemeProvider as NextThemesProvider } from '@teispace/next-themes';
 
 interface ThemeProviderProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
@@ -14,6 +15,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
       defaultTheme="system"
       enableSystem
       disableTransitionOnChange
+      storage="hybrid"
     >
       {children}
     </NextThemesProvider>

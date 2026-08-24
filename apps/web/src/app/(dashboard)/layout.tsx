@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 
 interface DashboardLayoutProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {

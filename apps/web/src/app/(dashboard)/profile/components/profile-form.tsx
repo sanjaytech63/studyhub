@@ -1,20 +1,19 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Form, useForm, type SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { profileSchema, type ProfileFormValues } from '@/lib/profile/profile.schema';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import type { Profile } from '@/lib/profile/profile.types';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { profileSchema, type ProfileFormValues } from '@/lib/profile/profile.schema';
 
 interface ProfileFormProps {
   readonly profile: Profile;
   readonly isEditing: boolean;
   readonly isSubmitting: boolean;
-  readonly onSubmit: (values: ProfileFormValues) => Promise<void>;
+  readonly onSubmit: (values: ProfileFormValues) => void | Promise<void>;
   readonly onCancel: () => void;
 }
 
@@ -27,151 +26,83 @@ export function ProfileForm({
 }: ProfileFormProps) {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
+
     defaultValues: {
-      name: profile.name,
-      email: profile.email,
-      bio: profile.bio,
-      location: profile.location,
+      firstName: profile.firstName,
+
+      lastName: profile.lastName ?? '',
     },
-    mode: 'onBlur',
   });
 
-  /*
-   * Keep form synchronized with server data.
-   *
-   * Useful when profile data is refetched or replaced.
-   */
   useEffect(() => {
+    if (!isEditing) {
+      return;
+    }
+
     form.reset({
-      name: profile.name,
-      email: profile.email,
-      bio: profile.bio,
-      location: profile.location,
+      firstName: profile.firstName,
+
+      lastName: profile.lastName ?? '',
     });
-  }, [profile, form]);
+  }, [form, isEditing, profile.firstName, profile.lastName]);
 
-  const handleSubmit: SubmitHandler<ProfileFormValues> = async (values) => {
-    await onSubmit(values);
-  };
-
-  function handleCancel() {
-    form.reset({
-      name: profile.name,
-      email: profile.email,
-      bio: profile.bio,
-      location: profile.location,
-    });
-
-    onCancel();
+  if (!isEditing) {
+    return null;
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="mt-7 space-y-5" noValidate>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full Name</FormLabel>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" noValidate>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="firstName">First name</Label>
 
-              <FormControl>
-                <Input
-                  {...field}
-                  disabled={!isEditing || isSubmitting}
-                  autoComplete="name"
-                  placeholder="Enter your full name"
-                />
-              </FormControl>
+          <Input
+            id="firstName"
+            autoComplete="given-name"
+            disabled={isSubmitting}
+            {...form.register('firstName')}
+          />
 
-              <FormMessage />
-            </FormItem>
+          {form.formState.errors.firstName && (
+            <p className="text-xs text-destructive">{form.formState.errors.firstName.message}</p>
           )}
-        />
+        </div>
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email Address</FormLabel>
+        <div className="space-y-2">
+          <Label htmlFor="lastName">Last name</Label>
 
-              <FormControl>
-                <Input
-                  {...field}
-                  type="email"
-                  disabled={!isEditing || isSubmitting}
-                  autoComplete="email"
-                  placeholder="Enter your email address"
-                />
-              </FormControl>
+          <Input
+            id="lastName"
+            autoComplete="family-name"
+            disabled={isSubmitting}
+            {...form.register('lastName')}
+          />
 
-              <FormMessage />
-            </FormItem>
+          {form.formState.errors.lastName && (
+            <p className="text-xs text-destructive">{form.formState.errors.lastName.message}</p>
           )}
-        />
+        </div>
+      </div>
 
-        <FormField
-          control={form.control}
-          name="bio"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bio</FormLabel>
+      <div className="rounded-lg border border-border/70 bg-muted/30 p-4">
+        <p className="text-sm font-medium">Email address</p>
 
-              <FormControl>
-                <Textarea
-                  {...field}
-                  disabled={!isEditing || isSubmitting}
-                  placeholder="Tell us a little about yourself"
-                  rows={4}
-                  className="resize-none"
-                />
-              </FormControl>
+        <p className="mt-1 text-sm text-muted-foreground">{profile.email}</p>
 
-              <div className="flex justify-between gap-4">
-                <FormMessage />
+        <p className="mt-2 text-xs text-muted-foreground">
+          Email changes are managed separately through account security.
+        </p>
+      </div>
 
-                <span className="ml-auto text-xs text-muted-foreground">
-                  {field.value.length}/500
-                </span>
-              </div>
-            </FormItem>
-          )}
-        />
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+        <Button type="button" variant="outline" disabled={isSubmitting} onClick={onCancel}>
+          Cancel
+        </Button>
 
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-
-              <FormControl>
-                <Input
-                  {...field}
-                  disabled={!isEditing || isSubmitting}
-                  autoComplete="address-level2"
-                  placeholder="e.g. New York, USA"
-                />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {isEditing && (
-          <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
-            <Button type="button" variant="outline" onClick={handleCancel} disabled={isSubmitting}>
-              Cancel
-            </Button>
-
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : 'Save Changes'}
-            </Button>
-          </div>
-        )}
-      </form>
-    </Form>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Saving...' : 'Save changes'}
+        </Button>
+      </div>
+    </form>
   );
 }

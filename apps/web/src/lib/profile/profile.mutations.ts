@@ -11,9 +11,6 @@ export function useUpdateProfileMutation() {
     mutationFn: updateProfile,
     onSuccess: (updatedProfile) => {
       queryClient.setQueryData(profileKeys.current(), updatedProfile);
-      void queryClient.invalidateQueries({
-        queryKey: profileKeys.current(),
-      });
     },
   });
 }

@@ -1,6 +1,7 @@
 export const authKeys = {
   all: ['auth'] as const,
   login: () => [...authKeys.all, 'login'] as const,
+  logout: () => [...authKeys.all, 'logout'] as const,
   register: () => [...authKeys.all, 'register'] as const,
   verifyOtp: () => [...authKeys.all, 'verify-otp'] as const,
   resendOtp: () => [...authKeys.all, 'resend-otp'] as const,

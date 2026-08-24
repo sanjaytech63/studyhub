@@ -8,18 +8,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
 import { AuthCard, AuthFooter, PasswordField } from '@/components/auth';
+
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { LoadingButton } from '@/components/ui/loading-button';
 
 import { getApiErrorMessage } from '@/lib/api/api-error';
+
 import { useResetPasswordMutation } from '@/lib/auth/auth.mutations';
+
 import { resetPasswordSchema, type ResetPasswordFormValues } from '@/lib/auth/auth.schemas';
 
 export default function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const token = searchParams.get('token')?.trim() ?? '';
+  const emailFromQuery = searchParams.get('email')?.trim() ?? '';
 
   const [completed, setCompleted] = useState(false);
 
@@ -29,6 +34,8 @@ export default function ResetPasswordForm() {
     resolver: zodResolver(resetPasswordSchema),
 
     defaultValues: {
+      email: emailFromQuery,
+      otp: '',
       password: '',
       confirmPassword: '',
     },
@@ -37,52 +44,21 @@ export default function ResetPasswordForm() {
   });
 
   async function onSubmit(values: ResetPasswordFormValues) {
-    if (!token) {
-      toast.error('This password reset link is invalid or expired.');
-
-      return;
-    }
-
     try {
       await mutation.mutateAsync({
-        token,
+        email: values.email,
+        otp: values.otp,
         password: values.password,
       });
 
       setCompleted(true);
 
-      toast.success('Your password has been reset successfully.');
-
       form.reset();
+
+      toast.success('Your password has been reset successfully.');
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Unable to reset your password.'));
     }
-  }
-
-  /*
-   * =========================================================
-   * INVALID TOKEN
-   * =========================================================
-   */
-
-  if (!token) {
-    return (
-      <AuthCard
-        title="Invalid reset link"
-        description="This password reset link is missing or no longer valid."
-        footer={
-          <AuthFooter message="Need a new link?" label="Reset password" href="/forgot-password" />
-        }
-      >
-        <Button
-          type="button"
-          className="w-full h-9"
-          onClick={() => router.replace('/forgot-password')}
-        >
-          Request new link
-        </Button>
-      </AuthCard>
-    );
   }
 
   /*
@@ -112,11 +88,56 @@ export default function ResetPasswordForm() {
 
   return (
     <AuthCard
-      title="Create a new password"
-      description="Choose a strong password that you haven't used before."
+      title="Reset your password"
+      description="Enter the verification code sent to your email and create a new password."
       footer={<AuthFooter message="Remember your password?" label="Login" href="/login" />}
     >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5" noValidate>
+        {/* EMAIL */}
+
+        <div className="space-y-2">
+          <Label htmlFor="email">Email address</Label>
+
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            {...form.register('email')}
+            aria-invalid={Boolean(form.formState.errors.email)}
+          />
+
+          {form.formState.errors.email && (
+            <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
+          )}
+        </div>
+
+        {/* OTP */}
+
+        <div className="space-y-2">
+          <Label htmlFor="otp">Verification code</Label>
+
+          <Input
+            id="otp"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={6}
+            placeholder="Enter 6-digit OTP"
+            {...form.register('otp')}
+            aria-invalid={Boolean(form.formState.errors.otp)}
+          />
+
+          {form.formState.errors.otp && (
+            <p className="text-xs text-destructive">{form.formState.errors.otp.message}</p>
+          )}
+
+          <p className="text-xs text-muted-foreground">
+            Enter the 6-digit code sent to your email address.
+          </p>
+        </div>
+
+        {/* NEW PASSWORD */}
+
         <PasswordField
           id="password"
           label="New password"
@@ -125,6 +146,8 @@ export default function ResetPasswordForm() {
           {...form.register('password')}
           error={form.formState.errors.password?.message}
         />
+
+        {/* CONFIRM PASSWORD */}
 
         <PasswordField
           id="confirmPassword"
@@ -140,8 +163,8 @@ export default function ResetPasswordForm() {
         <LoadingButton
           type="submit"
           loading={mutation.isPending}
-          loadingText="Updating password..."
-          className="w-fit"
+          loadingText="Resetting password..."
+          className="w-full"
         >
           Reset password
         </LoadingButton>
@@ -156,12 +179,6 @@ export default function ResetPasswordForm() {
     </AuthCard>
   );
 }
-
-/*
- * =========================================================
- * PASSWORD REQUIREMENTS
- * =========================================================
- */
 
 function PasswordRequirements() {
   return (

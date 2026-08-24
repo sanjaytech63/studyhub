@@ -1,23 +1,21 @@
 import { QueryClient } from '@tanstack/react-query';
 
+import { ApiError } from '@/lib/api/api-error';
+
 export function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        /*
-         * Don't immediately refetch every time
-         * the user switches browser tabs.
-         */
         refetchOnWindowFocus: false,
 
-        /*
-         * Retry transient server/network failures.
-         */
-        retry: 2,
+        retry: (failureCount, error) => {
+          if (error instanceof ApiError && (error.statusCode === 401 || error.statusCode === 403)) {
+            return false;
+          }
 
-        /*
-         * Profile/user data can stay fresh for 5 minutes.
-         */
+          return failureCount < 2;
+        },
+
         staleTime: 5 * 60 * 1000,
       },
 
