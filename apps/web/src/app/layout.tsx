@@ -42,7 +42,7 @@ export default function RootLayout({
               <AuthGuard>{children}</AuthGuard>
             </AuthProvider>
           </QueryProvider>
-          <Toaster position="top-center" richColors closeButton duration={4000} visibleToasts={4} />
+          <Toaster position="top-center" richColors duration={4000} visibleToasts={4} />
         </ThemeProvider>
       </body>
     </html>

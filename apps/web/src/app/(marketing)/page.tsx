@@ -1,36 +1,27 @@
-import { Button } from '@/components/ui/button';
-import { MarketingContainer } from '@/components/marketing/shared/marketing-container';
+import { CategoriesSection } from './home/categories-section';
+import { FeaturedCoursesSection } from './home/featured-courses-section';
+import { FinalCtaSection } from './home/final-cta-section';
+import { HeroSection } from './home/hero-section';
+import { InstructorSection } from './home/instructor-section';
+import { LearningExperienceSection } from './home/learning-experience-section';
+import { LearningJourneySection } from './home/learning-journey-section';
+import { TestimonialsSection } from './home/testimonials-section';
+import { TrustStrip } from './home/trust-strip';
+import { WhyStudyHubSection } from './home/why-studyhub-section';
 
-export default function MarketingHomePage() {
+export default function HomePage() {
   return (
-    <section className="py-20 sm:py-28">
-      <MarketingContainer>
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex rounded-full bg-accent px-3 py-1 text-sm font-medium text-accent-foreground">
-            Learn smarter with StudyHub
-          </span>
-
-          <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-6xl">
-            Build your skills.
-            <span className="text-primary"> Build your future.</span>
-          </h1>
-
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
-            Learn modern technologies through structured courses, practical projects, and real-world
-            development workflows.
-          </p>
-
-          <div className="mt-8 flex  justify-center gap-3">
-            <Button size="lg" className="px-4">
-              Explore Courses
-            </Button>
-
-            <Button size="lg" variant="outline" className="px-4">
-              View Pricing
-            </Button>
-          </div>
-        </div>
-      </MarketingContainer>
-    </section>
+    <main>
+      <HeroSection />
+      <TrustStrip />
+      <CategoriesSection />
+      <FeaturedCoursesSection />
+      <WhyStudyHubSection />
+      <LearningJourneySection />
+      <LearningExperienceSection />
+      <InstructorSection />
+      <TestimonialsSection />
+      <FinalCtaSection />
+    </main>
   );
 }

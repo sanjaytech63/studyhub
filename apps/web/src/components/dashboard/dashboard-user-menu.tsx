@@ -9,7 +9,11 @@ import { toast } from 'sonner';
 import { useAuthStore } from '@/store/auth.store';
 import { useLogoutMutation } from '@/lib/auth/auth.mutations';
 
-export function DashboardUserMenu() {
+interface DashboardUserMenuProps {
+  readonly isCollapsed?: boolean;
+}
+
+export function DashboardUserMenu({ isCollapsed = false }: DashboardUserMenuProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -109,6 +113,7 @@ export function DashboardUserMenu() {
           'focus-visible:outline-none',
           'focus-visible:ring-2',
           'focus-visible:ring-primary/40',
+          isCollapsed ? 'justify-center p-1' : '',
         ].join(' ')}
       >
         {/* Avatar */}
@@ -129,23 +134,27 @@ export function DashboardUserMenu() {
 
         {/* User information */}
 
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-foreground">{fullName || 'User'}</p>
+        {!isCollapsed && (
+          <>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold text-foreground">{fullName || 'User'}</p>
 
-          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-        </div>
+              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+            </div>
 
-        {/* Chevron */}
+            {/* Chevron */}
 
-        <ChevronUp
-          aria-hidden="true"
-          className={[
-            'size-4 shrink-0',
-            'text-muted-foreground',
-            'transition-transform duration-200',
-            open ? 'rotate-180' : '',
-          ].join(' ')}
-        />
+            <ChevronUp
+              aria-hidden="true"
+              className={[
+                'size-4 shrink-0',
+                'text-muted-foreground',
+                'transition-transform duration-200',
+                open ? 'rotate-180' : '',
+              ].join(' ')}
+            />
+          </>
+        )}
       </button>
 
       {/* =====================================================
@@ -157,8 +166,8 @@ export function DashboardUserMenu() {
           role="menu"
           aria-label="Account menu"
           className={[
-            'absolute bottom-full left-0 mb-2',
-            'w-full min-w-64',
+            'absolute bottom-full mb-2',
+            isCollapsed ? 'left-12 w-64' : 'left-0 w-full min-w-64',
             'overflow-hidden',
             'rounded-xl',
             'border border-border/70',
@@ -166,6 +175,7 @@ export function DashboardUserMenu() {
             'p-1.5',
             'shadow-xl shadow-black/10',
             'backdrop-blur-xl',
+            'z-50',
           ].join(' ')}
         >
           {/* User information */}

@@ -51,7 +51,8 @@ export interface LearningCourse {
   readonly title: string;
   readonly category: string;
   readonly progress: number;
-  readonly imageUrl: string;
+  readonly imageUrl?: string;
+  readonly lastAccessedAt?: string;
 }
 
 export interface DashboardData {

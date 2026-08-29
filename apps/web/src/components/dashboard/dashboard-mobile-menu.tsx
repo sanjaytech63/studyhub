@@ -1,43 +1,56 @@
 'use client';
 
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import * as React from 'react';
 
 interface DashboardSidebarContextValue {
-  readonly isMobileOpen: boolean;
-  readonly openMobileSidebar: () => void;
-  readonly closeMobileSidebar: () => void;
-  readonly toggleMobileSidebar: () => void;
+  isMobileOpen: boolean;
+  isCollapsed: boolean;
+  openMobileSidebar: () => void;
+  closeMobileSidebar: () => void;
+  toggleMobileSidebar: () => void;
+  toggleCollapsed: () => void;
 }
 
-const DashboardSidebarContext = createContext<DashboardSidebarContextValue | null>(null);
+const DashboardSidebarContext = React.createContext<DashboardSidebarContextValue | null>(null);
 
-interface DashboardSidebarProviderProps {
-  readonly children: ReactNode;
-}
+export function DashboardSidebarProvider({ children }: { readonly children: React.ReactNode }) {
+  const [isMobileOpen, setIsMobileOpen] = React.useState(false);
+  const [isCollapsed, setIsCollapsed] = React.useState(false);
 
-export function DashboardSidebarProvider({ children }: DashboardSidebarProviderProps) {
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const openMobileSidebar = React.useCallback(() => setIsMobileOpen(true), []);
+  const closeMobileSidebar = React.useCallback(() => setIsMobileOpen(false), []);
+  const toggleMobileSidebar = React.useCallback(() => setIsMobileOpen((prev) => !prev), []);
+  const toggleCollapsed = React.useCallback(() => setIsCollapsed((prev) => !prev), []);
 
-  const openMobileSidebar = useCallback(() => {
-    setIsMobileOpen(true);
-  }, []);
+  // Prevent background scrolling when mobile menu drawer is open
+  React.useEffect(() => {
+    if (isMobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileOpen]);
 
-  const closeMobileSidebar = useCallback(() => {
-    setIsMobileOpen(false);
-  }, []);
-
-  const toggleMobileSidebar = useCallback(() => {
-    setIsMobileOpen((current) => !current);
-  }, []);
-
-  const value = useMemo(
+  const value = React.useMemo(
     () => ({
       isMobileOpen,
+      isCollapsed,
       openMobileSidebar,
       closeMobileSidebar,
       toggleMobileSidebar,
+      toggleCollapsed,
     }),
-    [isMobileOpen, openMobileSidebar, closeMobileSidebar, toggleMobileSidebar],
+    [
+      isMobileOpen,
+      isCollapsed,
+      openMobileSidebar,
+      closeMobileSidebar,
+      toggleMobileSidebar,
+      toggleCollapsed,
+    ],
   );
 
   return (
@@ -45,12 +58,13 @@ export function DashboardSidebarProvider({ children }: DashboardSidebarProviderP
   );
 }
 
+/**
+ * Custom hook to access dashboard sidebar state and controls.
+ */
 export function useDashboardSidebar() {
-  const context = useContext(DashboardSidebarContext);
-
+  const context = React.useContext(DashboardSidebarContext);
   if (!context) {
-    throw new Error('useDashboardSidebar must be used within DashboardSidebarProvider');
+    throw new Error('useDashboardSidebar must be used within a DashboardSidebarProvider');
   }
-
   return context;
 }

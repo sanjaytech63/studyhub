@@ -11,7 +11,15 @@ interface AuthShellProps {
 export function AuthShell({ children }: AuthShellProps) {
   return (
     <div className="min-h-dvh bg-background text-foreground">
-      <header className="absolute inset-x-0 top-0 z-50">
+      <header
+        className={[
+          'fixed inset-x-0 top-0 z-40',
+          'border-b border-border/50',
+          'bg-background/80',
+          'backdrop-blur-xl',
+          'supports-backdrop-filter:bg-background/70',
+        ].join(' ')}
+      >
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link
             href="/"

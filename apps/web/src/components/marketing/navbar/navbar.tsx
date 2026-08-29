@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Loader2, LogOut } from 'lucide-react';
+import { BookOpen, Loader2, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { MarketingContainer } from '../shared/marketing-container';
@@ -15,8 +15,7 @@ import { Button } from '@/components/ui/button';
 
 export function Navbar() {
   const router = useRouter();
-  const user = useAuthStore((state) => state.user);
-  const isInitialized = useAuthStore((state) => state.isInitialized);
+  const { isInitialized, isAuthenticated } = useAuthStore();
   const logoutMutation = useLogoutMutation();
 
   async function handleLogout() {
@@ -27,8 +26,6 @@ export function Navbar() {
       router.replace('/login');
     }
   }
-
-  const isAuthenticated = Boolean(user);
 
   return (
     <header
@@ -42,19 +39,17 @@ export function Navbar() {
     >
       <MarketingContainer>
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" aria-label="StudyHub home" className="flex items-center gap-2">
-            <span
-              className={[
-                'flex size-8 items-center justify-center',
-                'rounded-lg bg-primary',
-                'text-sm font-bold',
-                'text-primary-foreground',
-              ].join(' ')}
-            >
-              S
+          <Link
+            href="/"
+            aria-label="StudyHub Home"
+            className="group flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+          >
+            <div className="flex size-9 items-center justify-center rounded-xl bg-primary shadow-sm shadow-primary/20 transition-transform group-hover:scale-105 active:scale-95">
+              <BookOpen className="size-5 text-primary-foreground" />
+            </div>
+            <span className="text-lg font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
+              StudyHub
             </span>
-
-            <span className="text-lg font-semibold tracking-tight">StudyHub</span>
           </Link>
 
           <nav aria-label="Main navigation" className="hidden items-center gap-6 md:flex">

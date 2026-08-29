@@ -48,7 +48,7 @@ import {
 } from './auth.jwt';
 import { getExpirationDate } from '@/utils/duration';
 import { prisma } from '@studyhub/database';
-import { sendPasswordResetOtpEmail } from './auth.email';
+import { sendEmailVerificationOtpEmail, sendPasswordResetOtpEmail } from './auth.email';
 
 /**
  * ============================================================================
@@ -73,18 +73,8 @@ import { sendPasswordResetOtpEmail } from './auth.email';
 
 export const register = async (input: RegisterInput) => {
   const email = input.email.trim().toLowerCase();
-
   const firstName = input.firstName.trim();
-
   const lastName = input.lastName?.trim() || undefined;
-
-  /**
-   * Fast duplicate check.
-   *
-   * This is only an optimization.
-   *
-   * PostgreSQL UNIQUE(email) remains the final authority.
-   */
   const existingUser = await findUserByEmail(email);
 
   if (existingUser) {
@@ -95,9 +85,6 @@ export const register = async (input: RegisterInput) => {
     );
   }
 
-  /**
-   * Every public registration becomes a STUDENT.
-   */
   const studentRole = await findRoleByName('STUDENT');
 
   if (!studentRole) {
@@ -108,16 +95,8 @@ export const register = async (input: RegisterInput) => {
     );
   }
 
-  /**
-   * Argon2 must happen outside the DB transaction.
-   */
   const passwordHash = await hashPassword(input.password);
-
-  /**
-   * Generate verification OTP.
-   */
   const otp = generateOtp();
-
   const codeHash = hashOtp(otp);
 
   const expiresAt = new Date(Date.now() + serverConfig.otp.expiresIn * 1000);
@@ -150,17 +129,21 @@ export const register = async (input: RegisterInput) => {
       },
     });
 
+    // IMPORTANT:
+    // Send the raw OTP only after the user + OTP
+    // have been successfully persisted.
+    await sendEmailVerificationOtpEmail({
+      email: user.email,
+      firstName: user.firstName,
+      otp,
+    });
+
     return {
       userId: user.id,
       email: user.email,
       firstName: user.firstName,
       requiresEmailVerification: true,
 
-      /**
-       * Development only.
-       *
-       * Never expose OTP in production.
-       */
       ...(serverConfig.app.isDevelopment
         ? {
             developmentOtp: otp,
@@ -168,10 +151,6 @@ export const register = async (input: RegisterInput) => {
         : {}),
     };
   } catch (error) {
-    /**
-     * PostgreSQL UNIQUE(email) is the final
-     * concurrency protection.
-     */
     if (isPrismaKnownRequestError(error) && error.code === 'P2002') {
       throw new AppError(
         HTTP_STATUS.CONFLICT,

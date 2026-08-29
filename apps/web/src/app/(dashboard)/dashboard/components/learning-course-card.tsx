@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, BookOpen } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -23,12 +24,14 @@ export function LearningCourseCard({ course }: LearningCourseCardProps) {
     >
       <div className="flex gap-4">
         {/* Course thumbnail */}
-        <div className="hidden size-16 shrink-0 overflow-hidden rounded-xl bg-muted sm:block">
+        <div className="relative hidden size-16 shrink-0 overflow-hidden rounded-xl bg-muted sm:block">
           {course.imageUrl ? (
-            <img
+            <Image
               src={course.imageUrl}
-              alt=""
-              className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+              alt={course.title}
+              fill
+              sizes="64px"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <div className="flex size-full items-center justify-center text-muted-foreground">

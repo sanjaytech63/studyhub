@@ -1,35 +1,27 @@
 'use client';
 
+import * as React from 'react';
 import Link from 'next/link';
-import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { X } from 'lucide-react';
+import { ChevronRight, LogIn, Sparkles, X } from 'lucide-react';
 
 import { navItems } from './navigation';
 import { useMobileNavigation } from './mobile-navigation-provider';
 
 export function MobileMoreMenu() {
   const pathname = usePathname();
-
   const { isMoreOpen, closeMore } = useMobileNavigation();
 
-  /*
-   * Close menu when route changes.
-   */
-  useEffect(() => {
+  // Close menu on route changes
+  React.useEffect(() => {
     closeMore();
   }, [pathname, closeMore]);
 
-  /*
-   * Lock background scrolling while modal is open.
-   */
-  useEffect(() => {
-    if (!isMoreOpen) {
-      return;
-    }
+  // Prevent body scroll when menu is active
+  React.useEffect(() => {
+    if (!isMoreOpen) return;
 
     const previousOverflow = document.body.style.overflow;
-
     document.body.style.overflow = 'hidden';
 
     return () => {
@@ -37,207 +29,124 @@ export function MobileMoreMenu() {
     };
   }, [isMoreOpen]);
 
-  /*
-   * Escape key closes the modal.
-   */
-  useEffect(() => {
-    if (!isMoreOpen) {
-      return;
-    }
+  // Keyboard accessibility
+  React.useEffect(() => {
+    if (!isMoreOpen) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        closeMore();
-      }
+      if (event.key === 'Escape') closeMore();
     };
 
     window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isMoreOpen, closeMore]);
 
   return (
     <>
-      {/* =========================================================
-          BACKDROP
-          ========================================================= */}
-
+      {/* Backdrop */}
       <div
         aria-hidden={!isMoreOpen}
         onClick={closeMore}
-        className={[
-          'fixed inset-0 z-100 md:hidden',
-          'bg-black/30',
-          'backdrop-blur-[3px]',
-          'transition-opacity duration-300 ease-out',
-          isMoreOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
-        ].join(' ')}
+        className={`fixed inset-0 z-100 bg-black/50 backdrop-blur-md transition-opacity duration-300 md:hidden ${
+          isMoreOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+        }`}
       />
 
-      {/* =========================================================
-          MODAL CONTAINER
-          ========================================================= */}
-
+      {/* Centered Modal Overlay Container */}
       <div
-        className={[
-          'fixed inset-0 z-110 md:hidden',
-          'flex items-center justify-center',
-          'px-5',
-          isMoreOpen ? 'pointer-events-auto' : 'pointer-events-none',
-        ].join(' ')}
+        className={`fixed inset-0 z-110 flex items-center justify-center p-4 sm:p-6 md:hidden transition-all duration-300 ease-out ${
+          isMoreOpen
+            ? 'pointer-events-auto opacity-100 scale-100'
+            : 'pointer-events-none opacity-0 scale-95'
+        }`}
       >
         <div
           role="dialog"
           aria-modal="true"
-          aria-labelledby="studyhub-more-title"
-          onClick={(event) => event.stopPropagation()}
-          className={[
-            'w-full max-w-97.5',
-            'overflow-hidden',
-            'rounded-[24px]',
-            'border border-border/70',
-            'bg-background/95',
-            'shadow-2xl shadow-black/20',
-            'backdrop-blur-2xl',
-
-            'transition-all duration-300',
-            'ease-[cubic-bezier(0.22,1,0.36,1)]',
-
-            isMoreOpen
-              ? 'translate-y-0 scale-100 opacity-100'
-              : 'translate-y-5 scale-[0.96] opacity-0',
-          ].join(' ')}
+          aria-labelledby="mobile-nav-title"
+          onClick={(e) => e.stopPropagation()}
+          className="flex max-h-[85vh] w-full max-w-md flex-col overflow-hidden rounded-3xl border border-border/80 bg-background/95 shadow-2xl backdrop-blur-2xl"
         >
-          {/* =====================================================
-              HEADER
-              ===================================================== */}
-
-          <div className="flex items-center justify-between border-b border-border/60 px-5 pb-4 pt-5">
+          {/* Modal Header */}
+          <div className="flex items-center justify-between border-b border-border/50 px-5 py-4 sm:px-6">
             <div>
-              <h2 id="studyhub-more-title" className="text-base font-semibold tracking-tight">
-                More
+              <h2
+                id="mobile-nav-title"
+                className="text-lg font-bold tracking-tight text-foreground"
+              >
+                Navigation
               </h2>
-
-              <p className="mt-1 text-sm text-muted-foreground">Explore more StudyHub features</p>
+              <p className="text-xs text-muted-foreground">Access all features and tools</p>
             </div>
 
             <button
               type="button"
               onClick={closeMore}
-              aria-label="Close more menu"
-              className={[
-                'inline-flex size-9 items-center justify-center',
-                'rounded-full',
-                'border border-border',
-                'text-muted-foreground',
-                'transition-all duration-200',
-                'hover:bg-accent',
-                'hover:text-foreground',
-                'active:scale-95',
-              ].join(' ')}
+              aria-label="Close menu"
+              className="inline-flex size-9 items-center justify-center rounded-full border border-border/80 bg-muted/40 text-muted-foreground transition-all hover:bg-muted active:scale-95"
             >
               <X aria-hidden="true" className="size-4" />
             </button>
           </div>
 
-          {/* =====================================================
-              NAVIGATION
-              ===================================================== */}
+          {/* Nav List */}
+          <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+            <nav aria-label="Main expanded menu" className="space-y-2">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive =
+                  item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
 
-          <div className="max-h-[55vh] overflow-y-auto px-4 py-5">
-            <nav aria-label="More navigation">
-              <div className="space-y-2">
-                {navItems.map((item) => {
-                  const Icon = item.icon;
-
-                  const isActive =
-                    item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
-
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={closeMore}
-                      className={[
-                        'flex h-14 items-center gap-3',
-                        'rounded-[16px]',
-                        'px-4',
-                        'transition-all duration-200',
-
-                        isActive
-                          ? [
-                              'bg-primary',
-                              'text-primary-foreground',
-                              'shadow-sm shadow-primary/20',
-                            ].join(' ')
-                          : ['bg-muted/50', 'text-foreground', 'hover:bg-muted'].join(' '),
-                      ].join(' ')}
-                    >
-                      <span
-                        className={[
-                          'flex size-9 shrink-0 items-center justify-center',
-                          'rounded-xl',
-                          isActive ? 'bg-primary-foreground/15' : 'bg-background',
-                        ].join(' ')}
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={closeMore}
+                    className={`flex h-13 items-center justify-between rounded-2xl px-4 transition-all duration-200 active:scale-[0.98] ${
+                      isActive
+                        ? 'bg-primary text-primary-foreground font-semibold shadow-md shadow-primary/15'
+                        : 'bg-muted/30 text-foreground hover:bg-muted/60'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <div
+                        className={`flex size-9 items-center justify-center rounded-xl ${
+                          isActive
+                            ? 'bg-primary-foreground/20 text-primary-foreground'
+                            : 'bg-background border border-border/60 text-muted-foreground'
+                        }`}
                       >
                         <Icon aria-hidden="true" className="size-4.5" />
-                      </span>
+                      </div>
+                      <span className="text-sm tracking-tight">{item.label}</span>
+                    </div>
 
-                      <span className="text-sm font-semibold">{item.label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
+                    <ChevronRight aria-hidden="true" className="size-4 opacity-50" />
+                  </Link>
+                );
+              })}
             </nav>
           </div>
 
-          {/* =====================================================
-              AUTHENTICATION ACTIONS
-              ===================================================== */}
-
-          <div className="border-t border-border/60 p-4">
-            <div className="grid grid-cols-2 gap-2">
-              {/* Login */}
-
+          {/* Authentication Actions Footer */}
+          <div className="border-t border-border/60 bg-muted/20 p-4 sm:p-5">
+            <div className="grid grid-cols-2 gap-3">
               <Link
                 href="/login"
                 onClick={closeMore}
-                className={[
-                  'flex h-11 items-center justify-center',
-                  'rounded-xl',
-                  'border border-border',
-                  'bg-background',
-                  'text-sm font-medium',
-                  'text-muted-foreground',
-                  'transition-all duration-200',
-                  'hover:bg-accent',
-                  'hover:text-foreground',
-                  'active:scale-[0.98]',
-                ].join(' ')}
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border/80 bg-background text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-accent active:scale-[0.98]"
               >
-                Login
+                <LogIn className="size-4" />
+                <span>Log In</span>
               </Link>
-
-              {/* Get Started */}
 
               <Link
                 href="/register"
                 onClick={closeMore}
-                className={[
-                  'flex h-11 items-center justify-center',
-                  'rounded-xl',
-                  'bg-primary',
-                  'text-sm font-medium',
-                  'text-primary-foreground',
-                  'shadow-sm shadow-primary/20',
-                  'transition-all duration-200',
-                  'hover:bg-primary/90',
-                  'active:scale-[0.98]',
-                ].join(' ')}
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-md shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
               >
-                Get Started
+                <Sparkles className="size-4" />
+                <span>Get Started</span>
               </Link>
             </div>
           </div>
