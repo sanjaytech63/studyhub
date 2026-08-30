@@ -4,7 +4,6 @@ import {
   getRefreshToken,
   initializeAuthState,
 } from '@/lib/api/api-client';
-
 import { refreshSession } from '@/services/auth/auth.service';
 import { getProfile } from '@/services/profile/profile.service';
 
