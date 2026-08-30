@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+
   push:
     branches:
       - main
@@ -16,8 +17,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
-      NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
+      NEXT_PUBLIC_API_URL: http://localhost:5000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
       NEXT_PUBLIC_APP_NAME: StudyHub
 
     steps:
@@ -43,6 +44,25 @@ jobs:
 
       - name: Typecheck
         run: npm run typecheck
+
+      - name: Validate environment
+        run: |
+          test -n "$NEXT_PUBLIC_API_URL" || {
+            echo "::error::NEXT_PUBLIC_API_URL is missing"
+            exit 1
+          }
+
+          test -n "$NEXT_PUBLIC_APP_URL" || {
+            echo "::error::NEXT_PUBLIC_APP_URL is missing"
+            exit 1
+          }
+
+          test -n "$NEXT_PUBLIC_APP_NAME" || {
+            echo "::error::NEXT_PUBLIC_APP_NAME is missing"
+            exit 1
+          }
+
+          echo "Web environment variables are configured."
 
       - name: Build web
         run: npm run build:web
