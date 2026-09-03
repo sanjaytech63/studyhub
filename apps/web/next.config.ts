@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   transpilePackages: ['@studyhub/config'],
   allowedDevOrigins: ['172.30.86.248'],
+  output: 'standalone',
   images: {
     remotePatterns: [
       {

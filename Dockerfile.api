@@ -1,0 +1,87 @@
+# ============================================================
+# StudyHub API
+# Production Dockerfile
+# ============================================================
+
+FROM node:24-alpine AS base
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# ------------------------------------------------------------
+# Dependency manifests
+# ------------------------------------------------------------
+
+COPY package.json package-lock.json ./
+
+COPY apps/api/package.json ./apps/api/
+
+COPY packages/config/package.json ./packages/config/
+COPY packages/database/package.json ./packages/database/
+COPY packages/logger/package.json ./packages/logger/
+COPY packages/types/package.json ./packages/types/
+COPY packages/validation/package.json ./packages/validation/
+
+# Root package.json contains:
+#
+# "prepare": "node scripts/prepare.mjs"
+#
+# Therefore scripts must exist before npm ci.
+COPY scripts ./scripts
+
+# Install dependencies
+RUN npm ci
+
+
+# ============================================================
+# Build
+# ============================================================
+
+FROM base AS build
+
+WORKDIR /app
+
+# Copy complete repository
+COPY . .
+
+# Generate Prisma Client
+RUN npm run db:generate --workspace=@studyhub/database
+
+# Build database package
+RUN npm run build --workspace=@studyhub/database
+
+# Build API
+RUN npm run build --workspace=@studyhub/api
+
+
+# ============================================================
+# Runtime
+# ============================================================
+
+FROM node:24-alpine AS runtime
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=5000
+
+# Node modules
+COPY --from=build /app/node_modules ./node_modules
+
+# API
+COPY --from=build /app/apps/api/dist ./apps/api/dist
+COPY --from=build /app/apps/api/package.json ./apps/api/package.json
+
+# Database package
+COPY --from=build /app/packages/database ./packages/database
+
+# Shared packages
+COPY --from=build /app/packages/config ./packages/config
+COPY --from=build /app/packages/logger ./packages/logger
+COPY --from=build /app/packages/types ./packages/types
+COPY --from=build /app/packages/validation ./packages/validation
+
+EXPOSE 5000
+
+CMD ["node", "apps/api/dist/server.js"]

@@ -1,5 +1,4 @@
-import { prisma, type Prisma } from '@studyhub/database';
-import { OtpPurpose } from '@studyhub/database/src/generated/enums';
+import { prisma, type Prisma, OtpPurpose } from '@studyhub/database';
 
 /**
  * ============================================================================

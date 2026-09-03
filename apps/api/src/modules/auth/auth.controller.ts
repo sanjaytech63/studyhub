@@ -32,9 +32,7 @@ import {
 
 export const registerController: RequestHandler = asyncHandler(async (req, res) => {
   const input = registerSchema.parse(req.body);
-
   const result = await register(input);
-
   return ApiResponse.created(res, result);
 });
 

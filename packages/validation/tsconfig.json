@@ -1,12 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@studyhub/tsconfig/node.json",
+  "extends": "../tsconfig/node.json",
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]

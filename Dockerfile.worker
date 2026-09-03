@@ -1,0 +1,136 @@
+# ============================================================
+# StudyHub Worker - Production Dockerfile
+# ============================================================
+
+FROM node:24-alpine AS base
+
+WORKDIR /app
+
+# ------------------------------------------------------------
+# Copy root package manifests
+# ------------------------------------------------------------
+
+COPY package.json package-lock.json ./
+
+# ------------------------------------------------------------
+# Copy workspace package manifests
+# ------------------------------------------------------------
+
+COPY apps/worker/package.json ./apps/worker/
+
+COPY packages/config/package.json ./packages/config/
+COPY packages/database/package.json ./packages/database/
+COPY packages/logger/package.json ./packages/logger/
+COPY packages/tsconfig/package.json ./packages/tsconfig/
+COPY packages/types/package.json ./packages/types/
+COPY packages/validation/package.json ./packages/validation/
+
+# ------------------------------------------------------------
+# Root prepare script
+# ------------------------------------------------------------
+
+COPY scripts ./scripts
+
+# ------------------------------------------------------------
+# Install dependencies
+# ------------------------------------------------------------
+
+RUN npm ci
+
+
+# ============================================================
+# BUILD
+# ============================================================
+
+FROM base AS build
+
+WORKDIR /app
+
+# Copy complete repository
+COPY . .
+
+# ------------------------------------------------------------
+# Prisma Client generation
+# ------------------------------------------------------------
+#
+# Prisma 7 requires DATABASE_URL during generate.
+#
+# This is ONLY a build-time dummy value.
+# It does not connect to PostgreSQL.
+#
+# Production DATABASE_URL will come from AWS Secrets Manager.
+# ------------------------------------------------------------
+
+RUN DATABASE_URL="postgresql://build:build@localhost:5432/build" \
+    npm run db:generate --workspace=@studyhub/database
+
+# ------------------------------------------------------------
+# Build database package
+# ------------------------------------------------------------
+
+RUN npm run build --workspace=@studyhub/database
+
+# ------------------------------------------------------------
+# Build worker
+# ------------------------------------------------------------
+
+RUN npm run build --workspace=@studyhub/worker
+
+
+# ============================================================
+# RUNTIME
+# ============================================================
+
+FROM node:24-alpine AS runtime
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# ------------------------------------------------------------
+# Production dependencies
+# ------------------------------------------------------------
+
+COPY --from=build /app/node_modules ./node_modules
+
+# ------------------------------------------------------------
+# Worker package
+# ------------------------------------------------------------
+
+COPY --from=build /app/apps/worker/package.json \
+    ./apps/worker/package.json
+
+COPY --from=build /app/apps/worker/dist \
+    ./apps/worker/dist
+
+# ------------------------------------------------------------
+# Database package
+# ------------------------------------------------------------
+
+COPY --from=build /app/packages/database \
+    ./packages/database
+
+# ------------------------------------------------------------
+# Shared packages
+# ------------------------------------------------------------
+
+COPY --from=build /app/packages/config \
+    ./packages/config
+
+COPY --from=build /app/packages/logger \
+    ./packages/logger
+
+COPY --from=build /app/packages/tsconfig \
+    ./packages/tsconfig
+
+COPY --from=build /app/packages/types \
+    ./packages/types
+
+COPY --from=build /app/packages/validation \
+    ./packages/validation
+
+# ------------------------------------------------------------
+# Start worker
+# ------------------------------------------------------------
+
+CMD ["node", "apps/worker/dist/worker.js"]
