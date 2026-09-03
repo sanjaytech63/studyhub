@@ -20,6 +20,8 @@ jobs:
       NEXT_PUBLIC_API_URL: http://localhost:5000
       NEXT_PUBLIC_APP_URL: http://localhost:3000
       NEXT_PUBLIC_APP_NAME: StudyHub
+      # Dummy DATABASE_URL required by Prisma generate (does not connect)
+      DATABASE_URL: postgresql://build:build@localhost:5432/build
 
     steps:
       - name: Checkout
@@ -35,6 +37,9 @@ jobs:
         run: npm ci
         env:
           HUSKY: 0
+
+      - name: Generate Prisma client
+        run: npm run db:generate --workspace=@studyhub/database
 
       - name: Format check
         run: npm run format:check
