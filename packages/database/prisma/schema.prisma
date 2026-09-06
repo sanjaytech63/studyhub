@@ -49,6 +49,8 @@ model User {
 
   emailVerifiedAt DateTime?
 
+  avatarUrl String? @db.VarChar(1000)
+
   roleId String @db.Uuid
   role   Role   @relation(fields: [roleId], references: [id], onDelete: Restrict)
 

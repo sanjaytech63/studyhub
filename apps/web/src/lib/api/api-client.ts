@@ -16,7 +16,6 @@ interface RetryableRequestConfig extends InternalAxiosRequestConfig {
 interface RefreshResponse {
   readonly accessToken: string;
   readonly refreshToken: string;
-  readonly sessionId: string;
 }
 
 let accessToken: string | null = null;
@@ -230,8 +229,6 @@ async function refreshAccessToken(): Promise<string> {
         setAccessToken(data.accessToken);
 
         setRefreshToken(data.refreshToken);
-
-        setSessionId(data.sessionId);
 
         return data.accessToken;
       })

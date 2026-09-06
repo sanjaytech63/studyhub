@@ -18,6 +18,12 @@ export const findAllRoles = async () => {
       type: true,
       createdAt: true,
       updatedAt: true,
+      _count: {
+        select: {
+          users: true,
+          rolePermissions: true,
+        },
+      },
     },
     orderBy: {
       name: 'asc',
@@ -35,6 +41,24 @@ export const findRoleById = async (roleId: string) => {
       name: true,
       description: true,
       type: true,
+      createdAt: true,
+      updatedAt: true,
+      rolePermissions: {
+        select: {
+          permission: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          users: true,
+        },
+      },
     },
   });
 };

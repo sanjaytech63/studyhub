@@ -4,11 +4,13 @@ import { asyncHandler } from '@/utils/async-handler';
 import {
   getMyProfile,
   getMySessions,
+  removeMyAvatar,
   requestEmailChange,
   resendEmailChangeOtp,
   revokeMyOtherSessions,
   revokeMySession,
   updateMyProfile,
+  uploadMyAvatar,
   verifyEmailChange,
 } from './user.service';
 import {
@@ -84,5 +86,23 @@ export const resendEmailChangeOtpController: RequestHandler = asyncHandler(async
 
   return ApiResponse.ok(res, {
     message: 'A new verification OTP has been sent.',
+  });
+});
+
+export const uploadMyAvatarController: RequestHandler = asyncHandler(async (req, res) => {
+  const user = await uploadMyAvatar(req.user!.id, req.file!.buffer);
+
+  return ApiResponse.ok(res, {
+    user,
+    message: 'Profile avatar updated successfully.',
+  });
+});
+
+export const removeMyAvatarController: RequestHandler = asyncHandler(async (req, res) => {
+  const user = await removeMyAvatar(req.user!.id);
+
+  return ApiResponse.ok(res, {
+    user,
+    message: 'Profile avatar removed successfully.',
   });
 });

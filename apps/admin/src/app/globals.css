@@ -1,0 +1,685 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* ==========================================================================
+   STUDYHUB ADMIN — PREMIUM DARK DESIGN SYSTEM
+   ==========================================================================
+   Design Direction:
+   - Deep dark mode, enterprise-grade admin panel
+   - Tight information density, zero visual noise
+   - Indigo/violet brand accent
+   - Precise grid, professional typography
+   - Glassmorphic surfaces with subtle depth
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   DARK VARIANT
+   -------------------------------------------------------------------------- */
+
+@custom-variant dark (&:is(.dark *));
+
+/* --------------------------------------------------------------------------
+   TAILWIND THEME TOKENS
+   -------------------------------------------------------------------------- */
+
+@theme inline {
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Core */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Surfaces */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* Brand */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+
+  /* Secondary */
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  /* Muted */
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  /* Accent */
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  /* Semantic */
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* Forms */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 2);
+}
+
+/* ==========================================================================
+   THEME DEFINITIONS (Light Default + Dark Mode)
+   Engineered with chromatic neutrals (Slate/Indigo undertones) & WCAG AAA compliance
+   ========================================================================== */
+
+/* ==========================================================================
+   LIGHT THEME
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* ------------------------------------------------------------------------
+     Brand
+     ------------------------------------------------------------------------ */
+
+  --primary: #5b4cf0;
+  --primary-hover: #4c3edc;
+  --primary-foreground: #ffffff;
+
+  /* ------------------------------------------------------------------------
+     Application
+     ------------------------------------------------------------------------ */
+
+  /* --background: #f7f7fb; */
+  --background: #fff;
+  --foreground: #18181f;
+
+  /* ------------------------------------------------------------------------
+     Surfaces
+     ------------------------------------------------------------------------ */
+
+  --card: #ffffff;
+  --card-foreground: #18181f;
+
+  --popover: #ffffff;
+  --popover-foreground: #18181f;
+
+  /* ------------------------------------------------------------------------
+     Secondary
+     ------------------------------------------------------------------------ */
+
+  --secondary: #f0f0f6;
+  --secondary-foreground: #292934;
+
+  /* ------------------------------------------------------------------------
+     Muted
+     ------------------------------------------------------------------------ */
+
+  --muted: #f3f3f8;
+  --muted-foreground: #6f7180;
+
+  /* ------------------------------------------------------------------------
+     Accent
+     ------------------------------------------------------------------------ */
+
+  --accent: #efedff;
+  --accent-foreground: #4c3edc;
+
+  /* ------------------------------------------------------------------------
+     Destructive
+     ------------------------------------------------------------------------ */
+
+  --destructive: #dc3f4b;
+  --destructive-foreground: #ffffff;
+
+  /* ------------------------------------------------------------------------
+     Borders / Inputs
+     ------------------------------------------------------------------------ */
+
+  --border: #e5e5ec;
+  --input: #d9d9e3;
+  --ring: #6b5cf6;
+
+  /* ------------------------------------------------------------------------
+     Semantic
+     ------------------------------------------------------------------------ */
+
+  --success: #159a68;
+  --success-foreground: #ffffff;
+
+  --warning: #d99113;
+  --warning-foreground: #ffffff;
+
+  --info: #3478e5;
+  --info-foreground: #ffffff;
+
+  /* ------------------------------------------------------------------------
+     Charts
+     ------------------------------------------------------------------------ */
+
+  --chart-1: #5b4cf0;
+  --chart-2: #3478e5;
+  --chart-3: #159a68;
+  --chart-4: #d99113;
+  --chart-5: #dc3f4b;
+
+  /* ------------------------------------------------------------------------
+     Radius
+     ------------------------------------------------------------------------ */
+
+  --radius: 0.75rem;
+
+  /* ------------------------------------------------------------------------
+     Sidebar
+     ------------------------------------------------------------------------ */
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #292934;
+
+  --sidebar-primary: #5b4cf0;
+  --sidebar-primary-foreground: #ffffff;
+
+  --sidebar-accent: #efedff;
+  --sidebar-accent-foreground: #4c3edc;
+
+  --sidebar-border: #e7e7ee;
+  --sidebar-ring: #6b5cf6;
+}
+
+/* ==========================================================================
+   DARK THEME
+   ========================================================================== */
+
+.dark {
+  color-scheme: dark;
+
+  /* ------------------------------------------------------------------------
+     Brand
+     ------------------------------------------------------------------------ */
+
+  --primary: #8174ff;
+  --primary-hover: #9488ff;
+  --primary-foreground: #ffffff;
+
+  /* ------------------------------------------------------------------------
+     Application
+     ------------------------------------------------------------------------ */
+
+  --background: #090b12;
+  --foreground: #f5f6fa;
+
+  /* ------------------------------------------------------------------------
+     Surfaces
+     ------------------------------------------------------------------------ */
+
+  --card: #11141d;
+  --card-foreground: #f5f6fa;
+
+  --popover: #151923;
+  --popover-foreground: #f5f6fa;
+
+  /* ------------------------------------------------------------------------
+     Secondary
+     ------------------------------------------------------------------------ */
+
+  --secondary: #191d28;
+  --secondary-foreground: #e8e9ef;
+
+  /* ------------------------------------------------------------------------
+     Muted
+     ------------------------------------------------------------------------ */
+
+  --muted: #151923;
+  --muted-foreground: #9a9eac;
+
+  /* ------------------------------------------------------------------------
+     Accent
+     ------------------------------------------------------------------------ */
+
+  --accent: #211e3d;
+  --accent-foreground: #b2a9ff;
+
+  /* ------------------------------------------------------------------------
+     Destructive
+     ------------------------------------------------------------------------ */
+
+  --destructive: #ef5962;
+  --destructive-foreground: #ffffff;
+
+  /* ------------------------------------------------------------------------
+     Borders / Inputs
+     ------------------------------------------------------------------------ */
+
+  --border: #252a38;
+  --input: #2b3040;
+  --ring: #8174ff;
+
+  /* ------------------------------------------------------------------------
+     Semantic
+     ------------------------------------------------------------------------ */
+
+  --success: #36c88b;
+  --success-foreground: #07150f;
+
+  --warning: #f0b94e;
+  --warning-foreground: #191204;
+
+  --info: #63a0ff;
+  --info-foreground: #071326;
+
+  /* ------------------------------------------------------------------------
+     Charts
+     ------------------------------------------------------------------------ */
+
+  --chart-1: #8174ff;
+  --chart-2: #63a0ff;
+  --chart-3: #36c88b;
+  --chart-4: #f0b94e;
+  --chart-5: #ef5962;
+
+  /* ------------------------------------------------------------------------
+     Sidebar
+     ------------------------------------------------------------------------ */
+
+  --sidebar: #0d1017;
+  --sidebar-foreground: #eceef4;
+
+  --sidebar-primary: #8174ff;
+  --sidebar-primary-foreground: #ffffff;
+
+  --sidebar-accent: #1a1d31;
+  --sidebar-accent-foreground: #b2a9ff;
+
+  --sidebar-border: #222735;
+  --sidebar-ring: #8174ff;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    border-color: var(--border);
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+    margin: 0;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 25%, transparent);
+    color: var(--foreground);
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img,
+  svg {
+    display: block;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--muted-foreground);
+    opacity: 0.65;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+}
+
+/* ==========================================================================
+   FOCUS SYSTEM
+   ========================================================================== */
+
+@layer base {
+  :where(button, a, input, textarea, select, [role='button']):focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+}
+
+/* ==========================================================================
+   SCROLLBAR
+   ========================================================================== */
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 9999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--primary) 40%, var(--border));
+  }
+}
+
+/* ==========================================================================
+   FORM POLISH
+   ========================================================================== */
+
+@layer base {
+  input,
+  textarea,
+  select {
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease,
+      background-color 150ms ease;
+  }
+
+  input:hover:not(:disabled),
+  textarea:hover:not(:disabled),
+  select:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+    outline: none;
+  }
+}
+
+/* ==========================================================================
+   TRANSITIONS
+   ========================================================================== */
+
+html,
+body,
+button,
+input,
+textarea,
+select {
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 100ms ease,
+    box-shadow 150ms ease;
+}
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+
+@layer utilities {
+  /* Surface cards */
+  .surface {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .surface-glass {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--card) 85%, transparent),
+      color-mix(in srgb, var(--card) 70%, transparent)
+    );
+    backdrop-filter: blur(16px);
+    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  }
+
+  /* Glow effects */
+  .glow-primary {
+    box-shadow:
+      0 0 20px color-mix(in srgb, var(--primary) 20%, transparent),
+      0 0 60px color-mix(in srgb, var(--primary) 8%, transparent);
+  }
+
+  .glow-success {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--success) 25%, transparent);
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    background: linear-gradient(135deg, var(--primary), #a5b4fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Sidebar item active indicator */
+  .nav-active {
+    background: color-mix(in srgb, var(--primary) 15%, transparent);
+    color: var(--primary);
+    border-left: 2px solid var(--primary);
+  }
+
+  .nav-inactive {
+    color: var(--muted-foreground);
+    border-left: 2px solid transparent;
+  }
+
+  .nav-inactive:hover {
+    background: color-mix(in srgb, var(--muted) 50%, transparent);
+    color: var(--foreground);
+  }
+
+  /* Table rows */
+  .table-row-hover:hover {
+    background: color-mix(in srgb, var(--primary) 5%, transparent);
+  }
+
+  /* Status badge base */
+  .badge-active {
+    background: color-mix(in srgb, var(--success) 15%, transparent);
+    color: var(--success);
+    border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+  }
+
+  .badge-inactive {
+    background: color-mix(in srgb, var(--muted) 60%, transparent);
+    color: var(--muted-foreground);
+    border: 1px solid var(--border);
+  }
+
+  .badge-suspended {
+    background: color-mix(in srgb, var(--warning) 15%, transparent);
+    color: var(--warning);
+    border: 1px solid color-mix(in srgb, var(--warning) 30%, transparent);
+  }
+
+  .badge-deleted {
+    background: color-mix(in srgb, var(--destructive) 12%, transparent);
+    color: var(--destructive);
+    border: 1px solid color-mix(in srgb, var(--destructive) 25%, transparent);
+  }
+}
+
+/* ==========================================================================
+   ANIMATIONS
+   ========================================================================== */
+
+@keyframes slide-in-from-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes count-up {
+  from {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@layer utilities {
+  .animate-fade-up {
+    animation: fade-up 0.3s ease forwards;
+  }
+
+  .animate-skeleton {
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+
+  .animate-count-up {
+    animation: count-up 0.4s ease forwards;
+  }
+
+  /* Stagger children */
+  .stagger-children > *:nth-child(1) {
+    animation-delay: 0ms;
+  }
+
+  .stagger-children > *:nth-child(2) {
+    animation-delay: 60ms;
+  }
+
+  .stagger-children > *:nth-child(3) {
+    animation-delay: 120ms;
+  }
+
+  .stagger-children > *:nth-child(4) {
+    animation-delay: 180ms;
+  }
+
+  .stagger-children > *:nth-child(5) {
+    animation-delay: 240ms;
+  }
+
+  .stagger-children > *:nth-child(6) {
+    animation-delay: 300ms;
+  }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

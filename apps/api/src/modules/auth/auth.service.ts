@@ -263,6 +263,7 @@ export const login = async (
       firstName: user.firstName,
       lastName: user.lastName,
       roleId: user.roleId,
+      avatarUrl: user.avatarUrl,
     },
     accessToken,
     refreshToken,

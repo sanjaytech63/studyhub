@@ -4,6 +4,7 @@ export interface AuthUser {
   readonly firstName: string;
   readonly lastName: string | null;
   readonly roleId: string;
+  readonly avatarUrl?: string | null;
 }
 
 export interface AuthResponse {
@@ -11,6 +12,14 @@ export interface AuthResponse {
   readonly accessToken: string;
   readonly refreshToken: string;
   readonly sessionId: string;
+}
+
+export interface RegisterResponse {
+  readonly userId: string;
+  readonly email: string;
+  readonly firstName: string;
+  readonly requiresEmailVerification: boolean;
+  readonly developmentOtp?: string;
 }
 
 export interface LoginPayload {
@@ -31,7 +40,9 @@ export interface VerifyOtpPayload {
 }
 
 export interface VerifyOtpResponse {
-  readonly verified: boolean;
+  readonly userId: string;
+  readonly email: string;
+  readonly emailVerified: boolean;
   readonly message?: string;
 }
 
@@ -42,9 +53,14 @@ export interface ForgotPasswordPayload {
 export interface ResetPasswordPayload {
   readonly email: string;
   readonly otp: string;
-  readonly password: string;
+  readonly newPassword: string;
 }
 
 export interface ResetPasswordResponse {
   readonly message?: string;
+}
+
+export interface RefreshResponse {
+  readonly accessToken: string;
+  readonly refreshToken: string;
 }

@@ -5,6 +5,7 @@ import healthRoutes from './health.routes';
 import { authRoutes } from '../modules/auth';
 import meRouter from './me.routes';
 import roleRoutes from '@/modules/roles';
+import adminUserRoutes from '@/modules/users/admin-user.routes';
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use(`${apiPrefix}/health`, healthRoutes);
 router.use(`${apiPrefix}/auth`, authRoutes);
 router.use(`${apiPrefix}/me`, meRouter);
 router.use(`${apiPrefix}`, roleRoutes);
+router.use(`${apiPrefix}/admin`, adminUserRoutes);
 
 export default router;

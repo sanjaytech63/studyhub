@@ -15,6 +15,7 @@ export const findUserProfileById = async (userId: string) => {
       lastName: true,
       status: true,
       emailVerifiedAt: true,
+      avatarUrl: true,
       createdAt: true,
       updatedAt: true,
 
@@ -50,6 +51,36 @@ export const updateUserProfile = async (
       lastName: true,
       status: true,
       emailVerifiedAt: true,
+      avatarUrl: true,
+      createdAt: true,
+      updatedAt: true,
+
+      role: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+};
+
+export const updateUserAvatar = async (userId: string, avatarUrl: string | null) => {
+  return prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      avatarUrl,
+    },
+    select: {
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      status: true,
+      emailVerifiedAt: true,
+      avatarUrl: true,
       createdAt: true,
       updatedAt: true,
 

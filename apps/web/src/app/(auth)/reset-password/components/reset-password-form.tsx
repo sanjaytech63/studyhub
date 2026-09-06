@@ -48,7 +48,7 @@ export default function ResetPasswordForm() {
       await mutation.mutateAsync({
         email: values.email,
         otp: values.otp,
-        password: values.password,
+        newPassword: values.password,
       });
 
       setCompleted(true);

@@ -1,16 +1,19 @@
 import { Router } from 'express';
 import { requireAuth } from '@/middlewares/auth.middleware';
 import { requirePermission } from '@/middlewares/authorization.middleware';
+import { uploadSingleAvatar } from '@/middlewares/upload.middleware';
 import { ApiResponse } from '@/utils/api-response';
 
 import {
   getMeController,
   getMySessionsController,
+  removeMyAvatarController,
   requestEmailChangeController,
   resendEmailChangeOtpController,
   revokeMyOtherSessionsController,
   revokeMySessionController,
   updateMeController,
+  uploadMyAvatarController,
   verifyEmailChangeController,
 } from '@/modules/users/user.controller';
 
@@ -18,6 +21,8 @@ const router = Router();
 
 router.get('/', requireAuth, getMeController);
 router.patch('/', requireAuth, updateMeController);
+router.post('/avatar', requireAuth, uploadSingleAvatar, uploadMyAvatarController);
+router.delete('/avatar', requireAuth, removeMyAvatarController);
 router.get('/sessions', requireAuth, getMySessionsController);
 router.delete('/sessions/:sessionId', requireAuth, revokeMySessionController);
 router.delete('/sessions', requireAuth, revokeMyOtherSessionsController);

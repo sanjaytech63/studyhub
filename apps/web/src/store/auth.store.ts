@@ -8,6 +8,7 @@ interface AuthState {
   readonly isInitialized: boolean;
 
   setAuthenticated: (user: AuthUser) => void;
+  updateUser: (patch: Partial<AuthUser>) => void;
   clearAuth: () => void;
   setInitialized: (value: boolean) => void;
 }
@@ -23,6 +24,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       isAuthenticated: true,
       isInitialized: true,
     }),
+
+  updateUser: (patch) =>
+    set((state) => ({
+      user: state.user ? { ...state.user, ...patch } : null,
+    })),
 
   clearAuth: () =>
     set({

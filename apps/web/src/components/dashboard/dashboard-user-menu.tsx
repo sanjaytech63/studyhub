@@ -11,9 +11,13 @@ import { useLogoutMutation } from '@/lib/auth/auth.mutations';
 
 interface DashboardUserMenuProps {
   readonly isCollapsed?: boolean;
+  readonly variant?: 'sidebar' | 'header';
 }
 
-export function DashboardUserMenu({ isCollapsed = false }: DashboardUserMenuProps) {
+export function DashboardUserMenu({
+  isCollapsed = false,
+  variant = 'sidebar',
+}: DashboardUserMenuProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -99,63 +103,92 @@ export function DashboardUserMenu({ isCollapsed = false }: DashboardUserMenuProp
           USER TRIGGER
           ===================================================== */}
 
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-haspopup="menu"
-        aria-label="Open account menu"
-        onClick={() => setOpen((current) => !current)}
-        className={[
-          'flex w-full items-center gap-3 rounded-xl p-2',
-          'text-left',
-          'transition-colors duration-200',
-          'hover:bg-muted/70',
-          'focus-visible:outline-none',
-          'focus-visible:ring-2',
-          'focus-visible:ring-primary/40',
-          isCollapsed ? 'justify-center p-1' : '',
-        ].join(' ')}
-      >
-        {/* Avatar */}
-
-        <div
-          aria-hidden="true"
+      {variant === 'header' ? (
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-haspopup="menu"
+          aria-label="Open account menu"
+          onClick={() => setOpen((current) => !current)}
+          className="relative flex items-center justify-center rounded-full p-0.5 transition-all duration-200 hover:ring-2 hover:ring-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        >
+          <div
+            aria-hidden="true"
+            className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/80 bg-primary text-xs font-semibold text-primary-foreground shadow-xs"
+          >
+            {user.avatarUrl ? (
+              <img src={user.avatarUrl} alt="" className="size-full object-cover" />
+            ) : (
+              initials
+            )}
+          </div>
+          <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
+        </button>
+      ) : (
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-haspopup="menu"
+          aria-label="Open account menu"
+          onClick={() => setOpen((current) => !current)}
           className={[
-            'flex size-9 shrink-0 items-center',
-            'justify-center rounded-xl',
-            'bg-primary',
-            'text-xs font-semibold',
-            'text-primary-foreground',
-            'shadow-sm',
+            'flex w-full items-center gap-3 rounded-xl p-2',
+            'text-left',
+            'transition-colors duration-200',
+            'hover:bg-muted/70',
+            'focus-visible:outline-none',
+            'focus-visible:ring-2',
+            'focus-visible:ring-primary/40',
+            isCollapsed ? 'justify-center p-1' : '',
           ].join(' ')}
         >
-          {initials}
-        </div>
+          {/* Avatar */}
 
-        {/* User information */}
+          <div
+            aria-hidden="true"
+            className={[
+              'flex size-9 shrink-0 items-center',
+              'justify-center rounded-xl overflow-hidden',
+              'bg-primary',
+              'text-xs font-semibold',
+              'text-primary-foreground',
+              'shadow-sm',
+            ].join(' ')}
+          >
+            {user.avatarUrl ? (
+              <img src={user.avatarUrl} alt="" className="size-full object-cover" />
+            ) : (
+              initials
+            )}
+          </div>
 
-        {!isCollapsed && (
-          <>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-foreground">{fullName || 'User'}</p>
+          {/* User information */}
 
-              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-            </div>
+          {!isCollapsed && (
+            <>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-foreground">
+                  {fullName || 'User'}
+                </p>
 
-            {/* Chevron */}
+                <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+              </div>
 
-            <ChevronUp
-              aria-hidden="true"
-              className={[
-                'size-4 shrink-0',
-                'text-muted-foreground',
-                'transition-transform duration-200',
-                open ? 'rotate-180' : '',
-              ].join(' ')}
-            />
-          </>
-        )}
-      </button>
+              {/* Chevron */}
+
+              <ChevronUp
+                aria-hidden="true"
+                className={[
+                  'size-4 shrink-0',
+                  'text-muted-foreground',
+                  'transition-transform duration-200',
+                  open ? 'rotate-180' : '',
+                ].join(' ')}
+              />
+            </>
+          )}
+        </button>
+      )}
 
       {/* =====================================================
           DROPDOWN
@@ -166,8 +199,11 @@ export function DashboardUserMenu({ isCollapsed = false }: DashboardUserMenuProp
           role="menu"
           aria-label="Account menu"
           className={[
-            'absolute bottom-full mb-2',
-            isCollapsed ? 'left-12 w-64' : 'left-0 w-full min-w-64',
+            variant === 'header'
+              ? 'absolute right-0 top-full mt-2 w-64'
+              : isCollapsed
+                ? 'absolute bottom-full mb-2 left-12 w-64'
+                : 'absolute bottom-full mb-2 left-0 w-full min-w-64',
             'overflow-hidden',
             'rounded-xl',
             'border border-border/70',
@@ -187,13 +223,17 @@ export function DashboardUserMenu({ isCollapsed = false }: DashboardUserMenuProp
                 className={[
                   'flex size-10 shrink-0',
                   'items-center justify-center',
-                  'rounded-xl',
+                  'rounded-xl overflow-hidden',
                   'bg-primary',
                   'text-sm font-semibold',
                   'text-primary-foreground',
                 ].join(' ')}
               >
-                {initials}
+                {user.avatarUrl ? (
+                  <img src={user.avatarUrl} alt="" className="size-full object-cover" />
+                ) : (
+                  initials
+                )}
               </div>
 
               <div className="min-w-0 flex-1">

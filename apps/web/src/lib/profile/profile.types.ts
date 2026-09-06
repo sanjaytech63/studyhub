@@ -14,6 +14,7 @@ export interface Profile {
   readonly status: ProfileStatus;
 
   readonly emailVerifiedAt: string | null;
+  readonly avatarUrl?: string | null;
 
   readonly createdAt: string;
   readonly updatedAt: string;

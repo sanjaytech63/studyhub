@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { ApiErrorState } from '@/components/feedback/api-error-state';
@@ -8,6 +8,7 @@ import { Loading } from '@/components/feedback/loading-state';
 import { getApiErrorMessage } from '@/lib/api/api-error';
 import { profileQueryOptions } from '@/lib/profile/profile.queries';
 import { useUpdateProfileMutation } from '@/lib/profile/profile.mutations';
+import { useAuthStore } from '@/store/auth.store';
 import type { ProfileFormValues } from '@/lib/profile/profile.schema';
 import { ProfileHeader } from './profile-header';
 import { ProfileForm } from './profile-form';
@@ -19,11 +20,30 @@ export function ProfilePage() {
   const profileQuery = useQuery(profileQueryOptions);
   const updateProfileMutation = useUpdateProfileMutation();
 
+  useEffect(() => {
+    const data = profileQuery.data;
+    if (data) {
+      const currentUser = useAuthStore.getState().user;
+      if (
+        currentUser &&
+        (currentUser.avatarUrl !== data.avatarUrl ||
+          currentUser.firstName !== data.firstName ||
+          currentUser.lastName !== data.lastName)
+      ) {
+        useAuthStore.getState().updateUser({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          avatarUrl: data.avatarUrl,
+        });
+      }
+    }
+  }, [profileQuery.data]);
+
   if (profileQuery.isPending) {
     return <Loading message="Loading your profile..." />;
   }
 
-  if (profileQuery.isError) {
+  if (profileQuery.isError || !profileQuery.data) {
     return (
       <section aria-labelledby="profile-title" className="space-y-6">
         <PageHeader />

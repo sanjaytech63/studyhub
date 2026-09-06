@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useDashboardSidebar } from './dashboard-mobile-menu';
 import { DashboardBreadcrumbs } from './dashboard-breadcrumbs';
 import { ThemeToggle } from '../marketing/navbar/theme-toggle';
+import { DashboardUserMenu } from './dashboard-user-menu';
 
 export function DashboardHeader() {
   const pathname = usePathname();
@@ -33,7 +34,7 @@ export function DashboardHeader() {
           <DashboardBreadcrumbs pathname={pathname} />
         </div>
 
-        {/* Right Section: Typable Search Input, Notifications, Theme Toggle */}
+        {/* Right Section: Typable Search Input, Notifications, Theme Toggle, User Menu */}
         <div className="flex items-center gap-2 sm:gap-3">
           <HeaderCommandSearch />
 
@@ -53,6 +54,10 @@ export function DashboardHeader() {
           </Button>
 
           <ThemeToggle />
+
+          <div className="h-5 w-px bg-border/60 mx-0.5 hidden sm:block" />
+
+          <DashboardUserMenu variant="header" />
         </div>
       </div>
     </header>

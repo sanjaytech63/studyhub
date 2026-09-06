@@ -11,7 +11,9 @@ import type {
   AuthResponse,
   ForgotPasswordPayload,
   LoginPayload,
+  RefreshResponse,
   RegisterPayload,
+  RegisterResponse,
   ResetPasswordPayload,
   ResetPasswordResponse,
   VerifyOtpPayload,
@@ -45,10 +47,10 @@ export async function login(payload: LoginPayload): Promise<AuthResponse> {
  * ============================================================================
  */
 
-export async function register(payload: RegisterPayload): Promise<AuthResponse> {
+export async function register(payload: RegisterPayload): Promise<RegisterResponse> {
   const response = await apiClient.post<{
     success: boolean;
-    data: AuthResponse;
+    data: RegisterResponse;
   }>('/auth/register', payload);
 
   return response.data.data;
@@ -121,11 +123,7 @@ export async function refreshSession(): Promise<string> {
 
   const response = await apiClient.post<{
     success: boolean;
-    data: {
-      accessToken: string;
-      refreshToken: string;
-      sessionId: string;
-    };
+    data: RefreshResponse;
   }>('/auth/refresh', {
     refreshToken: currentRefreshToken,
   });
@@ -134,7 +132,6 @@ export async function refreshSession(): Promise<string> {
 
   setAccessToken(data.accessToken);
   setRefreshToken(data.refreshToken);
-  setSessionId(data.sessionId);
 
   return data.accessToken;
 }

@@ -21,6 +21,7 @@ function profileToAuthUser(profile: Profile): AuthUser {
     firstName: profile.firstName,
     lastName: profile.lastName,
     roleId: profile.role.id,
+    avatarUrl: profile.avatarUrl,
   };
 }
 

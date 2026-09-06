@@ -14,6 +14,7 @@ import type {
   AuthResponse,
   ForgotPasswordPayload,
   RegisterPayload,
+  RegisterResponse,
   ResetPasswordPayload,
   ResetPasswordResponse,
   VerifyOtpPayload,
@@ -49,6 +50,7 @@ export function useLoginMutation() {
         firstName: user.firstName,
         lastName: user.lastName,
         roleId: user.roleId,
+        avatarUrl: user.avatarUrl,
       });
     },
   });
@@ -61,7 +63,7 @@ export function useLoginMutation() {
  */
 
 export function useRegisterMutation() {
-  return useMutation<AuthResponse, Error, RegisterPayload>({
+  return useMutation<RegisterResponse, Error, RegisterPayload>({
     mutationKey: authKeys.register(),
     mutationFn: register,
   });

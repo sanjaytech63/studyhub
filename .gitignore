@@ -45,6 +45,7 @@ Thumbs.db
 
 # Cache
 .cache/
+*.tsbuildinfo
 
 # Temporary
 tmp/

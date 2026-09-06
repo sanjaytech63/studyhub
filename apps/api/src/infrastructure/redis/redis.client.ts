@@ -3,7 +3,7 @@ import IORedis from 'ioredis';
 import { serverConfig } from '@studyhub/config/server';
 import { logger } from '@/config/logger';
 
-const REDIS_OPERATION_TIMEOUT_MS = 500;
+const REDIS_OPERATION_TIMEOUT_MS = 2_000;
 
 export const redis = new IORedis(serverConfig.redis.url, {
   maxRetriesPerRequest: 1,

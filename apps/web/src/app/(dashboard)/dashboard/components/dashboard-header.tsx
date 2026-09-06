@@ -5,8 +5,12 @@ import { ArrowRight, BookOpen, Sparkles } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/store/auth.store';
 
 export function DashboardHeader() {
+  const user = useAuthStore((state) => state.user);
+  const greetingName = user?.firstName ? user.firstName : 'there';
+
   return (
     <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
       <div className="space-y-2">
@@ -22,7 +26,7 @@ export function DashboardHeader() {
             id="dashboard-title"
             className="text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl"
           >
-            Welcome back, Sanjay.
+            Welcome back, {greetingName}.
           </h1>
 
           <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">

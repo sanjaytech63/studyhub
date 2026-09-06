@@ -9,8 +9,13 @@ import {
   findUserProfileById,
   revokeOtherUserSessions,
   revokeUserSession,
+  updateUserAvatar,
   updateUserProfile,
 } from './user.repository';
+import {
+  deleteAvatarByPublicId,
+  uploadAvatarStream,
+} from '@/infrastructure/cloudinary/cloudinary.client';
 
 import type {
   ChangeEmailInput,
@@ -211,4 +216,26 @@ export const resendEmailChangeOtp = async (
     email: newEmail,
     otp,
   });
+};
+
+export const uploadMyAvatar = async (userId: string, fileBuffer: Buffer) => {
+  const user = await findUserProfileById(userId);
+
+  if (!user) {
+    throw new AppError(HTTP_STATUS.NOT_FOUND, ERROR_CODES.NOT_FOUND, 'User not found.');
+  }
+
+  const { url } = await uploadAvatarStream(fileBuffer, userId);
+  return updateUserAvatar(userId, url);
+};
+
+export const removeMyAvatar = async (userId: string) => {
+  const user = await findUserProfileById(userId);
+
+  if (!user) {
+    throw new AppError(HTTP_STATUS.NOT_FOUND, ERROR_CODES.NOT_FOUND, 'User not found.');
+  }
+
+  await deleteAvatarByPublicId(`studyhub/avatars/avatar_${userId}`);
+  return updateUserAvatar(userId, null);
 };
