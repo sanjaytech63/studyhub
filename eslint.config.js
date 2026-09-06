@@ -5,13 +5,13 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
   {
     ignores: [
-      'node_modules/',
-      '.next/',
-      'dist/',
-      'build/',
-      'coverage/',
-      '.turbo/',
-      'packages/database/src/generated/',
+      '**/node_modules/**',
+      '**/.next/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/coverage/**',
+      '**/.turbo/**',
+      '**/packages/database/src/generated/**',
     ],
   },
 

@@ -5,7 +5,7 @@ build
 coverage
 .turbo
 package-lock.json
-apps/web/next-env.d.ts
+**/next-env.d.ts
 public
 uploads
 packages/database/src/generated

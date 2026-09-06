@@ -3,11 +3,10 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { KeyRound, Search, Shield, Layers, Lock, Sparkles, Info, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { KeyRound, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Table,
   TableHeader,
@@ -19,7 +18,6 @@ import {
   TableSkeleton,
 } from '@/components/ui/data-table';
 import { permissionsQueryOptions, rolesQueryOptions } from '@/lib/admin/roles.queries';
-import type { Permission } from '@/lib/admin/roles.types';
 
 export default function PermissionsDirectoryPage() {
   const { data: permissions, isLoading: isPermsLoading } = useQuery(permissionsQueryOptions);
