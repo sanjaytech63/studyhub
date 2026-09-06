@@ -98,7 +98,7 @@ export function StatCard({
           {trend && (
             <span
               className={cn(
-                'inline-flex items-center gap-1 font-mono font-medium rounded-full px-2 py-0.5 text-[11px]',
+                'flex items-center gap-1 font-mono font-medium rounded-full p-1 text-[11px]',
                 trend.isNeutral
                   ? 'bg-secondary text-muted-foreground'
                   : trend.isPositive

@@ -3,17 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import {
-  LayoutDashboard,
-  Users,
-  ShieldAlert,
-  KeyRound,
-  LogOut,
-  Sparkles,
-  Layers,
-  ChevronRight,
-  ExternalLink,
-} from 'lucide-react';
+import { LayoutDashboard, Users, ShieldAlert, KeyRound, LogOut, Sparkles, X } from 'lucide-react';
 import { cn } from '../ui/button';
 import { Avatar } from '../ui/avatar';
 import { Badge } from '../ui/badge';
@@ -67,14 +57,23 @@ const NAV_SECTIONS: readonly NavSection[] = [
 
 export interface AdminSidebarProps {
   readonly isOpen?: boolean;
+  readonly isMobileOpen?: boolean;
+  readonly isDesktopOpen?: boolean;
   readonly onClose?: () => void;
 }
 
-export function AdminSidebar({ isOpen = true, onClose }: AdminSidebarProps) {
+export function AdminSidebar({
+  isOpen,
+  isMobileOpen,
+  isDesktopOpen = true,
+  onClose,
+}: AdminSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout: storeLogout } = useAuthStore();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+
+  const mobileOpen = isMobileOpen ?? isOpen ?? false;
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -94,21 +93,23 @@ export function AdminSidebar({ isOpen = true, onClose }: AdminSidebarProps) {
   return (
     <>
       {/* Mobile Backdrop */}
-      {isOpen && (
+      {mobileOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-xs lg:hidden"
+          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-xs lg:hidden transition-opacity"
+          aria-hidden="true"
         />
       )}
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border/80 bg-sidebar/95 backdrop-blur-xl transition-transform duration-300 lg:translate-x-0',
-          isOpen ? 'translate-x-0' : '-translate-x-full',
+          'fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border/80 bg-sidebar/95 backdrop-blur-xl transition-transform duration-300 ease-in-out',
+          mobileOpen ? 'translate-x-0' : '-translate-x-full',
+          isDesktopOpen ? 'lg:translate-x-0' : 'lg:-translate-x-full',
         )}
       >
         {/* Brand Header */}
-        <div className="flex h-16 shrink-0 items-center justify-between px-6 border-b border-border/60">
+        <div className="flex h-16 shrink-0 items-center justify-between px-5 border-b border-border/60">
           <Link href="/dashboard" className="flex items-center gap-3 group">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-primary-hover shadow-md shadow-primary/25 border border-primary/40 group-hover:scale-105 transition-transform">
               <Sparkles className="h-4.5 w-4.5 text-white" />
@@ -125,6 +126,16 @@ export function AdminSidebar({ isOpen = true, onClose }: AdminSidebarProps) {
               <p className="text-[10px] text-muted-foreground font-mono">Control Plane v1.0</p>
             </div>
           </Link>
+
+          {/* Mobile Close Button */}
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground lg:hidden transition-colors"
+            aria-label="Close navigation sidebar"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
         {/* Navigation Sections */}

@@ -14,7 +14,6 @@ import {
   ArrowUpRight,
   RefreshCw,
   Clock,
-  Sparkles,
   Server,
   Lock,
 } from 'lucide-react';
@@ -140,7 +139,7 @@ export default function DashboardOverviewPage() {
             label: 'verified',
             isPositive: verifiedPercent >= 50,
           }}
-          description="Confirmed user email accounts"
+          description="Confirmed user email"
         />
       </div>
 

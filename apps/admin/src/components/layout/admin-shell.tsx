@@ -1,13 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { AdminSidebar } from './admin-sidebar';
 import { AdminTopbar } from './admin-topbar';
 import { useAuthStore } from '@/store/auth.store';
 import { getMe } from '@/services/auth.service';
 import { getAccessToken } from '@/lib/api/api-client';
 import { Loader2 } from 'lucide-react';
+import { cn } from '../ui/button';
 
 export interface AdminShellProps {
   readonly children: React.ReactNode;
@@ -15,9 +16,24 @@ export interface AdminShellProps {
 
 export function AdminShell({ children }: AdminShellProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, setUser, isInitialized, initialize } = useAuthStore();
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = React.useState(false);
+  const [desktopSidebarOpen, setDesktopSidebarOpen] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(true);
+
+  // Automatically close mobile drawer when navigating
+  React.useEffect(() => {
+    setMobileSidebarOpen(false);
+  }, [pathname]);
+
+  const handleToggleSidebar = React.useCallback(() => {
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      setDesktopSidebarOpen((prev) => !prev);
+    } else {
+      setMobileSidebarOpen((prev) => !prev);
+    }
+  }, []);
 
   React.useEffect(() => {
     initialize();
@@ -70,13 +86,27 @@ export function AdminShell({ children }: AdminShellProps) {
   return (
     <div className="min-h-screen bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary-foreground">
       {/* Sidebar Navigation */}
-      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <AdminSidebar
+        isMobileOpen={mobileSidebarOpen}
+        isDesktopOpen={desktopSidebarOpen}
+        isOpen={mobileSidebarOpen}
+        onClose={() => setMobileSidebarOpen(false)}
+      />
 
       {/* Main Content Area */}
-      <div className="flex flex-col lg:pl-64 min-h-screen">
-        <AdminTopbar onOpenSidebar={() => setSidebarOpen(true)} />
+      <div
+        className={cn(
+          'flex flex-col min-h-screen transition-all duration-300 ease-in-out',
+          desktopSidebarOpen ? 'lg:pl-64' : 'lg:pl-0',
+        )}
+      >
+        <AdminTopbar
+          onToggleSidebar={handleToggleSidebar}
+          onOpenSidebar={() => setMobileSidebarOpen(true)}
+          isSidebarCollapsed={!desktopSidebarOpen}
+        />
 
-        <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto animate-in fade-in duration-200">
+        <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl w-full mx-auto animate-in fade-in duration-200">
           {children}
         </main>
       </div>

@@ -78,7 +78,7 @@ export function AdminUserMenu() {
         aria-expanded={isOpen}
         aria-haspopup="menu"
         aria-label="Admin account menu"
-        className="flex items-center gap-2.5 rounded-xl border border-border/70 bg-card/60 p-1.5 pl-2 transition-all duration-200 hover:bg-secondary hover:border-border hover:shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+        className="flex items-center gap-1.5 sm:gap-2.5 rounded-xl border border-border/70 bg-card/60 p-1 sm:p-1.5 pl-1 sm:pl-2 transition-all duration-200 hover:bg-secondary hover:border-border hover:shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
       >
         <Avatar
           firstName={user.firstName}
@@ -110,7 +110,7 @@ export function AdminUserMenu() {
         <div
           role="menu"
           aria-label="Admin account dropdown"
-          className="absolute right-0 top-full mt-2 w-64 overflow-hidden rounded-2xl border border-border/80 bg-card/95 p-1.5 shadow-2xl backdrop-blur-2xl z-50 animate-fade-up"
+          className="absolute right-0 top-full mt-2 w-64 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-border/80 bg-card/95 p-1.5 shadow-2xl backdrop-blur-2xl z-50 animate-fade-up"
         >
           {/* User Profile Card */}
           <div className="border-b border-border/60 p-3 bg-secondary/30 rounded-xl mb-1">
