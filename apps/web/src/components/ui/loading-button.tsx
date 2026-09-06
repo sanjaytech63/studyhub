@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ButtonProps } from '@base-ui/react';
 
@@ -28,7 +28,7 @@ export function LoadingButton({
     >
       {loading ? (
         <>
-          <Loader2 aria-hidden="true" strokeWidth={4} className="size-4 animate-spin" />
+          <Loader aria-hidden="true" strokeWidth={4} className="size-4 animate-spin" />
           <span>{loadingText ?? children}</span>
         </>
       ) : (

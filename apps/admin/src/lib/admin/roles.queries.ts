@@ -49,7 +49,7 @@ export function rolePermissionsQueryOptions(roleId: string) {
 
 export function useCreateRoleMutation() {
   const queryClient = useQueryClient();
-  return useMutation<Role, Error, CreateRolePayload>({
+  return useMutation<Role & { message?: string }, Error, CreateRolePayload>({
     mutationFn: createRole,
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['admin', 'roles'] }),
   });
@@ -57,7 +57,7 @@ export function useCreateRoleMutation() {
 
 export function useUpdateRoleMutation(roleId: string) {
   const queryClient = useQueryClient();
-  return useMutation<Role, Error, UpdateRolePayload>({
+  return useMutation<Role & { message?: string }, Error, UpdateRolePayload>({
     mutationFn: (payload) => updateRole(roleId, payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'roles'] });
@@ -67,7 +67,7 @@ export function useUpdateRoleMutation(roleId: string) {
 
 export function useDeleteRoleMutation() {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
+  return useMutation<{ message: string }, Error, string>({
     mutationFn: deleteRole,
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['admin', 'roles'] }),
   });
@@ -75,7 +75,7 @@ export function useDeleteRoleMutation() {
 
 export function useAssignPermissionMutation(roleId: string) {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, AssignRolePermissionPayload>({
+  return useMutation<{ message: string }, Error, AssignRolePermissionPayload>({
     mutationFn: (payload) => assignRolePermission(roleId, payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'roles', roleId, 'permissions'] });
@@ -85,7 +85,7 @@ export function useAssignPermissionMutation(roleId: string) {
 
 export function useRemovePermissionMutation(roleId: string) {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
+  return useMutation<{ message: string }, Error, string>({
     mutationFn: (permissionId) => removeRolePermission(roleId, permissionId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'roles', roleId, 'permissions'] });
@@ -95,7 +95,7 @@ export function useRemovePermissionMutation(roleId: string) {
 
 export function useReplacePermissionsMutation(roleId: string) {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, ReplaceRolePermissionsPayload>({
+  return useMutation<{ message: string }, Error, ReplaceRolePermissionsPayload>({
     mutationFn: (payload) => replaceRolePermissions(roleId, payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'roles', roleId, 'permissions'] });

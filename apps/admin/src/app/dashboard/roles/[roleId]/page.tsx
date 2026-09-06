@@ -2,25 +2,13 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import {
-  ArrowLeft,
-  Shield,
-  KeyRound,
-  Check,
-  RotateCcw,
-  Lock,
-  Save,
-  CheckCheck,
-  X,
-  Search,
-  AlertTriangle,
-} from 'lucide-react';
+import { ArrowLeft, KeyRound, Check, RotateCcw, Lock, Save, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
   roleDetailQueryOptions,
@@ -28,6 +16,7 @@ import {
   permissionsQueryOptions,
   useReplacePermissionsMutation,
 } from '@/lib/admin/roles.queries';
+import { getApiErrorMessage } from '@/lib/api/api-client';
 import type { Permission } from '@/lib/admin/roles.types';
 
 // Helper to categorize permissions by prefix/domain
@@ -64,12 +53,11 @@ function categorizePermissions(permissions: readonly Permission[]) {
   }
 
   // Filter out empty categories
-  return Object.entries(categories).filter(([_, items]) => items.length > 0);
+  return Object.entries(categories).filter(([, items]) => items.length > 0);
 }
 
 export default function RolePermissionsPage() {
   const params = useParams();
-  const router = useRouter();
   const roleId = params?.roleId as string;
 
   const { data: role, isLoading: isRoleLoading } = useQuery(roleDetailQueryOptions(roleId));
@@ -145,15 +133,14 @@ export default function RolePermissionsPage() {
     if (!role || role.type === 'SYSTEM') return;
 
     try {
-      await replaceMutation.mutateAsync({
+      const res = await replaceMutation.mutateAsync({
         permissionIds: selectedPermissionIds,
       });
       setInitialPermissionIds(selectedPermissionIds);
       setIsDirty(false);
-      toast.success(`Permissions matrix updated for ${role.name}.`);
+      toast.success(res?.message || `Permissions matrix updated for ${role.name}.`);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to save permissions.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to save permissions.'));
     }
   };
 
@@ -260,7 +247,6 @@ export default function RolePermissionsPage() {
       <div className="space-y-6">
         {categories.map(([categoryName, perms]) => {
           const allInCatSelected = perms.every((p) => selectedPermissionIds.includes(p.id));
-          const someInCatSelected = perms.some((p) => selectedPermissionIds.includes(p.id));
 
           return (
             <Card key={categoryName} className="overflow-hidden">

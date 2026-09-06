@@ -24,7 +24,7 @@ export const adminProfileQueryOptions = queryOptions({
 
 export function useUpdateAdminProfileMutation() {
   const queryClient = useQueryClient();
-  return useMutation<AdminProfile, Error, UpdateAdminProfilePayload>({
+  return useMutation<AdminProfile & { message?: string }, Error, UpdateAdminProfilePayload>({
     mutationFn: updateAdminProfile,
     onSuccess: (updated) => {
       queryClient.setQueryData(adminProfileQueryKey, updated);
@@ -42,20 +42,20 @@ export function useUpdateAdminProfileMutation() {
 }
 
 export function useChangeAdminPasswordMutation() {
-  return useMutation<void, Error, ChangeAdminPasswordPayload>({
+  return useMutation<{ message: string }, Error, ChangeAdminPasswordPayload>({
     mutationFn: changeAdminPassword,
   });
 }
 
 export function useRequestAdminEmailChangeMutation() {
-  return useMutation<void, Error, { newEmail: string }>({
+  return useMutation<{ message: string }, Error, { newEmail: string }>({
     mutationFn: requestAdminEmailChange,
   });
 }
 
 export function useVerifyAdminEmailChangeMutation() {
   const queryClient = useQueryClient();
-  return useMutation<AdminProfile, Error, { otp: string }>({
+  return useMutation<AdminProfile & { message?: string }, Error, { otp: string }>({
     mutationFn: verifyAdminEmailChange,
     onSuccess: (updated) => {
       queryClient.setQueryData(adminProfileQueryKey, updated);
@@ -71,14 +71,14 @@ export function useVerifyAdminEmailChangeMutation() {
 }
 
 export function useResendAdminEmailChangeOtpMutation() {
-  return useMutation<void, Error, { newEmail: string }>({
+  return useMutation<{ message: string }, Error, { newEmail: string }>({
     mutationFn: resendAdminEmailChangeOtp,
   });
 }
 
 export function useUploadAdminSelfAvatarMutation() {
   const queryClient = useQueryClient();
-  return useMutation<AdminProfile, Error, File>({
+  return useMutation<AdminProfile & { message?: string }, Error, File>({
     mutationFn: uploadAdminSelfAvatar,
     onSuccess: (updated) => {
       queryClient.setQueryData(adminProfileQueryKey, updated);
@@ -95,7 +95,7 @@ export function useUploadAdminSelfAvatarMutation() {
 
 export function useDeleteAdminSelfAvatarMutation() {
   const queryClient = useQueryClient();
-  return useMutation<AdminProfile, Error, void>({
+  return useMutation<AdminProfile & { message?: string }, Error, void>({
     mutationFn: deleteAdminSelfAvatar,
     onSuccess: (updated) => {
       queryClient.setQueryData(adminProfileQueryKey, updated);

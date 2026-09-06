@@ -25,18 +25,18 @@ export const getRoleController: RequestHandler = asyncHandler(async (req, res) =
 export const createRoleController: RequestHandler = asyncHandler(async (req, res) => {
   const input = createRoleSchema.parse(req.body);
   const role = await createCustomRole(input);
-  return ApiResponse.created(res, role);
+  return ApiResponse.created(res, role, undefined, 'Role created successfully.');
 });
 
 export const updateRoleController: RequestHandler = asyncHandler(async (req, res) => {
   const { roleId } = roleIdParamSchema.parse(req.params);
   const input = updateRoleSchema.parse(req.body);
   const role = await updateCustomRole(roleId, input);
-  return ApiResponse.ok(res, role);
+  return ApiResponse.ok(res, role, undefined, 'Role updated successfully.');
 });
 
 export const deleteRoleController: RequestHandler = asyncHandler(async (req, res) => {
   const { roleId } = roleIdParamSchema.parse(req.params);
   await deleteCustomRole(roleId);
-  return ApiResponse.noContent(res);
+  return ApiResponse.ok(res, { message: 'Role deleted successfully.' });
 });

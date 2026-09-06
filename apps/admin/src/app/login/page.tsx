@@ -11,7 +11,7 @@ import { Input, Label } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { login, getMe } from '@/services/auth.service';
 import { useAuthStore } from '@/store/auth.store';
-import { getAccessToken } from '@/lib/api/api-client';
+import { getAccessToken, getApiErrorMessage } from '@/lib/api/api-client';
 import { loginSchema, type LoginFormValues } from '@/lib/admin/auth.schema';
 
 export default function LoginPage() {
@@ -70,11 +70,7 @@ export default function LoginPage() {
       toast.success('Authentication successful. Welcome to StudyHub Admin.');
       router.push('/dashboard');
     } catch (err: unknown) {
-      const apiErr = err as { message?: string };
-      const msg =
-        apiErr?.message ||
-        (err instanceof Error ? err.message : 'Invalid credentials or unauthorized access.');
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Invalid credentials or unauthorized access.'));
     } finally {
       setIsLoading(false);
     }

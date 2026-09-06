@@ -75,12 +75,12 @@ export default function VerifyOtpForm() {
     }
 
     try {
-      await verifyMutation.mutateAsync({
+      const res = await verifyMutation.mutateAsync({
         email,
         otp: values.otp,
       });
 
-      toast.success('Your email has been verified.');
+      toast.success(res?.message || 'Your email has been verified.');
 
       router.replace('/login');
       router.refresh();
@@ -101,7 +101,7 @@ export default function VerifyOtpForm() {
     }
 
     try {
-      await resendMutation.mutateAsync(email);
+      const res = await resendMutation.mutateAsync(email);
 
       setCountdown(RESEND_SECONDS);
 
@@ -109,7 +109,7 @@ export default function VerifyOtpForm() {
         otp: '',
       });
 
-      toast.success('A new verification code has been sent.');
+      toast.success(res?.message || 'A new verification code has been sent.');
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Unable to resend the verification code.'));
     }

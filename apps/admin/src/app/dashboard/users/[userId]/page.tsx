@@ -8,20 +8,13 @@ import { toast } from 'sonner';
 import {
   ArrowLeft,
   Shield,
-  Activity,
-  Calendar,
   CheckCircle2,
-  XCircle,
   LogOut,
   Laptop,
-  Globe,
   Clock,
-  KeyRound,
   Trash2,
-  Edit2,
-  UserCheck,
   Camera,
-  Loader2,
+  Loader,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -45,6 +38,7 @@ import {
   useUploadUserAvatarMutation,
   useDeleteUserAvatarMutation,
 } from '@/lib/admin/users.queries';
+import { getApiErrorMessage } from '@/lib/api/api-client';
 
 export default function UserDetailPage() {
   const params = useParams();
@@ -84,44 +78,40 @@ export default function UserDetailPage() {
     }
 
     try {
-      await uploadAvatarMutation.mutateAsync(file);
-      toast.success("User's avatar updated successfully!");
+      const res = await uploadAvatarMutation.mutateAsync(file);
+      toast.success(res?.message || "User's avatar updated successfully!");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to upload avatar.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to upload avatar.'));
     }
   };
 
   const handleDeleteAvatar = async () => {
     try {
-      await deleteAvatarMutation.mutateAsync();
-      toast.success("User's avatar removed successfully!");
+      const res = await deleteAvatarMutation.mutateAsync();
+      toast.success(res?.message || "User's avatar removed successfully!");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to remove avatar.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to remove avatar.'));
     }
   };
 
   const handleRevokeSessions = async () => {
     try {
-      await revokeMutation.mutateAsync();
-      toast.success('All sessions have been revoked.');
+      const res = await revokeMutation.mutateAsync();
+      toast.success(res?.message || 'All sessions have been revoked.');
       setIsRevokeModalOpen(false);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to revoke sessions.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to revoke sessions.'));
     }
   };
 
   const handleDeleteUser = async () => {
     try {
-      await deleteMutation.mutateAsync(userId);
-      toast.success('User account marked as DELETED.');
+      const res = await deleteMutation.mutateAsync(userId);
+      toast.success(res?.message || 'User account marked as DELETED.');
       setIsDeleteModalOpen(false);
       router.push('/dashboard/users');
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to delete user.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to delete user.'));
     }
   };
 
@@ -178,7 +168,7 @@ export default function UserDetailPage() {
 
               {isAvatarProcessing ? (
                 <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60 text-white">
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader className="h-5 w-5 animate-spin" />
                 </div>
               ) : (
                 <button

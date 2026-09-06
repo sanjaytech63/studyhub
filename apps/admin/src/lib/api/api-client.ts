@@ -183,15 +183,52 @@ export function normalizeError(error: unknown): ApiError {
       };
     }
     const data = error.response?.data as Record<string, unknown> | undefined;
+    const nestedError = data?.error as Record<string, unknown> | undefined;
+    const backendMessage =
+      (nestedError?.message as string | undefined) ??
+      (data?.message as string | undefined) ??
+      error.message ??
+      'An unexpected error occurred.';
+
     return {
-      message: (data?.message as string) ?? error.message ?? 'An unexpected error occurred.',
-      code: (data?.code as string) ?? undefined,
+      message: backendMessage,
+      code:
+        (nestedError?.code as string | undefined) ??
+        (data?.code as string | undefined) ??
+        error.code,
       status: error.response?.status,
-      errors: data?.errors,
+      errors: nestedError?.details ?? data?.errors,
     };
   }
   if (error instanceof Error) {
     return { message: error.message };
   }
   return { message: 'An unexpected error occurred.' };
+}
+
+export function getApiErrorMessage(
+  error: unknown,
+  fallback = 'An unexpected error occurred.',
+): string {
+  const normalized = normalizeError(error);
+  return normalized.message || fallback;
+}
+
+export function getApiSuccessMessage(
+  response: unknown,
+  fallback = 'Action completed successfully.',
+): string {
+  if (response && typeof response === 'object') {
+    const r = response as Record<string, unknown>;
+    if (typeof r.message === 'string' && r.message.trim().length > 0) {
+      return r.message;
+    }
+    if (r.data && typeof r.data === 'object') {
+      const d = r.data as Record<string, unknown>;
+      if (typeof d.message === 'string' && d.message.trim().length > 0) {
+        return d.message;
+      }
+    }
+  }
+  return fallback;
 }

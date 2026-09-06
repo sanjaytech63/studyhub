@@ -46,8 +46,8 @@ export function ChangePasswordDialog() {
 
   async function handleSubmit(values: ChangePasswordFormValues) {
     try {
-      await mutation.mutateAsync(values);
-      toast.success('Password changed successfully.');
+      const res = await mutation.mutateAsync(values);
+      toast.success(res?.message || 'Password changed successfully.');
       form.reset();
       setOpen(false);
     } catch (error) {

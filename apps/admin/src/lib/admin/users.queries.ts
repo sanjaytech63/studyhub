@@ -16,7 +16,6 @@ import type {
   AdminUpdateUserPayload,
   AdminUserDetail,
   CreateUserPayload,
-  UserSessionSummary,
 } from './users.types';
 
 export const adminStatsQueryOptions = queryOptions({
@@ -54,7 +53,7 @@ export function userSessionsQueryOptions(userId: string) {
 
 export function useCreateUserMutation() {
   const queryClient = useQueryClient();
-  return useMutation<AdminUserDetail, Error, CreateUserPayload>({
+  return useMutation<AdminUserDetail & { message?: string }, Error, CreateUserPayload>({
     mutationFn: createAdminUser,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
@@ -65,7 +64,11 @@ export function useCreateUserMutation() {
 
 export function useUpdateUserMutation() {
   const queryClient = useQueryClient();
-  return useMutation<AdminUserDetail, Error, { userId: string; payload: AdminUpdateUserPayload }>({
+  return useMutation<
+    AdminUserDetail & { message?: string },
+    Error,
+    { userId: string; payload: AdminUpdateUserPayload }
+  >({
     mutationFn: ({ userId, payload }) => updateAdminUser(userId, payload),
     onSuccess: (updatedUser) => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
@@ -77,7 +80,7 @@ export function useUpdateUserMutation() {
 
 export function useDeleteUserMutation() {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
+  return useMutation<{ message: string }, Error, string>({
     mutationFn: deleteAdminUser,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
@@ -88,7 +91,7 @@ export function useDeleteUserMutation() {
 
 export function useRevokeUserSessionsMutation(userId: string) {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, void>({
+  return useMutation<{ message: string }, Error, void>({
     mutationFn: () => revokeUserSessions(userId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'users', userId, 'sessions'] });
@@ -100,7 +103,7 @@ export function useRevokeUserSessionsMutation(userId: string) {
 
 export function useUploadUserAvatarMutation(userId: string) {
   const queryClient = useQueryClient();
-  return useMutation<AdminUserDetail, Error, File>({
+  return useMutation<AdminUserDetail & { message?: string }, Error, File>({
     mutationFn: (file: File) => uploadAdminUserAvatar(userId, file),
     onSuccess: (updatedUser) => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
@@ -111,7 +114,7 @@ export function useUploadUserAvatarMutation(userId: string) {
 
 export function useDeleteUserAvatarMutation(userId: string) {
   const queryClient = useQueryClient();
-  return useMutation<AdminUserDetail, Error, void>({
+  return useMutation<AdminUserDetail & { message?: string }, Error, void>({
     mutationFn: () => deleteAdminUserAvatar(userId),
     onSuccess: (updatedUser) => {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });

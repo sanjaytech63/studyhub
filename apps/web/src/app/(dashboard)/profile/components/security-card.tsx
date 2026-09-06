@@ -26,8 +26,8 @@ export function SecurityCard() {
 
   async function handleRevokeSession(sessionId: string) {
     try {
-      await revokeSessionMutation.mutateAsync(sessionId);
-      toast.success('Session revoked successfully.');
+      const res = await revokeSessionMutation.mutateAsync(sessionId);
+      toast.success(res?.message || 'Session revoked successfully.');
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Unable to revoke session.'));
     }
@@ -35,8 +35,8 @@ export function SecurityCard() {
 
   async function handleRevokeOtherSessions() {
     try {
-      await revokeOtherMutation.mutateAsync();
-      toast.success('All other sessions have been revoked.');
+      const res = await revokeOtherMutation.mutateAsync();
+      toast.success(res?.message || 'All other sessions have been revoked.');
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Unable to revoke other sessions.'));
     }

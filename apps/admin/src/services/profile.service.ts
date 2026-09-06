@@ -37,53 +37,102 @@ export async function getAdminProfile(): Promise<AdminProfile> {
 
 export async function updateAdminProfile(
   payload: UpdateAdminProfilePayload,
-): Promise<AdminProfile> {
+): Promise<AdminProfile & { message?: string }> {
   const response = await apiClient.patch<{
     success: boolean;
-    data: { user: AdminProfile };
+    message?: string;
+    data: { user: AdminProfile; message?: string };
   }>('/me', payload);
-  return response.data.data.user;
+  const msg =
+    response.data?.message || response.data?.data?.message || 'Profile updated successfully.';
+  return { ...response.data.data.user, message: msg };
 }
 
-export async function changeAdminPassword(payload: ChangeAdminPasswordPayload): Promise<void> {
-  await apiClient.post('/auth/change-password', payload);
-}
-
-export async function requestAdminEmailChange(payload: { newEmail: string }): Promise<void> {
-  await apiClient.post('/me/change-email', payload);
-}
-
-export async function verifyAdminEmailChange(payload: { otp: string }): Promise<AdminProfile> {
+export async function changeAdminPassword(
+  payload: ChangeAdminPasswordPayload,
+): Promise<{ message: string }> {
   const response = await apiClient.post<{
     success: boolean;
-    data: { user: AdminProfile };
+    message?: string;
+    data?: { message?: string };
+  }>('/auth/change-password', payload);
+  return {
+    message:
+      response.data?.message || response.data?.data?.message || 'Password changed successfully.',
+  };
+}
+
+export async function requestAdminEmailChange(payload: {
+  newEmail: string;
+}): Promise<{ message: string }> {
+  const response = await apiClient.post<{
+    success: boolean;
+    message?: string;
+    data?: { message?: string };
+  }>('/me/change-email', payload);
+  return {
+    message: response.data?.message || response.data?.data?.message || 'Verification OTP sent.',
+  };
+}
+
+export async function verifyAdminEmailChange(payload: {
+  otp: string;
+}): Promise<AdminProfile & { message?: string }> {
+  const response = await apiClient.post<{
+    success: boolean;
+    message?: string;
+    data: { user: AdminProfile; message?: string };
   }>('/me/verify-email-change', payload);
-  return response.data.data.user;
+  const msg =
+    response.data?.message || response.data?.data?.message || 'Email address updated successfully.';
+  return { ...response.data.data.user, message: msg };
 }
 
-export async function resendAdminEmailChangeOtp(payload: { newEmail: string }): Promise<void> {
-  await apiClient.post('/me/change-email/resend', payload);
+export async function resendAdminEmailChangeOtp(payload: {
+  newEmail: string;
+}): Promise<{ message: string }> {
+  const response = await apiClient.post<{
+    success: boolean;
+    message?: string;
+    data?: { message?: string };
+  }>('/me/change-email/resend', payload);
+  return {
+    message:
+      response.data?.message || response.data?.data?.message || 'New verification code sent.',
+  };
 }
 
-export async function uploadAdminSelfAvatar(file: File): Promise<AdminProfile> {
+export async function uploadAdminSelfAvatar(
+  file: File,
+): Promise<AdminProfile & { message?: string }> {
   const formData = new FormData();
   formData.append('avatar', file);
 
   const response = await apiClient.post<{
     success: boolean;
-    data: { user: AdminProfile };
+    message?: string;
+    data: { user: AdminProfile; message?: string };
   }>('/me/avatar', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
-  return response.data.data.user;
+  const msg =
+    response.data?.message ||
+    response.data?.data?.message ||
+    'Profile avatar updated successfully.';
+  return { ...response.data.data.user, message: msg };
 }
 
-export async function deleteAdminSelfAvatar(): Promise<AdminProfile> {
+export async function deleteAdminSelfAvatar(): Promise<AdminProfile & { message?: string }> {
   const response = await apiClient.delete<{
     success: boolean;
-    data: { user: AdminProfile };
+    message?: string;
+    data: { user: AdminProfile; message?: string };
   }>('/me/avatar');
-  return response.data.data.user;
+  const msg =
+    response.data?.message ||
+    response.data?.data?.message ||
+    'Profile avatar removed successfully.';
+  return { ...response.data.data.user, message: msg };
 }

@@ -46,9 +46,9 @@ export function ChangePasswordCard() {
 
   async function handleSubmit(values: ChangePasswordFormValues) {
     try {
-      await mutation.mutateAsync(values);
+      const res = await mutation.mutateAsync(values);
 
-      toast.success('Your password has been changed successfully.');
+      toast.success(res?.message || 'Your password has been changed successfully.');
 
       form.reset();
 

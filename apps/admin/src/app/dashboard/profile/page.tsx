@@ -12,7 +12,7 @@ import {
   Camera,
   Trash2,
   CheckCircle2,
-  Loader2,
+  Loader,
   Eye,
   EyeOff,
   ArrowRight,
@@ -36,6 +36,7 @@ import {
   useUploadAdminSelfAvatarMutation,
   useDeleteAdminSelfAvatarMutation,
 } from '@/lib/admin/profile.queries';
+import { getApiErrorMessage } from '@/lib/api/api-client';
 import {
   adminProfileSchema,
   type AdminProfileFormValues,
@@ -146,47 +147,47 @@ export default function AdminProfilePage() {
     }
 
     try {
-      await uploadAvatarMutation.mutateAsync(file);
-      toast.success('Avatar updated successfully!');
+      const res = await uploadAvatarMutation.mutateAsync(file);
+      toast.success(res?.message || 'Avatar updated successfully!');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to upload avatar.');
+      toast.error(getApiErrorMessage(err, 'Failed to upload avatar.'));
     }
   };
 
   // Handle Avatar Delete
   const handleDeleteAvatar = async () => {
     try {
-      await deleteAvatarMutation.mutateAsync();
-      toast.success('Avatar removed.');
+      const res = await deleteAvatarMutation.mutateAsync();
+      toast.success(res?.message || 'Avatar removed.');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to remove avatar.');
+      toast.error(getApiErrorMessage(err, 'Failed to remove avatar.'));
     }
   };
 
   // Handle Profile (Name) Submit
   const onProfileSubmit = async (values: AdminProfileFormValues) => {
     try {
-      await updateProfileMutation.mutateAsync({
+      const res = await updateProfileMutation.mutateAsync({
         firstName: values.firstName.trim(),
         lastName: values.lastName?.trim() || null,
       });
-      toast.success('Profile details updated successfully!');
+      toast.success(res?.message || 'Profile details updated successfully!');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to update profile.');
+      toast.error(getApiErrorMessage(err, 'Failed to update profile.'));
     }
   };
 
   // Handle Password Change Submit
   const onPasswordSubmit = async (values: AdminChangePasswordFormValues) => {
     try {
-      await changePasswordMutation.mutateAsync({
+      const res = await changePasswordMutation.mutateAsync({
         currentPassword: values.currentPassword,
         newPassword: values.newPassword,
       });
-      toast.success('Password changed successfully!');
+      toast.success(res?.message || 'Password changed successfully!');
       passwordForm.reset();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to change password.');
+      toast.error(getApiErrorMessage(err, 'Failed to change password.'));
     }
   };
 
@@ -200,26 +201,26 @@ export default function AdminProfilePage() {
     }
 
     try {
-      await requestEmailMutation.mutateAsync({ newEmail: values.newEmail });
-      toast.success(`Verification code sent to ${values.newEmail}`);
+      const res = await requestEmailMutation.mutateAsync({ newEmail: values.newEmail });
+      toast.success(res?.message || `Verification code sent to ${values.newEmail}`);
       setIsOtpStep(true);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to request email change.');
+      toast.error(getApiErrorMessage(err, 'Failed to request email change.'));
     }
   };
 
   // Handle Verify Email Change OTP
   const onVerifyOtpSubmit = async (values: AdminVerifyEmailOtpFormValues) => {
     try {
-      await verifyEmailMutation.mutateAsync({ otp: values.otp });
-      toast.success('Email address updated successfully!');
+      const res = await verifyEmailMutation.mutateAsync({ otp: values.otp });
+      toast.success(res?.message || 'Email address updated successfully!');
       setIsEmailModalOpen(false);
       setIsOtpStep(false);
       emailForm.reset();
       otpForm.reset();
       void refetch();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Invalid or expired OTP code.');
+      toast.error(getApiErrorMessage(err, 'Invalid or expired OTP code.'));
     }
   };
 
@@ -229,10 +230,10 @@ export default function AdminProfilePage() {
     if (!currentNewEmail) return;
 
     try {
-      await resendOtpMutation.mutateAsync({ newEmail: currentNewEmail });
-      toast.success('New verification code sent!');
+      const res = await resendOtpMutation.mutateAsync({ newEmail: currentNewEmail });
+      toast.success(res?.message || 'New verification code sent!');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to resend code.');
+      toast.error(getApiErrorMessage(err, 'Failed to resend code.'));
     }
   };
 
@@ -282,7 +283,7 @@ export default function AdminProfilePage() {
 
               {isAvatarProcessing ? (
                 <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-xs">
-                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <Loader className="h-6 w-6 animate-spin" />
                 </div>
               ) : (
                 <button

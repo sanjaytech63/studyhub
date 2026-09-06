@@ -36,13 +36,13 @@ export const adminUpdateUserController: RequestHandler = asyncHandler(async (req
   const { userId } = adminUserIdParamSchema.parse(req.params);
   const input = adminUpdateUserSchema.parse(req.body);
   const user = await updateUser(userId, input);
-  return ApiResponse.ok(res, { user });
+  return ApiResponse.ok(res, { user, message: 'User updated successfully.' });
 });
 
 export const adminDeleteUserController: RequestHandler = asyncHandler(async (req, res) => {
   const { userId } = adminUserIdParamSchema.parse(req.params);
   await deleteUser(userId);
-  return ApiResponse.noContent(res);
+  return ApiResponse.ok(res, { message: 'User account marked as deleted successfully.' });
 });
 
 export const adminGetStatsController: RequestHandler = asyncHandler(async (_req, res) => {
@@ -53,7 +53,7 @@ export const adminGetStatsController: RequestHandler = asyncHandler(async (_req,
 export const adminCreateUserController: RequestHandler = asyncHandler(async (req, res) => {
   const input = adminCreateUserSchema.parse(req.body);
   const user = await createUser(input);
-  return ApiResponse.created(res, { user });
+  return ApiResponse.created(res, { user, message: 'User created successfully.' });
 });
 
 export const adminGetUserSessionsController: RequestHandler = asyncHandler(async (req, res) => {

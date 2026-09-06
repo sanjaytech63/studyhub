@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, Loader2, LogOut } from 'lucide-react';
+import { BookOpen, Loader, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { MarketingContainer } from '../shared/marketing-container';
@@ -10,6 +10,7 @@ import { ThemeToggle } from './theme-toggle';
 
 import { useAuthStore } from '@/store/auth.store';
 import { useLogoutMutation } from '@/lib/auth/auth.mutations';
+import { getApiErrorMessage } from '@/lib/api/api-error';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
@@ -20,8 +21,10 @@ export function Navbar() {
 
   async function handleLogout() {
     try {
-      await logoutMutation.mutateAsync();
-      toast.success('You have been logged out.');
+      const result = await logoutMutation.mutateAsync();
+      toast.success(result?.message || 'You have been logged out.');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Unable to sign out.'));
     } finally {
       router.replace('/login');
     }
@@ -134,7 +137,7 @@ export function Navbar() {
                       disabled={logoutMutation.isPending}
                     >
                       {logoutMutation.isPending ? (
-                        <Loader2 aria-hidden="true" className="size-4 animate-spin" />
+                        <Loader aria-hidden="true" className="size-4 animate-spin" />
                       ) : (
                         <LogOut aria-hidden="true" className="size-4" />
                       )}

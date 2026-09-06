@@ -1,24 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import {
-  Shield,
-  ShieldPlus,
-  Users,
-  KeyRound,
-  Trash2,
-  Edit2,
-  Lock,
-  ArrowRight,
-  Sparkles,
-  Info,
-  CheckCircle2,
-} from 'lucide-react';
+import { Shield, ShieldPlus, Users, KeyRound, Trash2, Edit2, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input, Label, Textarea } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -32,17 +19,16 @@ import {
   useUpdateRoleMutation,
   useDeleteRoleMutation,
 } from '@/lib/admin/roles.queries';
-import type { Role, Permission } from '@/lib/admin/roles.types';
+import type { Role } from '@/lib/admin/roles.types';
 import {
   createRoleFormSchema,
   type CreateRoleFormValues,
   updateRoleFormSchema,
   type UpdateRoleFormValues,
 } from '@/lib/admin/roles.schema';
+import { getApiErrorMessage } from '@/lib/api/api-client';
 
 export default function RolesManagementPage() {
-  const queryClient = useQueryClient();
-
   const { data: roles, isLoading: isRolesLoading } = useQuery(rolesQueryOptions);
   const { data: permissions } = useQuery(permissionsQueryOptions);
 
@@ -98,12 +84,12 @@ export default function RolesManagementPage() {
 
   const handleCreateSubmit = async (values: CreateRoleFormValues) => {
     try {
-      await createRoleMutation.mutateAsync({
+      const res = await createRoleMutation.mutateAsync({
         name: values.name.toUpperCase().trim(),
         description: values.description?.trim() || '',
         permissionIds: values.permissionIds,
       });
-      toast.success(`Role ${values.name} created successfully.`);
+      toast.success(res?.message || `Role ${values.name} created successfully.`);
       setIsCreateModalOpen(false);
       createForm.reset({
         name: '',
@@ -111,8 +97,7 @@ export default function RolesManagementPage() {
         permissionIds: [],
       });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to create role.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to create role.'));
     }
   };
 
@@ -120,32 +105,29 @@ export default function RolesManagementPage() {
     if (!editingRole) return;
 
     try {
-      await updateRoleMutation.mutateAsync({
+      const res = await updateRoleMutation.mutateAsync({
         name: values.name.toUpperCase().trim(),
         description: values.description?.trim() || '',
       });
-      toast.success('Role updated successfully.');
+      toast.success(res?.message || 'Role updated successfully.');
       setEditingRole(null);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to update role.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to update role.'));
     }
   };
 
   const handleDeleteSubmit = async () => {
     if (!deletingRole) return;
     try {
-      await deleteRoleMutation.mutateAsync(deletingRole.id);
-      toast.success(`Role ${deletingRole.name} deleted.`);
+      const res = await deleteRoleMutation.mutateAsync(deletingRole.id);
+      toast.success(res?.message || `Role ${deletingRole.name} deleted.`);
       setDeletingRole(null);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to delete role.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to delete role.'));
     }
   };
 
   const systemRolesCount = roles?.filter((r) => r.type === 'SYSTEM').length ?? 0;
-  const customRolesCount = roles?.filter((r) => r.type === 'CUSTOM').length ?? 0;
 
   return (
     <div className="space-y-8">

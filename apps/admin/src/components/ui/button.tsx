@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Loader2 } from 'lucide-react';
+import { Loader } from 'lucide-react';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -71,7 +71,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size, className }))}
         {...props}
       >
-        {isLoading && <Loader2 className="h-4 w-4 animate-spin text-current" />}
+        {isLoading && <Loader className="h-4 w-4 animate-spin text-current" />}
         {!isLoading && leftIcon}
         <span>{children}</span>
         {!isLoading && rightIcon}

@@ -24,27 +24,42 @@ export async function getAdminUser(userId: string): Promise<AdminUserDetail> {
   return response.data.data.user;
 }
 
-export async function createAdminUser(payload: CreateUserPayload): Promise<AdminUserDetail> {
-  const response = await apiClient.post<{ success: boolean; data: { user: AdminUserDetail } }>(
-    '/admin/users',
-    payload,
-  );
-  return response.data.data.user;
+export async function createAdminUser(
+  payload: CreateUserPayload,
+): Promise<AdminUserDetail & { message?: string }> {
+  const response = await apiClient.post<{
+    success: boolean;
+    message?: string;
+    data: { user: AdminUserDetail; message?: string };
+  }>('/admin/users', payload);
+  const msg =
+    response.data?.message || response.data?.data?.message || 'User created successfully.';
+  return { ...response.data.data.user, message: msg };
 }
 
 export async function updateAdminUser(
   userId: string,
   payload: AdminUpdateUserPayload,
-): Promise<AdminUserDetail> {
-  const response = await apiClient.patch<{ success: boolean; data: { user: AdminUserDetail } }>(
-    `/admin/users/${userId}`,
-    payload,
-  );
-  return response.data.data.user;
+): Promise<AdminUserDetail & { message?: string }> {
+  const response = await apiClient.patch<{
+    success: boolean;
+    message?: string;
+    data: { user: AdminUserDetail; message?: string };
+  }>(`/admin/users/${userId}`, payload);
+  const msg =
+    response.data?.message || response.data?.data?.message || 'User updated successfully.';
+  return { ...response.data.data.user, message: msg };
 }
 
-export async function deleteAdminUser(userId: string): Promise<void> {
-  await apiClient.delete(`/admin/users/${userId}`);
+export async function deleteAdminUser(userId: string): Promise<{ message: string }> {
+  const response = await apiClient.delete<{
+    success: boolean;
+    message?: string;
+    data?: { message?: string };
+  }>(`/admin/users/${userId}`);
+  return {
+    message: response.data?.message || response.data?.data?.message || 'User deleted successfully.',
+  };
 }
 
 export async function getAdminStats(): Promise<AdminStatsResponse> {
@@ -62,29 +77,50 @@ export async function getUserSessions(userId: string): Promise<readonly UserSess
   return response.data.data.sessions;
 }
 
-export async function revokeUserSessions(userId: string): Promise<void> {
-  await apiClient.post(`/admin/users/${userId}/revoke-sessions`);
+export async function revokeUserSessions(userId: string): Promise<{ message: string }> {
+  const response = await apiClient.post<{
+    success: boolean;
+    message?: string;
+    data?: { message?: string };
+  }>(`/admin/users/${userId}/revoke-sessions`);
+  return {
+    message:
+      response.data?.message ||
+      response.data?.data?.message ||
+      'All user sessions have been revoked.',
+  };
 }
 
-export async function uploadAdminUserAvatar(userId: string, file: File): Promise<AdminUserDetail> {
+export async function uploadAdminUserAvatar(
+  userId: string,
+  file: File,
+): Promise<AdminUserDetail & { message?: string }> {
   const formData = new FormData();
   formData.append('avatar', file);
 
   const response = await apiClient.post<{
     success: boolean;
-    data: { user: AdminUserDetail };
+    message?: string;
+    data: { user: AdminUserDetail; message?: string };
   }>(`/admin/users/${userId}/avatar`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
-  return response.data.data.user;
+  const msg =
+    response.data?.message || response.data?.data?.message || 'User avatar uploaded successfully.';
+  return { ...response.data.data.user, message: msg };
 }
 
-export async function deleteAdminUserAvatar(userId: string): Promise<AdminUserDetail> {
+export async function deleteAdminUserAvatar(
+  userId: string,
+): Promise<AdminUserDetail & { message?: string }> {
   const response = await apiClient.delete<{
     success: boolean;
-    data: { user: AdminUserDetail };
+    message?: string;
+    data: { user: AdminUserDetail; message?: string };
   }>(`/admin/users/${userId}/avatar`);
-  return response.data.data.user;
+  const msg =
+    response.data?.message || response.data?.data?.message || 'User avatar removed successfully.';
+  return { ...response.data.data.user, message: msg };
 }

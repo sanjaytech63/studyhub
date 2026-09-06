@@ -65,10 +65,12 @@ export async function register(payload: RegisterPayload): Promise<RegisterRespon
 export async function verifyOtp(payload: VerifyOtpPayload): Promise<VerifyOtpResponse> {
   const response = await apiClient.post<{
     success: boolean;
+    message?: string;
     data: VerifyOtpResponse;
   }>('/auth/verify-otp', payload);
 
-  return response.data.data;
+  const msg = response.data?.message;
+  return { ...response.data.data, ...(msg ? { message: msg } : {}) };
 }
 
 /**
@@ -77,10 +79,15 @@ export async function verifyOtp(payload: VerifyOtpPayload): Promise<VerifyOtpRes
  * ============================================================================
  */
 
-export async function resendOtp(email: string): Promise<void> {
-  await apiClient.post('/auth/resend-otp', {
+export async function resendOtp(email: string): Promise<{ message?: string }> {
+  const response = await apiClient.post<{
+    success: boolean;
+    message?: string;
+    data?: { message?: string };
+  }>('/auth/resend-otp', {
     email,
   });
+  return { message: response.data?.message || response.data?.data?.message };
 }
 
 /**
@@ -142,9 +149,18 @@ export async function refreshSession(): Promise<string> {
  * ============================================================================
  */
 
-export async function logout(): Promise<void> {
+export async function logout(): Promise<{ message: string }> {
   try {
-    await apiClient.post('/auth/logout');
+    const response = await apiClient.post<{
+      success: boolean;
+      message?: string;
+      data?: { message?: string };
+    }>('/auth/logout');
+    const msg =
+      response.data?.message ||
+      response.data?.data?.message ||
+      'You have been signed out successfully.';
+    return { message: msg };
   } finally {
     clearAuthTokens();
   }

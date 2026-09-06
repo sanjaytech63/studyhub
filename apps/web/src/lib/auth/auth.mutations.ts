@@ -89,7 +89,7 @@ export function useVerifyOtpMutation() {
  */
 
 export function useResendOtpMutation() {
-  return useMutation<void, Error, string>({
+  return useMutation<{ message?: string }, Error, string>({
     mutationKey: authKeys.resendOtp(),
     mutationFn: resendOtp,
   });
@@ -129,7 +129,7 @@ export function useResetPasswordMutation() {
 
 export function useLogoutMutation() {
   const clearAuth = useAuthStore((state) => state.clearAuth);
-  return useMutation<void, Error, void>({
+  return useMutation<{ message: string }, Error, void>({
     mutationKey: authKeys.logout(),
     mutationFn: logout,
     onSettled: () => {

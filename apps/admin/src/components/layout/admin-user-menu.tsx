@@ -10,7 +10,6 @@ import {
   ShieldAlert,
   KeyRound,
   ExternalLink,
-  UserCheck,
   LayoutDashboard,
   User,
 } from 'lucide-react';
@@ -18,6 +17,7 @@ import { Avatar } from '../ui/avatar';
 import { Badge } from '../ui/badge';
 import { useAuthStore } from '@/store/auth.store';
 import { logout } from '@/services/auth.service';
+import { getApiErrorMessage } from '@/lib/api/api-client';
 import { toast } from 'sonner';
 
 export function AdminUserMenu() {
@@ -59,10 +59,10 @@ export function AdminUserMenu() {
     setIsLoggingOut(true);
     setIsOpen(false);
     try {
-      await logout();
-      toast.success('You have been signed out.');
-    } catch {
-      toast.error('Session ended.');
+      const res = await logout();
+      toast.success(res?.message || 'Signed out successfully.');
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, 'Session ended.'));
     } finally {
       storeLogout();
       router.push('/login');

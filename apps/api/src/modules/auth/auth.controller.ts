@@ -33,7 +33,7 @@ import {
 export const registerController: RequestHandler = asyncHandler(async (req, res) => {
   const input = registerSchema.parse(req.body);
   const result = await register(input);
-  return ApiResponse.created(res, result);
+  return ApiResponse.created(res, result, undefined, 'Account created successfully.');
 });
 
 export const loginController: RequestHandler = asyncHandler(async (req, res) => {
@@ -44,7 +44,7 @@ export const loginController: RequestHandler = asyncHandler(async (req, res) => 
     userAgent: req.get('user-agent') ?? undefined,
   });
 
-  return ApiResponse.ok(res, result);
+  return ApiResponse.ok(res, result, undefined, 'Signed in successfully.');
 });
 
 export const refreshTokenController: RequestHandler = asyncHandler(async (req, res) => {
@@ -66,7 +66,9 @@ export const logoutController: RequestHandler = asyncHandler(async (req, res) =>
 
   await logout(req.user.sessionId);
 
-  return ApiResponse.noContent(res);
+  return ApiResponse.ok(res, {
+    message: 'You have been signed out successfully.',
+  });
 });
 
 export const resendOtpController: RequestHandler = asyncHandler(async (req, res) => {
@@ -74,7 +76,7 @@ export const resendOtpController: RequestHandler = asyncHandler(async (req, res)
 
   const result = await resendEmailVerificationOtp(input);
 
-  return ApiResponse.ok(res, result);
+  return ApiResponse.ok(res, result, undefined, 'A new verification code has been sent.');
 });
 
 export const verifyEmailOtpController: RequestHandler = asyncHandler(async (req, res) => {
@@ -82,7 +84,7 @@ export const verifyEmailOtpController: RequestHandler = asyncHandler(async (req,
 
   const result = await verifyEmailOtp(input);
 
-  return ApiResponse.ok(res, result);
+  return ApiResponse.ok(res, result, undefined, 'Your email has been verified successfully.');
 });
 
 export const forgotPasswordController: RequestHandler = asyncHandler(async (req, res) => {

@@ -32,7 +32,7 @@ export function useUpdateProfileMutation() {
 }
 
 export function useChangePasswordMutation() {
-  return useMutation<void, Error, ChangePasswordFormValues>({
+  return useMutation<{ message?: string }, Error, ChangePasswordFormValues>({
     mutationKey: profileKeys.changePassword(),
     mutationFn: changePassword,
   });
@@ -40,7 +40,7 @@ export function useChangePasswordMutation() {
 
 export function useRevokeSessionMutation() {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
+  return useMutation<{ message?: string }, Error, string>({
     mutationFn: revokeMySession,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: profileKeys.sessions() });
@@ -50,7 +50,7 @@ export function useRevokeSessionMutation() {
 
 export function useRevokeOtherSessionsMutation() {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, void>({
+  return useMutation<{ message?: string }, Error, void>({
     mutationFn: revokeMyOtherSessions,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: profileKeys.sessions() });
@@ -59,14 +59,14 @@ export function useRevokeOtherSessionsMutation() {
 }
 
 export function useRequestEmailChangeMutation() {
-  return useMutation<void, Error, ChangeEmailPayload>({
+  return useMutation<{ message?: string }, Error, ChangeEmailPayload>({
     mutationFn: requestEmailChange,
   });
 }
 
 export function useVerifyEmailChangeMutation() {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, VerifyEmailChangePayload>({
+  return useMutation<{ message?: string }, Error, VerifyEmailChangePayload>({
     mutationFn: verifyEmailChange,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: profileKeys.current() });
@@ -75,14 +75,14 @@ export function useVerifyEmailChangeMutation() {
 }
 
 export function useResendEmailChangeOtpMutation() {
-  return useMutation<void, Error, ResendEmailChangePayload>({
+  return useMutation<{ message?: string }, Error, ResendEmailChangePayload>({
     mutationFn: resendEmailChangeOtp,
   });
 }
 
 export function useUploadAvatarMutation() {
   const queryClient = useQueryClient();
-  return useMutation<Profile, Error, File>({
+  return useMutation<Profile & { message?: string }, Error, File>({
     mutationFn: uploadAvatar,
     onSuccess: (updatedProfile) => {
       queryClient.setQueryData(profileKeys.current(), updatedProfile);
@@ -94,7 +94,7 @@ export function useUploadAvatarMutation() {
 
 export function useDeleteAvatarMutation() {
   const queryClient = useQueryClient();
-  return useMutation<Profile, Error, void>({
+  return useMutation<Profile & { message?: string }, Error, void>({
     mutationFn: deleteAvatar,
     onSuccess: (updatedProfile) => {
       queryClient.setQueryData(profileKeys.current(), updatedProfile);

@@ -2,25 +2,20 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import {
   Search,
   UserPlus,
-  Filter,
-  MoreVertical,
-  Shield,
   CheckCircle2,
   XCircle,
-  Clock,
   Trash2,
   LogOut,
   Edit2,
   Eye,
   RefreshCw,
-  Sparkles,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input, Label } from '@/components/ui/input';
@@ -62,10 +57,9 @@ import {
   updateUserFormSchema,
   type UpdateUserFormValues,
 } from '@/lib/admin/users.schema';
+import { getApiErrorMessage } from '@/lib/api/api-client';
 
 export default function UsersDirectoryPage() {
-  const queryClient = useQueryClient();
-
   // Search & Filter State
   const [page, setPage] = React.useState(1);
   const [search, setSearch] = React.useState('');
@@ -164,7 +158,7 @@ export default function UsersDirectoryPage() {
   // Handle Create User Submit
   const handleCreateSubmit = async (values: CreateUserFormValues) => {
     try {
-      await createUserMutation.mutateAsync({
+      const res = await createUserMutation.mutateAsync({
         email: values.email,
         password: values.password,
         firstName: values.firstName,
@@ -172,7 +166,7 @@ export default function UsersDirectoryPage() {
         roleId: values.roleId,
         status: values.status,
       });
-      toast.success(`User ${values.email} created successfully.`);
+      toast.success(res?.message || `User ${values.email} created successfully.`);
       setIsCreateModalOpen(false);
       createForm.reset({
         firstName: '',
@@ -183,8 +177,7 @@ export default function UsersDirectoryPage() {
         status: 'ACTIVE',
       });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to create user.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to create user.'));
     }
   };
 
@@ -193,7 +186,7 @@ export default function UsersDirectoryPage() {
     if (!editingUser) return;
 
     try {
-      await updateUserMutation.mutateAsync({
+      const res = await updateUserMutation.mutateAsync({
         userId: editingUser.id,
         payload: {
           firstName: values.firstName.trim(),
@@ -204,11 +197,10 @@ export default function UsersDirectoryPage() {
           status: values.status,
         },
       });
-      toast.success('User updated successfully.');
+      toast.success(res?.message || 'User updated successfully.');
       setEditingUser(null);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to update user.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to update user.'));
     }
   };
 
@@ -216,12 +208,11 @@ export default function UsersDirectoryPage() {
   const handleConfirmDelete = async () => {
     if (!deletingUser) return;
     try {
-      await deleteUserMutation.mutateAsync(deletingUser.id);
-      toast.success(`User ${deletingUser.email} has been deactivated.`);
+      const res = await deleteUserMutation.mutateAsync(deletingUser.id);
+      toast.success(res?.message || `User ${deletingUser.email} has been deactivated.`);
       setDeletingUser(null);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to delete user.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to delete user.'));
     }
   };
 
@@ -229,12 +220,11 @@ export default function UsersDirectoryPage() {
   const handleConfirmRevoke = async () => {
     if (!revokingUser) return;
     try {
-      await revokeSessionsMutation.mutateAsync();
-      toast.success(`All sessions for ${revokingUser.email} revoked.`);
+      const res = await revokeSessionsMutation.mutateAsync();
+      toast.success(res?.message || `All sessions for ${revokingUser.email} revoked.`);
       setRevokingUser(null);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to revoke sessions.';
-      toast.error(msg);
+      toast.error(getApiErrorMessage(err, 'Failed to revoke sessions.'));
     }
   };
 

@@ -25,21 +25,31 @@ export const assignPermissionController: RequestHandler = asyncHandler(async (re
   const { permissionId } = assignPermissionSchema.parse(req.body);
   await assignRolePermission(roleId, permissionId);
 
-  return ApiResponse.created(res, {
-    roleId,
-    permissionId,
-  });
+  return ApiResponse.created(
+    res,
+    {
+      roleId,
+      permissionId,
+    },
+    undefined,
+    'Permission assigned to role successfully.',
+  );
 });
 
 export const removePermissionController: RequestHandler = asyncHandler(async (req, res) => {
   const { roleId, permissionId } = permissionIdParamSchema.parse(req.params);
   await removeRolePermission(roleId, permissionId);
 
-  return ApiResponse.ok(res, {
-    roleId,
-    permissionId,
-    removed: true,
-  });
+  return ApiResponse.ok(
+    res,
+    {
+      roleId,
+      permissionId,
+      removed: true,
+    },
+    undefined,
+    'Permission removed from role successfully.',
+  );
 });
 
 export const getRolePermissionsController: RequestHandler = asyncHandler(async (req, res) => {
@@ -57,8 +67,13 @@ export const replaceRolePermissionsController: RequestHandler = asyncHandler(asy
   const { permissionIds } = replaceRolePermissionsSchema.parse(req.body);
   await replaceRolePermissions(roleId, permissionIds);
 
-  return ApiResponse.ok(res, {
-    roleId,
-    permissionIds,
-  });
+  return ApiResponse.ok(
+    res,
+    {
+      roleId,
+      permissionIds,
+    },
+    undefined,
+    'Role permissions updated successfully.',
+  );
 });

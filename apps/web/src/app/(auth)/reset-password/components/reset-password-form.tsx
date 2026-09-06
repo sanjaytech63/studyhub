@@ -45,7 +45,7 @@ export default function ResetPasswordForm() {
 
   async function onSubmit(values: ResetPasswordFormValues) {
     try {
-      await mutation.mutateAsync({
+      const res = await mutation.mutateAsync({
         email: values.email,
         otp: values.otp,
         newPassword: values.password,
@@ -55,7 +55,7 @@ export default function ResetPasswordForm() {
 
       form.reset();
 
-      toast.success('Your password has been reset successfully.');
+      toast.success(res?.message || 'Your password has been reset successfully.');
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Unable to reset your password.'));
     }

@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 
 import { useAuthStore } from '@/store/auth.store';
 import { useLogoutMutation } from '@/lib/auth/auth.mutations';
+import { getApiErrorMessage } from '@/lib/api/api-error';
 
 interface DashboardUserMenuProps {
   readonly isCollapsed?: boolean;
@@ -84,11 +85,11 @@ export function DashboardUserMenu({
     setOpen(false);
 
     try {
-      await logoutMutation.mutateAsync();
-      toast.success('You have been logged out.');
+      const result = await logoutMutation.mutateAsync();
+      toast.success(result?.message || 'You have been logged out.');
       router.replace('/login');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Unable to complete logout.');
+      toast.error(getApiErrorMessage(error, 'Unable to complete logout.'));
       router.replace('/login');
     }
   }

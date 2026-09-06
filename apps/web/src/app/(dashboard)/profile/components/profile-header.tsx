@@ -1,12 +1,13 @@
 'use client';
 
 import { useRef } from 'react';
-import { Camera, CheckCircle2, Loader2, Pencil, Trash2 } from 'lucide-react';
+import { Camera, CheckCircle2, Loader, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import type { Profile } from '@/lib/profile/profile.types';
 import { useDeleteAvatarMutation, useUploadAvatarMutation } from '@/lib/profile/profile.mutations';
+import { getApiErrorMessage } from '@/lib/api/api-error';
 
 interface ProfileHeaderProps {
   readonly profile: Profile;
@@ -48,10 +49,10 @@ export function ProfileHeader({ profile, isEditing, onEdit }: ProfileHeaderProps
     }
 
     try {
-      await uploadAvatarMutation.mutateAsync(file);
-      toast.success('Profile picture updated successfully!');
+      const res = await uploadAvatarMutation.mutateAsync(file);
+      toast.success(res?.message || 'Profile picture updated successfully!');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to upload profile picture.');
+      toast.error(getApiErrorMessage(error, 'Failed to upload profile picture.'));
     }
   }
 
@@ -59,10 +60,10 @@ export function ProfileHeader({ profile, isEditing, onEdit }: ProfileHeaderProps
     if (!profile.avatarUrl) return;
 
     try {
-      await deleteAvatarMutation.mutateAsync();
-      toast.success('Profile picture removed.');
+      const res = await deleteAvatarMutation.mutateAsync();
+      toast.success(res?.message || 'Profile picture removed.');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to remove profile picture.');
+      toast.error(getApiErrorMessage(error, 'Failed to remove profile picture.'));
     }
   }
 
@@ -89,7 +90,7 @@ export function ProfileHeader({ profile, isEditing, onEdit }: ProfileHeaderProps
 
                   {isProcessing && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white backdrop-blur-xs">
-                      <Loader2 className="size-6 animate-spin" />
+                      <Loader className="size-6 animate-spin" />
                     </div>
                   )}
                 </div>

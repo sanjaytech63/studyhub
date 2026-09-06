@@ -33,6 +33,7 @@ export const updateMeController: RequestHandler = asyncHandler(async (req, res) 
 
   return ApiResponse.ok(res, {
     user,
+    message: 'Profile updated successfully.',
   });
 });
 

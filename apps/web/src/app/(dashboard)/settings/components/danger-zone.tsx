@@ -29,9 +29,9 @@ export function DangerZone() {
 
   async function handleLogout() {
     try {
-      await logoutMutation.mutateAsync();
+      const result = await logoutMutation.mutateAsync();
 
-      toast.success('You have been signed out.');
+      toast.success(result?.message || 'You have been signed out.');
 
       setOpen(false);
 

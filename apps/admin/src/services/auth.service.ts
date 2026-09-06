@@ -37,9 +37,18 @@ export async function login(payload: LoginPayload): Promise<AuthResponse> {
   return data;
 }
 
-export async function logout(): Promise<void> {
+export async function logout(): Promise<{ message: string }> {
   try {
-    await apiClient.post('/auth/logout');
+    const response = await apiClient.post<{
+      success: boolean;
+      message?: string;
+      data?: { message?: string };
+    }>('/auth/logout');
+    const msg =
+      response.data?.message ||
+      response.data?.data?.message ||
+      'You have been signed out successfully.';
+    return { message: msg };
   } finally {
     clearAuthTokens();
   }
