@@ -70,7 +70,7 @@ export function HeroSection() {
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden select-none"
       >
         <div className="absolute inset-0 bg-[radial-gradient(var(--border)_1px,transparent_1px)] [background-size:28px_28px] opacity-70 [mask-image:radial-gradient(ellipse_75%_60%_at_50%_15%,#000_65%,transparent_100%)]" />
-        <div className="absolute -top-32 left-1/2 -z-10 h-[580px] w-[900px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-primary/25 via-violet-600/15 to-indigo-500/10 blur-[150px] dark:from-primary/30 dark:via-violet-500/20" />
+        {/* <div className="absolute -top-32 left-1/2 -z-10 h-[580px] w-[900px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-primary/25 via-violet-600/15 to-indigo-500/10 blur-[150px] dark:from-primary/30 dark:via-violet-500/20" /> */}
         <div className="absolute top-1/2 -left-40 -z-10 h-96 w-96 rounded-full bg-primary/10 blur-[140px]" />
         <div className="absolute top-1/3 -right-40 -z-10 h-96 w-96 rounded-full bg-indigo-500/10 blur-[140px]" />
       </div>
