@@ -44,7 +44,7 @@ export function AdminTopbar({
         <button
           type="button"
           onClick={handleToggle}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-card/60 text-muted-foreground hover:bg-secondary hover:text-foreground hover:border-border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-card/60 text-muted-foreground hover:bg-secondary hover:text-foreground hover:border-border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 cursor-pointer"
           aria-label={
             isSidebarCollapsed ? 'Expand navigation sidebar' : 'Collapse navigation sidebar'
           }

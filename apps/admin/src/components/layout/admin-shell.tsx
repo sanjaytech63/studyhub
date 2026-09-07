@@ -20,12 +20,14 @@ export function AdminShell({ children }: AdminShellProps) {
   const { user, setUser, isInitialized, initialize } = useAuthStore();
   const [mobileSidebarOpen, setMobileSidebarOpen] = React.useState(false);
   const [desktopSidebarOpen, setDesktopSidebarOpen] = React.useState(true);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(!user);
 
   // Automatically close mobile drawer when navigating
-  React.useEffect(() => {
+  const [prevPathname, setPrevPathname] = React.useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     setMobileSidebarOpen(false);
-  }, [pathname]);
+  }
 
   const handleToggleSidebar = React.useCallback(() => {
     if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
@@ -42,15 +44,18 @@ export function AdminShell({ children }: AdminShellProps) {
   React.useEffect(() => {
     if (!isInitialized) return;
 
-    const token = getAccessToken();
-    if (!token) {
-      router.replace('/login');
-      return;
-    }
+    let isMounted = true;
+    const verifySession = async () => {
+      const token = getAccessToken();
+      if (!token) {
+        router.replace('/login');
+        return;
+      }
 
-    if (!user) {
-      getMe()
-        .then((userData) => {
+      if (!user) {
+        try {
+          const userData = await getMe();
+          if (!isMounted) return;
           setUser({
             id: userData.id,
             email: userData.email,
@@ -61,13 +66,24 @@ export function AdminShell({ children }: AdminShellProps) {
             role: userData.role,
           });
           setIsLoading(false);
-        })
-        .catch(() => {
-          router.replace('/login');
-        });
-    } else {
-      setIsLoading(false);
-    }
+        } catch {
+          if (isMounted) {
+            router.replace('/login');
+          }
+        }
+      } else {
+        await Promise.resolve();
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void verifySession();
+
+    return () => {
+      isMounted = false;
+    };
   }, [isInitialized, user, router, setUser]);
 
   if (isLoading) {
@@ -106,7 +122,7 @@ export function AdminShell({ children }: AdminShellProps) {
           isSidebarCollapsed={!desktopSidebarOpen}
         />
 
-        <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl w-full mx-auto animate-in fade-in duration-200">
+        <main className="flex-1 p-3.5 sm:p-6 md:p-8 max-w-7xl w-full mx-auto animate-in fade-in duration-200">
           {children}
         </main>
       </div>

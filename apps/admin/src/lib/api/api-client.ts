@@ -148,7 +148,7 @@ apiClient.interceptors.response.use(
 
     if (original._retry) {
       clearAuthTokens();
-      if (isBrowser()) window.location.href = '/login';
+      if (isBrowser()) window.location.replace('/login');
       return Promise.reject(normalizeError(error));
     }
 
@@ -160,7 +160,7 @@ apiClient.interceptors.response.use(
       return apiClient.request(original);
     } catch {
       clearAuthTokens();
-      if (isBrowser()) window.location.href = '/login';
+      if (isBrowser()) window.location.replace('/login');
       return Promise.reject(normalizeError(error));
     }
   },

@@ -67,39 +67,35 @@ export default function RolePermissionsPage() {
   const { data: allPermissions, isLoading: isAllPermsLoading } = useQuery(permissionsQueryOptions);
 
   const [search, setSearch] = React.useState('');
-  const [selectedPermissionIds, setSelectedPermissionIds] = React.useState<string[]>([]);
-  const [initialPermissionIds, setInitialPermissionIds] = React.useState<string[]>([]);
-  const [isDirty, setIsDirty] = React.useState(false);
 
-  // Sync initial permissions once loaded
-  React.useEffect(() => {
-    if (allPermissions && assignedPermissionsData) {
-      // assignedPermissionsData.permissions is string[] of permission names or records
-      const assignedNames = new Set(
-        Array.isArray(assignedPermissionsData.permissions)
-          ? assignedPermissionsData.permissions
-          : [],
-      );
-
-      const assignedIds = allPermissions.filter((p) => assignedNames.has(p.name)).map((p) => p.id);
-
-      setSelectedPermissionIds(assignedIds);
-      setInitialPermissionIds(assignedIds);
-      setIsDirty(false);
-    }
+  const assignedIds = React.useMemo(() => {
+    if (!allPermissions || !assignedPermissionsData) return [];
+    const assignedNames = new Set(
+      Array.isArray(assignedPermissionsData.permissions) ? assignedPermissionsData.permissions : [],
+    );
+    return allPermissions.filter((p) => assignedNames.has(p.name)).map((p) => p.id);
   }, [allPermissions, assignedPermissionsData]);
 
-  // Track dirty state
+  const [userSelectedIds, setUserSelectedIds] = React.useState<string[] | null>(null);
+
+  const selectedPermissionIds = userSelectedIds ?? assignedIds;
+
+  const isDirty = React.useMemo(() => {
+    if (userSelectedIds === null) return false;
+    if (userSelectedIds.length !== assignedIds.length) return true;
+    const assignedSet = new Set(assignedIds);
+    return userSelectedIds.some((id) => !assignedSet.has(id));
+  }, [userSelectedIds, assignedIds]);
+
+  // Track user edits
   const handleToggle = (permId: string) => {
     if (role?.type === 'SYSTEM') return;
 
-    setSelectedPermissionIds((prev) => {
-      const next = prev.includes(permId) ? prev.filter((id) => id !== permId) : [...prev, permId];
-      const dirty =
-        next.length !== initialPermissionIds.length ||
-        next.some((id) => !initialPermissionIds.includes(id));
-      setIsDirty(dirty);
-      return next;
+    setUserSelectedIds((prev) => {
+      const current = prev ?? assignedIds;
+      return current.includes(permId)
+        ? current.filter((id) => id !== permId)
+        : [...current, permId];
     });
   };
 
@@ -107,24 +103,17 @@ export default function RolePermissionsPage() {
     if (role?.type === 'SYSTEM') return;
 
     const catIds = categoryPerms.map((p) => p.id);
-    setSelectedPermissionIds((prev) => {
-      let next: string[];
+    setUserSelectedIds((prev) => {
+      const current = prev ?? assignedIds;
       if (selectAll) {
-        next = Array.from(new Set([...prev, ...catIds]));
-      } else {
-        next = prev.filter((id) => !catIds.includes(id));
+        return Array.from(new Set([...current, ...catIds]));
       }
-      const dirty =
-        next.length !== initialPermissionIds.length ||
-        next.some((id) => !initialPermissionIds.includes(id));
-      setIsDirty(dirty);
-      return next;
+      return current.filter((id) => !catIds.includes(id));
     });
   };
 
   const handleReset = () => {
-    setSelectedPermissionIds(initialPermissionIds);
-    setIsDirty(false);
+    setUserSelectedIds(null);
   };
 
   const replaceMutation = useReplacePermissionsMutation(roleId);
@@ -136,8 +125,7 @@ export default function RolePermissionsPage() {
       const res = await replaceMutation.mutateAsync({
         permissionIds: selectedPermissionIds,
       });
-      setInitialPermissionIds(selectedPermissionIds);
-      setIsDirty(false);
+      setUserSelectedIds(null);
       toast.success(res?.message || `Permissions matrix updated for ${role.name}.`);
     } catch (err: unknown) {
       toast.error(getApiErrorMessage(err, 'Failed to save permissions.'));
@@ -233,7 +221,7 @@ export default function RolePermissionsPage() {
 
       {/* Search & Filter Toolbar */}
       <div className="flex items-center justify-between gap-4">
-        <div className="w-full max-w-sm">
+        <div className="w-full sm:max-w-sm">
           <Input
             placeholder="Filter privileges by name or domain..."
             value={search}
@@ -333,30 +321,30 @@ export default function RolePermissionsPage() {
       {/* Floating Sticky Save Bar (if dirty and not system) */}
       {isDirty && !isSystem && (
         <div className="fixed bottom-6 inset-x-0 mx-auto max-w-2xl px-4 z-40 animate-in slide-in-from-bottom-4 duration-200">
-          <div className="flex items-center justify-between gap-4 p-4 rounded-2xl border border-primary/30 bg-card/95 backdrop-blur-2xl shadow-2xl shadow-primary/10">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 p-4 rounded-2xl border border-primary/30 bg-card/95 backdrop-blur-2xl shadow-2xl shadow-primary/10">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-2 w-2 rounded-full bg-primary animate-ping" />
+              <span className="flex h-2 w-2 rounded-full bg-primary animate-ping shrink-0" />
               <p className="text-xs font-medium text-foreground">
                 You have unsaved changes to this role&apos;s permissions.
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <Button
                 variant="outline"
-                size="sm"
                 onClick={handleReset}
                 disabled={replaceMutation.isPending}
-                leftIcon={<RotateCcw className="h-3.5 w-3.5" />}
+                className="w-1/2 sm:w-auto"
+                leftIcon={<RotateCcw className="h-4 w-4" />}
               >
                 Reset
               </Button>
               <Button
                 variant="primary"
-                size="sm"
                 onClick={handleSave}
                 isLoading={replaceMutation.isPending}
-                leftIcon={<Save className="h-3.5 w-3.5" />}
+                className="w-1/2 sm:w-auto"
+                leftIcon={<Save className="h-4 w-4" />}
               >
                 Save Matrix
               </Button>

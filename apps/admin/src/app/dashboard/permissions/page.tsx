@@ -87,7 +87,7 @@ export default function PermissionsDirectoryPage() {
       </div>
 
       {/* Search Toolbar */}
-      <div className="w-full max-w-sm">
+      <div className="w-full sm:max-w-sm">
         <Input
           placeholder="Search by capability or description..."
           value={search}

@@ -48,7 +48,7 @@ export function Modal({
   }[maxWidth];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div
         onClick={onClose}
@@ -60,21 +60,23 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         className={cn(
-          'relative w-full rounded-2xl border border-border/80 bg-card/95 backdrop-blur-2xl shadow-2xl transition-all duration-200 overflow-hidden z-10 my-8',
+          'relative w-full rounded-2xl border border-border/80 bg-card/95 backdrop-blur-2xl shadow-2xl transition-all duration-200 overflow-hidden z-10 my-6 sm:my-8',
           // Specular hairline
           'before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent',
           maxWidthClass,
         )}
       >
         {/* Header */}
-        <div className="flex items-start justify-between p-6 border-b border-border/60">
+        <div className="flex items-start justify-between p-4 sm:p-6 border-b border-border/60">
           <div>
-            <h2 className="text-lg font-semibold text-foreground tracking-tight">{title}</h2>
+            <h2 className="text-base sm:text-lg font-semibold text-foreground tracking-tight">
+              {title}
+            </h2>
             {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-muted-foreground hover:text-foreground hover:bg-secondary/70 transition-colors"
+            className="rounded-lg p-1.5 text-muted-foreground hover:text-foreground hover:bg-secondary/70 transition-colors inline-flex items-center justify-center"
             aria-label="Close modal"
           >
             <X className="h-4 w-4" />
@@ -82,7 +84,7 @@ export function Modal({
         </div>
 
         {/* Body */}
-        <div className="p-6 max-h-[calc(85vh-160px)] overflow-y-auto">{children}</div>
+        <div className="p-4 sm:p-6 max-h-[calc(90vh-120px)] overflow-y-auto">{children}</div>
       </div>
     </div>
   );

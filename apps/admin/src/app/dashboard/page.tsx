@@ -70,18 +70,22 @@ export default function DashboardOverviewPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
           <Button
             variant="outline"
-            size="sm"
             onClick={() => refetchStats()}
             isLoading={isStatsRefetching}
-            leftIcon={<RefreshCw className="h-3.5 w-3.5" />}
+            className="w-full sm:w-auto"
+            leftIcon={<RefreshCw className="h-4 w-4" />}
           >
             Refresh Metrics
           </Button>
-          <Link href="/dashboard/users">
-            <Button variant="primary" size="sm" leftIcon={<UserPlus className="h-3.5 w-3.5" />}>
+          <Link href="/dashboard/users" className="w-full sm:w-auto">
+            <Button
+              variant="primary"
+              className="w-full sm:w-auto"
+              leftIcon={<UserPlus className="h-4 w-4" />}
+            >
               Manage Users
             </Button>
           </Link>

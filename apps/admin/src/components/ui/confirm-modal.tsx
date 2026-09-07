@@ -40,13 +40,20 @@ export function ConfirmModal({
           <p className="text-sm text-muted-foreground leading-relaxed">{message}</p>
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/50">
-          <Button variant="outline" size="sm" onClick={onClose} disabled={isLoading}>
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2 sm:gap-3 pt-4 border-t border-border/50">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={onClose}
+            disabled={isLoading}
+          >
             {cancelText}
           </Button>
           <Button
+            type="button"
             variant={isDestructive ? 'destructiveSolid' : 'primary'}
-            size="sm"
+            className="w-full sm:w-auto"
             onClick={onConfirm}
             isLoading={isLoading}
           >

@@ -155,7 +155,7 @@ export function AdminSidebar({
                       href={item.href}
                       onClick={onClose}
                       className={cn(
-                        'group flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-all duration-150 relative select-none',
+                        'group flex h-10 items-center justify-between rounded-lg px-3 text-xs font-medium transition-all duration-150 relative select-none',
                         active
                           ? 'bg-primary/15 text-primary font-semibold shadow-xs border border-primary/30'
                           : 'text-muted-foreground hover:bg-secondary/60 hover:text-foreground',

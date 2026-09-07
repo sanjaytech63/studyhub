@@ -36,7 +36,9 @@ export function DashboardHeader() {
 
         {/* Right Section: Typable Search Input, Notifications, Theme Toggle, User Menu */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <HeaderCommandSearch />
+          <div className="hidden md:block">
+            <HeaderCommandSearch />
+          </div>
 
           {/* Notifications Button */}
           <Button

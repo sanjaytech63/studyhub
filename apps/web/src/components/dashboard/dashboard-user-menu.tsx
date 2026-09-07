@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ChevronUp, LogOut, Settings, UserRound } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -118,7 +119,14 @@ export function DashboardUserMenu({
             className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/80 bg-primary text-xs font-semibold text-primary-foreground shadow-xs"
           >
             {user.avatarUrl ? (
-              <img src={user.avatarUrl} alt="" className="size-full object-cover" />
+              <Image
+                src={user.avatarUrl}
+                alt=""
+                width={36}
+                height={36}
+                unoptimized
+                className="size-full object-cover"
+              />
             ) : (
               initials
             )}
@@ -157,7 +165,14 @@ export function DashboardUserMenu({
             ].join(' ')}
           >
             {user.avatarUrl ? (
-              <img src={user.avatarUrl} alt="" className="size-full object-cover" />
+              <Image
+                src={user.avatarUrl}
+                alt=""
+                width={36}
+                height={36}
+                unoptimized
+                className="size-full object-cover"
+              />
             ) : (
               initials
             )}
@@ -231,7 +246,14 @@ export function DashboardUserMenu({
                 ].join(' ')}
               >
                 {user.avatarUrl ? (
-                  <img src={user.avatarUrl} alt="" className="size-full object-cover" />
+                  <Image
+                    src={user.avatarUrl}
+                    alt=""
+                    width={40}
+                    height={40}
+                    unoptimized
+                    className="size-full object-cover"
+                  />
                 ) : (
                   initials
                 )}

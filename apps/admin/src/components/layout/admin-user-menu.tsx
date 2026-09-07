@@ -78,7 +78,7 @@ export function AdminUserMenu() {
         aria-expanded={isOpen}
         aria-haspopup="menu"
         aria-label="Admin account menu"
-        className="flex items-center gap-1.5 sm:gap-2.5 rounded-xl border border-border/70 bg-card/60 p-1 sm:p-1.5 pl-1 sm:pl-2 transition-all duration-200 hover:bg-secondary hover:border-border hover:shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+        className="flex h-10 items-center gap-1.5 sm:gap-2.5 rounded-xl border border-border/70 bg-card/60 px-2 transition-all duration-200 hover:bg-secondary hover:border-border hover:shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 cursor-pointer"
       >
         <Avatar
           firstName={user.firstName}

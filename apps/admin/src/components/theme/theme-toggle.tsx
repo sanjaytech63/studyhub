@@ -17,11 +17,11 @@ export function ThemeToggle() {
       aria-label={resolvedTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
       title={resolvedTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
       className={[
-        'relative flex size-9 items-center justify-center',
-        'rounded-lg bg-muted',
+        'relative flex size-10 items-center justify-center shrink-0 cursor-pointer',
+        'rounded-xl border border-border/70 bg-card/60',
         'text-muted-foreground',
         'transition-colors',
-        'hover:bg-muted/80 hover:text-foreground',
+        'hover:bg-secondary hover:text-foreground hover:border-border',
         'focus-visible:outline-none',
         'focus-visible:ring-2',
         'focus-visible:ring-primary/40',

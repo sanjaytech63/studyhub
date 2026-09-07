@@ -230,13 +230,13 @@ export default function UserDetailPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
             {user._count.sessions > 0 && (
               <Button
                 variant="destructive"
-                size="sm"
+                className="w-full sm:w-auto"
                 onClick={() => setIsRevokeModalOpen(true)}
-                leftIcon={<LogOut className="h-3.5 w-3.5" />}
+                leftIcon={<LogOut className="h-4 w-4" />}
               >
                 Revoke Sessions ({user._count.sessions})
               </Button>
@@ -244,10 +244,9 @@ export default function UserDetailPage() {
             {user.status !== 'DELETED' && (
               <Button
                 variant="outline"
-                size="sm"
+                className="w-full sm:w-auto text-destructive hover:bg-destructive/10"
                 onClick={() => setIsDeleteModalOpen(true)}
-                className="text-destructive hover:bg-destructive/10"
-                leftIcon={<Trash2 className="h-3.5 w-3.5" />}
+                leftIcon={<Trash2 className="h-4 w-4" />}
               >
                 Deactivate User
               </Button>

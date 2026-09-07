@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Mail, ShieldAlert, User } from 'lucide-react';
@@ -34,7 +34,7 @@ export default function RegisterPage() {
     },
   });
 
-  const passwordValue = form.watch('password') || '';
+  const passwordValue = useWatch({ control: form.control, name: 'password' }) || '';
 
   // Dynamic Password Strength Calculator
   const passwordStrength = React.useMemo(() => {

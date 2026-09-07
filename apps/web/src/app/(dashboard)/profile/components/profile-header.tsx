@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import Image from 'next/image';
 import { Camera, CheckCircle2, Loader, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -79,9 +80,12 @@ export function ProfileHeader({ profile, isEditing, onEdit }: ProfileHeaderProps
               <div className="group relative shrink-0">
                 <div className="relative flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-card bg-primary/15 text-xl font-semibold text-primary shadow-md">
                   {profile.avatarUrl ? (
-                    <img
+                    <Image
                       src={profile.avatarUrl}
                       alt={fullName || 'Profile'}
+                      width={80}
+                      height={80}
+                      unoptimized
                       className="size-full object-cover"
                     />
                   ) : (

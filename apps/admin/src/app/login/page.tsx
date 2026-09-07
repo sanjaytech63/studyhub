@@ -30,11 +30,18 @@ export default function LoginPage() {
   });
 
   React.useEffect(() => {
+    let isMounted = true;
     initialize();
-    const token = getAccessToken();
-    if (token) {
-      getMe()
-        .then((userData) => {
+
+    const checkAuth = async () => {
+      await Promise.resolve();
+      if (!isMounted) return;
+
+      const token = getAccessToken();
+      if (token) {
+        try {
+          const userData = await getMe();
+          if (!isMounted) return;
           setUser({
             id: userData.id,
             email: userData.email,
@@ -45,13 +52,22 @@ export default function LoginPage() {
             role: userData.role,
           });
           router.replace('/dashboard');
-        })
-        .catch(() => {
-          setIsCheckingAuth(false);
-        });
-    } else {
-      setIsCheckingAuth(false);
-    }
+          return;
+        } catch {
+          // Continue to display login form
+        }
+      }
+
+      if (isMounted) {
+        setIsCheckingAuth(false);
+      }
+    };
+
+    void checkAuth();
+
+    return () => {
+      isMounted = false;
+    };
   }, [initialize, router, setUser]);
 
   const onSubmit = async (values: LoginFormValues) => {

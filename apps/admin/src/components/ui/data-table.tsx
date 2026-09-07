@@ -174,8 +174,8 @@ export function TablePagination({
   const end = Math.min(page * limit, total);
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-t border-border/50 text-xs text-muted-foreground">
-      <div className="font-mono">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-border/50 text-xs text-muted-foreground">
+      <div className="font-mono text-center sm:text-left">
         Showing <span className="font-semibold text-foreground">{start}</span> to{' '}
         <span className="font-semibold text-foreground">{end}</span> of{' '}
         <span className="font-semibold text-foreground">{total}</span> records

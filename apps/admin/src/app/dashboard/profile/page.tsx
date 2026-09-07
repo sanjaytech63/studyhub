@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import {
@@ -98,6 +98,8 @@ export default function AdminProfilePage() {
       newEmail: '',
     },
   });
+
+  const currentTargetEmail = useWatch({ control: emailForm.control, name: 'newEmail' });
 
   // 4. Email Verify OTP Form
   const otpForm = useForm<AdminVerifyEmailOtpFormValues>({
@@ -250,7 +252,6 @@ export default function AdminProfilePage() {
   }
 
   const isAvatarProcessing = uploadAvatarMutation.isPending || deleteAvatarMutation.isPending;
-  const currentTargetEmail = emailForm.watch('newEmail');
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
@@ -347,9 +348,9 @@ export default function AdminProfilePage() {
           <div className="flex items-center gap-2 self-stretch sm:self-auto justify-center">
             <Button
               variant="outline"
-              size="sm"
               onClick={() => refetch()}
-              leftIcon={<RefreshCw className="h-3.5 w-3.5" />}
+              className="w-full sm:w-auto"
+              leftIcon={<RefreshCw className="h-4 w-4" />}
             >
               Sync Profile
             </Button>
@@ -402,7 +403,6 @@ export default function AdminProfilePage() {
                 <Button
                   type="submit"
                   variant="primary"
-                  size="sm"
                   className="w-full"
                   isLoading={updateProfileMutation.isPending}
                 >
@@ -439,7 +439,6 @@ export default function AdminProfilePage() {
             <Button
               type="button"
               variant="outline"
-              size="sm"
               className="w-full"
               onClick={() => {
                 emailForm.reset({ newEmail: '' });
@@ -447,7 +446,7 @@ export default function AdminProfilePage() {
                 setIsOtpStep(false);
                 setIsEmailModalOpen(true);
               }}
-              leftIcon={<Mail className="h-3.5 w-3.5" />}
+              leftIcon={<Mail className="h-4 w-4" />}
             >
               Change Email Address
             </Button>
@@ -566,9 +565,9 @@ export default function AdminProfilePage() {
               <Button
                 type="submit"
                 variant="primary"
-                size="sm"
+                className="w-full sm:w-auto"
                 isLoading={changePasswordMutation.isPending}
-                leftIcon={<Lock className="h-3.5 w-3.5" />}
+                leftIcon={<Lock className="h-4 w-4" />}
               >
                 Update Password
               </Button>
@@ -611,11 +610,11 @@ export default function AdminProfilePage() {
               />
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2">
+            <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2.5 pt-2 border-t border-border/50">
               <Button
                 type="button"
                 variant="outline"
-                size="sm"
+                className="w-full sm:w-auto"
                 onClick={() => setIsEmailModalOpen(false)}
               >
                 Cancel
@@ -623,9 +622,9 @@ export default function AdminProfilePage() {
               <Button
                 type="submit"
                 variant="primary"
-                size="sm"
+                className="w-full sm:w-auto"
                 isLoading={requestEmailMutation.isPending}
-                rightIcon={<ArrowRight className="h-3.5 w-3.5" />}
+                rightIcon={<ArrowRight className="h-4 w-4" />}
               >
                 Send Verification Code
               </Button>
@@ -665,11 +664,11 @@ export default function AdminProfilePage() {
               </button>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2">
+            <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2.5 pt-2 border-t border-border/50">
               <Button
                 type="button"
                 variant="outline"
-                size="sm"
+                className="w-full sm:w-auto"
                 onClick={() => setIsEmailModalOpen(false)}
               >
                 Cancel
@@ -677,7 +676,7 @@ export default function AdminProfilePage() {
               <Button
                 type="submit"
                 variant="primary"
-                size="sm"
+                className="w-full sm:w-auto"
                 isLoading={verifyEmailMutation.isPending}
               >
                 Verify & Update Email

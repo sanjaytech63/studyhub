@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Shield, ShieldPlus, Users, KeyRound, Trash2, Edit2, Lock } from 'lucide-react';
@@ -67,7 +67,8 @@ export default function RolesManagementPage() {
     });
   };
 
-  const selectedPermissionIds = createForm.watch('permissionIds') || [];
+  const selectedPermissionIds =
+    useWatch({ control: createForm.control, name: 'permissionIds' }) || [];
 
   const handleTogglePermission = (permId: string) => {
     const current = createForm.getValues('permissionIds') || [];
@@ -142,7 +143,6 @@ export default function RolesManagementPage() {
 
         <Button
           variant="primary"
-          size="sm"
           onClick={() => {
             createForm.reset({
               name: '',
@@ -151,6 +151,7 @@ export default function RolesManagementPage() {
             });
             setIsCreateModalOpen(true);
           }}
+          className="w-full sm:w-auto"
           leftIcon={<ShieldPlus className="h-4 w-4" />}
         >
           Create Custom Role
@@ -380,11 +381,11 @@ export default function RolesManagementPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/50">
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2.5 pt-4 border-t border-border/50">
             <Button
               type="button"
               variant="outline"
-              size="sm"
+              className="w-full sm:w-auto"
               onClick={() => setIsCreateModalOpen(false)}
             >
               Cancel
@@ -392,7 +393,7 @@ export default function RolesManagementPage() {
             <Button
               type="submit"
               variant="primary"
-              size="sm"
+              className="w-full sm:w-auto"
               isLoading={createRoleMutation.isPending}
             >
               Create Role
@@ -431,14 +432,19 @@ export default function RolesManagementPage() {
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/50">
-            <Button type="button" variant="outline" size="sm" onClick={() => setEditingRole(null)}>
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2.5 pt-4 border-t border-border/50">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={() => setEditingRole(null)}
+            >
               Cancel
             </Button>
             <Button
               type="submit"
               variant="primary"
-              size="sm"
+              className="w-full sm:w-auto"
               isLoading={updateRoleMutation.isPending}
             >
               Save Changes

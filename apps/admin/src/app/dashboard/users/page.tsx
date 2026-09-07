@@ -240,21 +240,21 @@ export default function UsersDirectoryPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
           <Button
             variant="outline"
-            size="sm"
             onClick={() => refetch()}
             isLoading={isFetching}
-            leftIcon={<RefreshCw className="h-3.5 w-3.5" />}
+            className="w-full sm:w-auto"
+            leftIcon={<RefreshCw className="h-4 w-4" />}
           >
             Refresh
           </Button>
           <Button
             variant="primary"
-            size="sm"
             onClick={() => setIsCreateModalOpen(true)}
-            leftIcon={<UserPlus className="h-3.5 w-3.5" />}
+            className="w-full sm:w-auto"
+            leftIcon={<UserPlus className="h-4 w-4" />}
           >
             Create New User
           </Button>
@@ -544,7 +544,7 @@ export default function UsersDirectoryPage() {
           className="space-y-4"
           noValidate
         >
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label htmlFor="firstName" required>
                 First Name
@@ -593,7 +593,7 @@ export default function UsersDirectoryPage() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Controller
               control={createForm.control}
               name="roleId"
@@ -641,11 +641,11 @@ export default function UsersDirectoryPage() {
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/50">
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2.5 pt-4 border-t border-border/50">
             <Button
               type="button"
               variant="outline"
-              size="sm"
+              className="w-full sm:w-auto"
               onClick={() => setIsCreateModalOpen(false)}
             >
               Cancel
@@ -653,7 +653,7 @@ export default function UsersDirectoryPage() {
             <Button
               type="submit"
               variant="primary"
-              size="sm"
+              className="w-full sm:w-auto"
               isLoading={createUserMutation.isPending}
             >
               Create User
@@ -671,7 +671,7 @@ export default function UsersDirectoryPage() {
         maxWidth="md"
       >
         <form onSubmit={editForm.handleSubmit(handleEditSubmit)} className="space-y-4" noValidate>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label htmlFor="editFirstName" required>
                 First Name
@@ -720,7 +720,7 @@ export default function UsersDirectoryPage() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Controller
               control={editForm.control}
               name="roleId"
@@ -768,14 +768,19 @@ export default function UsersDirectoryPage() {
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/50">
-            <Button type="button" variant="outline" size="sm" onClick={() => setEditingUser(null)}>
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2.5 pt-4 border-t border-border/50">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={() => setEditingUser(null)}
+            >
               Cancel
             </Button>
             <Button
               type="submit"
               variant="primary"
-              size="sm"
+              className="w-full sm:w-auto"
               isLoading={updateUserMutation.isPending}
             >
               Save Changes

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Image from 'next/image';
 import { cn } from './button';
 
 export interface AvatarProps {
@@ -52,9 +53,12 @@ export function Avatar({
       )}
     >
       {avatarUrl ? (
-        <img
+        <Image
           src={avatarUrl}
           alt={firstName ? `${firstName} ${lastName || ''}`.trim() : email || 'Avatar'}
+          width={48}
+          height={48}
+          unoptimized
           className={cn(
             'rounded-full object-cover shadow-inner border border-border/40',
             sizeClasses,
