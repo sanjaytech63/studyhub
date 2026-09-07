@@ -100,7 +100,6 @@ export function Navbar() {
 
                     <Button
                       type="button"
-                      variant="destructive"
                       onClick={handleLogout}
                       disabled={logoutMutation.isPending}
                     >
