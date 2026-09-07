@@ -7,7 +7,7 @@ export interface AvatarProps {
   readonly lastName?: string | null;
   readonly email?: string;
   readonly avatarUrl?: string | null;
-  readonly size?: 'sm' | 'md' | 'lg';
+  readonly size?: 'sm' | 'md' | 'lg' | 'xl';
   readonly isOnline?: boolean;
   readonly className?: string;
 }
@@ -40,15 +40,17 @@ export function Avatar({
   const gradientColor = colors[charCode];
 
   const sizeClasses = {
-    sm: 'h-7 w-7 text-[11px]',
-    md: 'h-10 w-9 text-xs',
-    lg: 'h-10 w-12 text-sm',
+    sm: 'h-8 w-8 text-[11px]',
+    md: 'h-10 w-10 text-xs',
+    lg: 'h-14 w-14 text-sm',
+    xl: 'h-20 w-20 text-lg',
   }[size];
 
   return (
     <div
       className={cn(
         'relative inline-flex shrink-0 select-none items-center justify-center',
+        sizeClasses,
         className,
       )}
     >
@@ -56,19 +58,15 @@ export function Avatar({
         <Image
           src={avatarUrl}
           alt={firstName ? `${firstName} ${lastName || ''}`.trim() : email || 'Avatar'}
-          width={48}
-          height={48}
+          width={160}
+          height={160}
           unoptimized
-          className={cn(
-            'rounded-full object-cover shadow-inner border border-border/40',
-            sizeClasses,
-          )}
+          className="h-full w-full rounded-full object-cover shadow-inner border border-border/40"
         />
       ) : (
         <div
           className={cn(
-            'flex items-center justify-center rounded-full font-semibold font-mono tracking-wider shadow-inner bg-gradient-to-tr border border-white/15',
-            sizeClasses,
+            'flex h-full w-full items-center justify-center rounded-full font-semibold font-mono tracking-wider shadow-inner bg-gradient-to-tr border border-white/15',
             gradientColor,
           )}
         >
@@ -79,7 +77,8 @@ export function Avatar({
       {isOnline !== undefined && (
         <span
           className={cn(
-            'absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full ring-2 ring-background',
+            'absolute bottom-0 right-0 rounded-full ring-2 ring-background',
+            size === 'xl' || size === 'lg' ? 'h-3.5 w-3.5' : 'h-2.5 w-2.5',
             isOnline ? 'bg-emerald-500' : 'bg-slate-500',
           )}
         />

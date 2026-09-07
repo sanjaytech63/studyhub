@@ -75,11 +75,11 @@ export function HeroSection() {
         <div className="absolute top-1/3 -right-40 -z-10 h-96 w-96 rounded-full bg-indigo-500/10 blur-[140px]" />
       </div>
 
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-10">
         {/* Balanced 50/50 Layout Grid (lg:grid-cols-12 split evenly into col-span-6) */}
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           {/* LEFT COLUMN: High-Impact Hero Typography & CTAs (50%) */}
-          <div className="flex flex-col items-start text-left lg:col-span-6 pt-10">
+          <div className="flex flex-col items-start text-left lg:col-span-6">
             <Link
               href="/courses"
               className="group mb-6 inline-flex items-center gap-2.5 rounded-full border border-primary/25 bg-primary/5 px-4 py-1.5 text-xs font-semibold text-primary shadow-xs backdrop-blur-md transition-all hover:border-primary/45 hover:bg-primary/10 hover:shadow-primary/15"
@@ -182,8 +182,8 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Modern Course Platform Showcase (50%) */}
-          <div className="lg:col-span-6">
+          {/* RIGHT COLUMN: Modern Course Platform Showcase (50%) - Centered */}
+          <div className="flex w-full items-center justify-center lg:col-span-6">
             <CoursePlatformShowcase />
           </div>
         </div>
@@ -269,7 +269,7 @@ function CoursePlatformShowcase() {
   const activeTrack = TRACK_HIGHLIGHTS.find((t) => t.id === selectedTrack) ?? TRACK_HIGHLIGHTS[0];
 
   return (
-    <Card className="group relative overflow-hidden rounded-3xl border border-border/80 bg-card/90 p-5 shadow-2xl shadow-primary/5 backdrop-blur-2xl transition-all hover:border-border sm:p-6">
+    <Card className="group relative w-full max-w-xl mx-auto overflow-hidden rounded-3xl border border-border/80 bg-card/90 p-5 shadow-2xl shadow-primary/5 backdrop-blur-2xl transition-all hover:border-border sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-4">
         <div className="flex items-center gap-2.5">
           <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">

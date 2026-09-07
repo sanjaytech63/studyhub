@@ -277,9 +277,9 @@ export default function AdminProfilePage() {
                 lastName={profile?.lastName}
                 email={profile?.email}
                 avatarUrl={profile?.avatarUrl}
-
+                size="xl"
                 isOnline={true}
-                className="h-20 w-20 text-lg"
+                className="h-20 w-20 sm:h-24 sm:w-24 text-xl"
               />
 
               {isAvatarProcessing ? (
@@ -292,10 +292,10 @@ export default function AdminProfilePage() {
                   onClick={() => fileInputRef.current?.click()}
                   title="Upload / Change Avatar"
                   aria-label="Upload / Change Avatar"
-                  className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/55 text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer gap-1"
                 >
-                  <Camera className="h-5 w-5" />
-                  <span className="text-[9px] font-medium tracking-tight">Edit</span>
+                  <Camera className="h-6 w-6" />
+                  <span className="text-[11px] font-semibold tracking-tight">Edit Photo</span>
                 </button>
               )}
 
@@ -347,6 +347,7 @@ export default function AdminProfilePage() {
 
           <div className="flex items-center gap-2 self-stretch sm:self-auto justify-center">
             <Button
+              disabled={isLoading}
               variant="outline"
               onClick={() => refetch()}
               className="w-full sm:w-auto"
