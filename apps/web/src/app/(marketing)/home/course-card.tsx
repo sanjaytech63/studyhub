@@ -140,7 +140,7 @@ export function CourseCard({ course, priority = false, showWishlist = false }: C
             <Link
               href={`/courses/${course.slug}`}
               aria-label={`Enroll in ${course.title}`}
-              className="inline-flex size-9 items-center justify-center rounded-xl border border-border/80 bg-background text-foreground shadow-xs transition-all duration-300 hover:border-primary/40 hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:shadow-primary/20"
+              className="inline-flex size-9 items-center justify-center rounded-lg border border-border/80 bg-card text-foreground shadow-xs transition-all duration-300 hover:border-primary/40 hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:shadow-primary/20"
             >
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>

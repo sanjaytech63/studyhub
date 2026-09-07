@@ -41,8 +41,8 @@ export function Avatar({
 
   const sizeClasses = {
     sm: 'h-7 w-7 text-[11px]',
-    md: 'h-9 w-9 text-xs',
-    lg: 'h-12 w-12 text-sm',
+    md: 'h-10 w-9 text-xs',
+    lg: 'h-10 w-12 text-sm',
   }[size];
 
   return (

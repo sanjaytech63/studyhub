@@ -132,24 +132,15 @@ function HeroCopySection() {
 
       {/* CTA buttons */}
       <div className="mt-7 grid w-full grid-cols-1 gap-3 min-[400px]:grid-cols-2 sm:flex sm:w-auto sm:flex-row sm:items-center">
-        <Button
-          size="lg"
-          className="h-12 w-full rounded-xl px-5 text-sm font-semibold shadow-lg shadow-primary/25 transition-all active:scale-[0.98] min-[400px]:px-6 sm:w-auto sm:px-7"
-        >
-          <Link href="/courses" className="flex w-full items-center justify-center gap-2">
-            Start Learning Now
+        <Button asChild>
+          <Link href="/courses">
+            <span>Start Learning Now</span>
             <ArrowRight className="size-4 shrink-0" />
           </Link>
         </Button>
 
-        <Button
-          variant="outline"
-          size="lg"
-          className="h-12 w-full rounded-xl border-border/80 px-5 text-sm font-semibold transition-all hover:bg-muted/60 active:scale-[0.98] min-[400px]:px-6 sm:w-auto"
-        >
-          <Link href="/curriculum" className="flex items-center justify-center">
-            View Curriculum
-          </Link>
+        <Button asChild variant="outline">
+          <Link href="/courses">View Curriculum</Link>
         </Button>
       </div>
 

@@ -5,12 +5,12 @@ export function SocialAuth() {
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap  items-center gap-3 justify-center">
-        <Button type="button" variant="outline" className="md:w-fit w-full h-9!" disabled>
+        <Button type="button" variant="outline" className="md:w-fit w-full h-10!" disabled>
           <FaGoogle className="size-4" />
           Continue with Google
         </Button>
 
-        <Button type="button" variant="outline" className="md:w-fit w-full h-9!" disabled>
+        <Button type="button" variant="outline" className="md:w-fit w-full h-10!" disabled>
           <FaApple className="size-4" />
           Continue with Apple
         </Button>

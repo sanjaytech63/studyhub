@@ -44,7 +44,7 @@ export function RecentActivity() {
         </div>
 
         <Button variant="ghost" size="sm" className="hidden sm:inline-flex">
-          <Link href="/notifications">
+          <Link href="/notifications" className="flex items-center gap-2">
             View all
             <ArrowRight className="size-4" />
           </Link>

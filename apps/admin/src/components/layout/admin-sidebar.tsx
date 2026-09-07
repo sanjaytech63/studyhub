@@ -111,7 +111,7 @@ export function AdminSidebar({
         {/* Brand Header */}
         <div className="flex h-16 shrink-0 items-center justify-between px-5 border-b border-border/60">
           <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-primary-hover shadow-md shadow-primary/25 border border-primary/40 group-hover:scale-105 transition-transform">
+            <div className="flex h-10 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-primary-hover shadow-md shadow-primary/25 border border-primary/40 group-hover:scale-105 transition-transform">
               <Sparkles className="h-4.5 w-4.5 text-white" />
             </div>
             <div>

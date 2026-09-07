@@ -162,7 +162,7 @@ export default function UserDetailPage() {
                 lastName={user.lastName}
                 email={user.email}
                 avatarUrl={user.avatarUrl}
-                size="lg"
+
                 isOnline={user._count.sessions > 0}
               />
 

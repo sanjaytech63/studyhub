@@ -162,7 +162,7 @@ export default function VerifyOtpForm() {
           disabled={isVerifyDisabled}
           loading={verifyMutation.isPending}
           loadingText="Verifying..."
-          className="w-full"
+          className="h-11 w-full text-sm font-bold shadow-md shadow-primary/25 transition-all hover:shadow-lg hover:shadow-primary/35"
         >
           Verify email
         </LoadingButton>

@@ -7,6 +7,7 @@ import { ChevronRight, LogIn, Sparkles, X } from 'lucide-react';
 
 import { navItems } from './navigation';
 import { useMobileNavigation } from './mobile-navigation-provider';
+import { Button } from '@/components/ui/button';
 
 export function MobileMoreMenu() {
   const pathname = usePathname();
@@ -131,23 +132,19 @@ export function MobileMoreMenu() {
           {/* Authentication Actions Footer */}
           <div className="border-t border-border/60 bg-muted/20 p-4 sm:p-5">
             <div className="grid grid-cols-2 gap-3">
-              <Link
-                href="/login"
-                onClick={closeMore}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border/80 bg-background text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-accent active:scale-[0.98]"
-              >
-                <LogIn className="size-4" />
-                <span>Log In</span>
-              </Link>
+              <Button asChild variant="outline" className="h-11 rounded-xl">
+                <Link href="/login" onClick={closeMore}>
+                  <LogIn className="size-4 mr-1.5" />
+                  <span>Log In</span>
+                </Link>
+              </Button>
 
-              <Link
-                href="/register"
-                onClick={closeMore}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-md shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
-              >
-                <Sparkles className="size-4" />
-                <span>Get Started</span>
-              </Link>
+              <Button asChild variant="default" className="h-11 rounded-xl">
+                <Link href="/register" onClick={closeMore}>
+                  <Sparkles className="size-4 mr-1.5" />
+                  <span>Get Started</span>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

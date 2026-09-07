@@ -1,39 +1,35 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import { Loader } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { ButtonProps } from '@base-ui/react';
+import * as React from 'react';
+import { Loader2 } from 'lucide-react';
+import { Button, type ButtonProps } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
-interface LoadingButtonProps extends ButtonProps {
+export interface LoadingButtonProps extends ButtonProps {
   readonly loading?: boolean;
   readonly loadingText?: string;
-  readonly children: ReactNode;
 }
 
-export function LoadingButton({
-  loading = false,
-  loadingText,
-  children,
-  disabled,
-  ...props
-}: LoadingButtonProps) {
-  return (
-    <Button
-      {...props}
-      type={props.type ?? 'button'}
-      disabled={disabled || loading}
-      aria-busy={loading}
-      className="h-9! w-full"
-    >
-      {loading ? (
-        <>
-          <Loader aria-hidden="true" strokeWidth={4} className="size-4 animate-spin" />
-          <span>{loadingText ?? children}</span>
-        </>
-      ) : (
-        children
-      )}
-    </Button>
-  );
-}
+export const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButtonProps>(
+  ({ loading = false, loadingText, children, disabled, className, ...props }, ref) => {
+    return (
+      <Button
+        ref={ref}
+        {...props}
+        disabled={disabled || loading}
+        aria-busy={loading}
+        className={cn('w-full', className)}
+      >
+        {loading ? (
+          <>
+            <Loader2 aria-hidden="true" className="size-4 animate-spin shrink-0" />
+            <span>{loadingText ?? children}</span>
+          </>
+        ) : (
+          children
+        )}
+      </Button>
+    );
+  },
+);
+LoadingButton.displayName = 'LoadingButton';

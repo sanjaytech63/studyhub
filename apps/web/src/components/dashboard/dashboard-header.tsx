@@ -26,7 +26,7 @@ export function DashboardHeader() {
             size="icon"
             onClick={openMobileSidebar}
             aria-label="Open mobile navigation"
-            className="size-9 rounded-xl border-border/60 bg-muted/20 md:hidden"
+            className="size-10 rounded-xl border-border/60 bg-muted/20 md:hidden"
           >
             <Menu className="size-5 text-muted-foreground" />
           </Button>
@@ -42,13 +42,14 @@ export function DashboardHeader() {
 
           {/* Notifications Button */}
           <Button
-            variant="outline"
+            asChild
+            variant="ghost"
             size="icon"
-            className="relative size-9  border-none bg-background text-muted-foreground shadow-2xs hover:text-foreground"
+            className="relative size-10 text-muted-foreground hover:text-foreground"
           >
             <Link href="/notifications" aria-label="Notifications">
-              <Bell className="size-4.5" />
-              <span className="absolute top-2 right-2 flex size-2">
+              <Bell className="size-5" />
+              <span className="absolute top-2.5 right-2.5 flex size-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex size-2 rounded-full bg-primary ring-2 ring-background" />
               </span>
@@ -91,7 +92,7 @@ function HeaderCommandSearch() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search platform..."
-        className=" w-full  border-border/80 bg-muted/30 pl-8 pr-11 text-xs shadow-2xs transition-all placeholder:text-muted-foreground/70 hover:border-border hover:bg-muted/50 focus-visible:bg-background focus-visible:ring-primary/40"
+        className="h-10 w-full border-border/80 bg-muted/30 pl-8 pr-11 text-xs shadow-2xs transition-all placeholder:text-muted-foreground/70 hover:border-border hover:bg-muted/50 focus-visible:bg-background focus-visible:ring-primary/40"
       />
 
       <kbd className="pointer-events-none absolute right-2.5 hidden select-none items-center gap-0.5 rounded-md border border-border/80 bg-background/80 px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground/80 shadow-2xs sm:flex">

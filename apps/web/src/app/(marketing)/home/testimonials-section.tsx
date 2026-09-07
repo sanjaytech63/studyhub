@@ -103,11 +103,7 @@ function TestimonialsHeader() {
         </p>
       </div>
 
-      <Button
-        variant="outline"
-        size="lg"
-        className="group min-h-11 rounded-xl border-border/80 bg-card/60 px-5 shadow-xs backdrop-blur-md transition-all duration-300 hover:border-primary/30 hover:bg-card hover:shadow-md"
-      >
+      <Button variant="outline">
         <Link href="/reviews" className="inline-flex items-center gap-2 font-semibold">
           <span>Read All 12,000+ Reviews</span>
           <ArrowRight

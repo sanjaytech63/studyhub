@@ -87,7 +87,7 @@ function FeaturedCoursesHeader() {
 
       <Link
         href="/courses"
-        className="group inline-flex items-center gap-2 self-start rounded-xl border border-border/80 bg-card/60 px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs backdrop-blur-md transition-all duration-300 hover:border-primary/30 hover:bg-card hover:text-primary hover:shadow-md lg:self-auto"
+        className="group inline-flex items-center gap-2 self-start rounded-lg border border-border/80 bg-card/60 px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs backdrop-blur-md transition-all duration-300 hover:border-primary/30 hover:bg-card hover:text-primary hover:shadow-md lg:self-auto"
       >
         <span>Explore all courses</span>
         <ArrowRight
@@ -135,7 +135,7 @@ function DiscoveryFilterPill({ filter, active }: DiscoveryFilterPillProps) {
     <Link
       href={href}
       aria-current={active ? 'page' : undefined}
-      className={`inline-flex h-9 shrink-0 items-center gap-2 rounded-full px-4 text-xs font-semibold transition-all duration-300 ${
+      className={`inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-4 text-xs font-semibold transition-all duration-300 ${
         active
           ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25 ring-2 ring-primary/20'
           : 'border border-border/60 bg-card/60 text-muted-foreground hover:border-border hover:bg-card hover:text-foreground'

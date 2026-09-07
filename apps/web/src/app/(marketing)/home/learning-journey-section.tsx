@@ -78,7 +78,7 @@ export function LearningJourneySection() {
       {/* Background glow effects */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-0 -z-10 h-125 w-full max-w-7xl -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-0 -z-10 h-105 w-full max-w-7xl -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent blur-3xl"
       />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

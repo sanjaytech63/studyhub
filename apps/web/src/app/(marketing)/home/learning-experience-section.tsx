@@ -202,18 +202,14 @@ function ShellHeader() {
           <Progress
             value={COURSE_PROGRESS.percentage}
             aria-label={`Overall progress: ${COURSE_PROGRESS.percentage}%`}
-            className="h-2 w-24 bg-muted sm:w-32"
+            className="h-1 w-24 bg-muted sm:w-32"
           />
           <span className="font-mono text-xs font-bold text-foreground">
             {COURSE_PROGRESS.percentage}%
           </span>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          className="shrink-0 rounded-xl border-border/80 bg-background/60 font-medium hover:border-primary/40 hover:bg-card"
-        >
+        <Button variant="outline">
           <Link href="/dashboard">Dashboard</Link>
         </Button>
       </div>
@@ -480,7 +476,7 @@ function LessonDetailsSection() {
           </Button>
         </div>
 
-        <Button size="lg" className="h-11 rounded-xl font-semibold shadow-md shadow-primary/20">
+        <Button asChild>
           <Link href="/dashboard" className="inline-flex items-center gap-2">
             <span>Continue Next Lesson</span>
             <ArrowRight className="size-4" />

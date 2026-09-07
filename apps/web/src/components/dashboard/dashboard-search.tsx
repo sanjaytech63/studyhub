@@ -16,7 +16,7 @@ export function DashboardSearch() {
         name="dashboard-search"
         placeholder="Search..."
         aria-label="Search dashboard"
-        className="pl-9 h-9! pr-3"
+        className="pl-9 h-10! pr-3"
       />
     </div>
   );

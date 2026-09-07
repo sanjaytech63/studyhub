@@ -153,7 +153,7 @@ export default function RolePermissionsPage() {
       <div className="space-y-6">
         <div className="h-8 w-48 rounded bg-muted/60 animate-pulse" />
         <div className="h-28 rounded-xl bg-muted/40 animate-pulse" />
-        <div className="h-96 rounded-xl bg-muted/30 animate-pulse" />
+        <div className="h-106 rounded-xl bg-muted/30 animate-pulse" />
       </div>
     );
   }

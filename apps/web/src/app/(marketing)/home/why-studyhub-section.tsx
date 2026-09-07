@@ -68,7 +68,7 @@ export function WhyStudyHubSection() {
       {/* Ambient Lighting & Canvas Grids */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-125 w-full max-w-7xl -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent blur-3xl opacity-70"
+        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-105 w-full max-w-7xl -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent blur-3xl opacity-70"
       />
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -331,7 +331,7 @@ function CredentialsBentoCard() {
               <p className="text-xs font-bold text-foreground">
                 Full-Stack Engineering Certification
               </p>
-              <p className="text-[11px] text-muted-foreground">ID: SH-99482-2026</p>
+              <p className="text-[11px] text-muted-foreground">ID: Sh-109482-2026</p>
             </div>
           </div>
 

@@ -103,8 +103,8 @@ export default function LoginPage() {
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center p-4 bg-background overflow-hidden">
       {/* Background ambient gradient blurs */}
-      <div className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full bg-primary/15 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -top-40 -left-40 h-106 w-96 rounded-full bg-primary/15 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 h-106 w-96 rounded-full bg-purple-500/10 blur-3xl" />
 
       {/* Grid pattern overlay */}
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
@@ -170,7 +170,6 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 variant="primary"
-                size="lg"
                 className="w-full font-semibold"
                 isLoading={isLoading}
                 rightIcon={<ArrowRight className="h-4 w-4" />}

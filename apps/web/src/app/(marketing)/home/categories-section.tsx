@@ -33,7 +33,7 @@ export function CategoriesSection() {
       {/* Background Radial Ambient Glow */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-125 w-full max-w-7xl -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-105 w-full max-w-7xl -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent blur-3xl"
       />
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -85,7 +85,7 @@ function CategoriesHeader() {
 
       <Link
         href="/categories"
-        className="group inline-flex items-center gap-2 self-start rounded-xl border border-border/80 bg-card/60 px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs backdrop-blur-md transition-all duration-300 hover:border-primary/30 hover:bg-card hover:text-primary hover:shadow-md sm:self-auto"
+        className="group inline-flex items-center gap-2 self-start rounded-lg border border-border/80 bg-card/60 px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs backdrop-blur-md transition-all duration-300 hover:border-primary/30 hover:bg-card hover:text-primary hover:shadow-md sm:self-auto"
       >
         <span>View all categories</span>
         <ArrowRight

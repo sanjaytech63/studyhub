@@ -71,7 +71,7 @@ export function ProfileHeader({ profile, isEditing, onEdit }: ProfileHeaderProps
   return (
     <section className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm">
       <div className="relative">
-        <div className="h-24 bg-linear-to-r from-primary/20 via-primary/10 to-transparent" />
+        <div className="h-16 bg-linear-to-r from-primary/20 via-primary/10 to-transparent" />
 
         <div className="px-6 pb-6">
           <div className="-mt-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
@@ -130,7 +130,7 @@ export function ProfileHeader({ profile, isEditing, onEdit }: ProfileHeaderProps
                   </span>
                 </div>
 
-                <p className="mt-1 truncate text-sm text-muted-foreground">{profile.email}</p>
+                <p className="mt-3 truncate text-sm text-muted-foreground">{profile.email}</p>
 
                 <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                   <span className="rounded-md bg-muted px-2 py-1 font-medium">
@@ -162,12 +162,10 @@ export function ProfileHeader({ profile, isEditing, onEdit }: ProfileHeaderProps
             <Button
               type="button"
               variant="outline"
-              size="sm"
               onClick={onEdit}
               disabled={isEditing || isProcessing}
-              className="shrink-0"
             >
-              <Pencil className="mr-2 size-4" />
+              <Pencil className="size-4" />
               Edit profile
             </Button>
           </div>

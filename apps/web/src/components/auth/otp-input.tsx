@@ -38,7 +38,7 @@ export function OtpInput({ value, onChange, disabled = false, error }: OtpInputP
         disabled={disabled}
         aria-label="6-digit verification code"
         aria-invalid={Boolean(error)}
-        className="h-12 text-center text-lg font-semibold tracking-[0.45em]"
+        className="h-10 text-center text-lg font-semibold tracking-[0.45em]"
       />
 
       {error ? <p className="text-center text-xs text-destructive">{error}</p> : null}

@@ -170,7 +170,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Password */}
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <PasswordField
             id="password"
             label="Password"
@@ -238,26 +238,26 @@ export default function RegisterPage() {
             />
 
             <div className="space-y-1">
-              <Label
+              <label
                 htmlFor="terms"
-                className="cursor-pointer text-xs leading-relaxed font-normal text-muted-foreground"
+                className="cursor-pointer text-xs leading-relaxed text-muted-foreground block select-none"
               >
                 I agree to StudyHub&apos;s{' '}
                 <Link
                   href="/terms"
-                  className="font-bold text-foreground underline-offset-4 hover:text-primary hover:underline"
+                  className="font-semibold text-foreground underline-offset-4 hover:text-primary hover:underline"
                 >
                   Terms of Service
                 </Link>{' '}
                 and{' '}
                 <Link
                   href="/privacy"
-                  className="font-bold text-foreground underline-offset-4 hover:text-primary hover:underline"
+                  className="font-semibold text-foreground underline-offset-4 hover:text-primary hover:underline"
                 >
                   Privacy Policy
                 </Link>
                 .
-              </Label>
+              </label>
 
               {form.formState.errors.terms && (
                 <p className="inline-flex items-center gap-1 text-[11px] font-semibold text-destructive">

@@ -131,10 +131,11 @@ export default function NotFound() {
           {/* Actions */}
           <div className="mt-7 flex w-full flex-col gap-3 sm:mt-8 sm:w-auto sm:flex-row sm:items-center">
             <Button
-              size="lg"
-              className="group min-h-11 w-full rounded-xl px-6 font-semibold shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-primary/30 active:scale-[0.98] sm:w-auto"
+              asChild
+
+              className="group h-11 w-full rounded-xl px-6 font-semibold shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-primary/30 active:scale-[0.98] sm:w-auto"
             >
-              <Link href="/" className="inline-flex items-center justify-center gap-2">
+              <Link href="/">
                 <Home aria-hidden="true" className="size-4" />
                 <span>Return Home</span>
                 <ArrowRight
@@ -145,21 +146,23 @@ export default function NotFound() {
             </Button>
 
             <Button
+              asChild
               variant="outline"
-              size="lg"
-              className="min-h-11 w-full rounded-xl border-border/80 px-6 font-semibold transition-all duration-300 hover:bg-muted/60 active:scale-[0.98] sm:w-auto"
+
+              className="h-11 w-full rounded-xl border-border/80 px-6 font-semibold transition-all duration-300 hover:bg-muted/60 active:scale-[0.98] sm:w-auto"
             >
-              <Link href="/courses" className="inline-flex items-center justify-center gap-2">
+              <Link href="/courses">
                 <Compass aria-hidden="true" className="size-4" />
                 <span>Explore Courses</span>
               </Link>
             </Button>
 
             <Button
+              type="button"
               variant="ghost"
-              size="lg"
+
               onClick={() => window.history.back()}
-              className="min-h-11 w-full rounded-xl px-6 font-semibold text-muted-foreground transition-all duration-300 hover:text-foreground sm:w-auto"
+              className="h-11 w-full rounded-xl px-6 font-semibold text-muted-foreground transition-all duration-300 hover:text-foreground sm:w-auto"
             >
               <ArrowLeft aria-hidden="true" className="size-4" />
               <span>Go Back</span>

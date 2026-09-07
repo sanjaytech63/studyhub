@@ -17,7 +17,7 @@ export function ThemeToggle() {
       aria-label={resolvedTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
       title={resolvedTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
       className={[
-        'relative flex size-9 items-center justify-center',
+        'relative flex size-10 items-center justify-center',
         'rounded-lg bg-muted',
         'text-muted-foreground',
         'transition-colors',

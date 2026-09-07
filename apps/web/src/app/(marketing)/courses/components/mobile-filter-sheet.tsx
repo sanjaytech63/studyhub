@@ -18,11 +18,7 @@ export function MobileFilterSheet({ filters, totalResults }: MobileFilterSheetPr
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-10 border-border/80 lg:hidden font-medium text-xs"
-        >
+        <Button variant="outline" className="h-10 border-border/80 lg:hidden font-medium text-xs">
           <SlidersHorizontal className="mr-2 size-3.5 text-muted-foreground" />
           Filters
         </Button>
@@ -35,7 +31,7 @@ export function MobileFilterSheet({ filters, totalResults }: MobileFilterSheetPr
           <FilterSidebar filters={filters} />
         </div>
         <div className="pt-4 border-t border-border/60">
-          <Button className="w-full font-semibold" size="sm" onClick={() => setOpen(false)}>
+          <Button className="w-full font-semibold h-10" onClick={() => setOpen(false)}>
             Show {totalResults} Results
           </Button>
         </div>

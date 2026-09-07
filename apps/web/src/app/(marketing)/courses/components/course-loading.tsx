@@ -7,7 +7,7 @@ export default function Loading() {
       {/* Header Skeleton */}
       <div className="space-y-3 border-b border-border/40 pb-6">
         <Skeleton className="h-4 w-24 rounded-md" />
-        <Skeleton className="h-9 w-3/4 max-w-md rounded-md" />
+        <Skeleton className="h-10 w-3/4 max-w-md rounded-md" />
         <Skeleton className="h-4 w-1/2 max-w-sm rounded-md" />
       </div>
 
@@ -17,7 +17,7 @@ export default function Loading() {
       {/* Body Skeleton Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="hidden lg:block lg:col-span-1">
-          <Skeleton className="h-125 w-full rounded-xl" />
+          <Skeleton className="h-105 w-full rounded-xl" />
         </div>
         <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, i) => (

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
+import { Mail, ShieldAlert } from 'lucide-react';
 import { AuthCard, AuthFooter } from '@/components/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -75,21 +76,40 @@ export default function ForgotPasswordPage() {
       description="Enter your email address and we'll send you a secure password reset OTP."
       footer={<AuthFooter message="Remember your password?" label="Back to login" href="/login" />}
     >
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5" noValidate>
-        <div className="space-y-2">
-          <Label htmlFor="email">Email address</Label>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <div className="space-y-1.5">
+          <Label
+            htmlFor="email"
+            className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
+          >
+            Email address
+          </Label>
 
-          <Input
-            id="email"
-            type="email"
-            autoComplete="email"
-            placeholder="you@example.com"
-            {...form.register('email')}
-            aria-invalid={Boolean(form.formState.errors.email)}
-          />
+          <div className="relative">
+            <Mail
+              aria-hidden="true"
+              className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/60 transition-colors peer-focus:text-primary"
+            />
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              className={`peer h-11 pl-10 pr-4 text-sm font-medium transition-all ${
+                form.formState.errors.email
+                  ? 'border-destructive focus-visible:ring-destructive/20'
+                  : 'focus-visible:ring-primary/20'
+              }`}
+              {...form.register('email')}
+              aria-invalid={Boolean(form.formState.errors.email)}
+            />
+          </div>
 
           {form.formState.errors.email && (
-            <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
+            <p className="inline-flex items-center gap-1 text-[11px] font-semibold text-destructive">
+              <ShieldAlert className="size-3 shrink-0" aria-hidden="true" />
+              <span>{form.formState.errors.email.message}</span>
+            </p>
           )}
         </div>
 
@@ -97,17 +117,18 @@ export default function ForgotPasswordPage() {
           type="submit"
           loading={mutation.isPending}
           loadingText="Sending OTP..."
-          className="w-full"
+          className="h-11 w-full text-sm font-bold shadow-md shadow-primary/25 transition-all hover:shadow-lg hover:shadow-primary/35"
         >
           Send reset OTP
         </LoadingButton>
 
-        <Link
-          href="/login"
-          className="block text-center text-xs text-muted-foreground hover:text-foreground"
+        <Button
+          asChild
+          variant="ghost"
+          className="h-10 w-full text-xs text-muted-foreground hover:text-foreground"
         >
-          Back to login
-        </Link>
+          <Link href="/login">Back to login</Link>
+        </Button>
       </form>
     </AuthCard>
   );

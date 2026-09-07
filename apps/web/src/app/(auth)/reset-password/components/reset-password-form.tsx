@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
+import { ShieldAlert } from 'lucide-react';
 import { AuthCard, AuthFooter, PasswordField } from '@/components/auth';
 
 import { Button } from '@/components/ui/button';
@@ -92,30 +93,44 @@ export default function ResetPasswordForm() {
       description="Enter the verification code sent to your email and create a new password."
       footer={<AuthFooter message="Remember your password?" label="Login" href="/login" />}
     >
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5" noValidate>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
         {/* EMAIL */}
 
-        <div className="space-y-2">
-          <Label htmlFor="email">Email address</Label>
+        <div className="space-y-1.5">
+          <Label
+            htmlFor="email"
+            className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
+          >
+            Email address
+          </Label>
 
           <Input
             id="email"
             type="email"
             autoComplete="email"
             placeholder="you@example.com"
+            className="h-11 text-sm font-medium"
             {...form.register('email')}
             aria-invalid={Boolean(form.formState.errors.email)}
           />
 
           {form.formState.errors.email && (
-            <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
+            <p className="inline-flex items-center gap-1 text-[11px] font-semibold text-destructive">
+              <ShieldAlert className="size-3 shrink-0" aria-hidden="true" />
+              <span>{form.formState.errors.email.message}</span>
+            </p>
           )}
         </div>
 
         {/* OTP */}
 
-        <div className="space-y-2">
-          <Label htmlFor="otp">Verification code</Label>
+        <div className="space-y-1.5">
+          <Label
+            htmlFor="otp"
+            className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
+          >
+            Verification code
+          </Label>
 
           <Input
             id="otp"
@@ -123,12 +138,16 @@ export default function ResetPasswordForm() {
             autoComplete="one-time-code"
             maxLength={6}
             placeholder="Enter 6-digit OTP"
+            className="h-11 text-sm font-medium"
             {...form.register('otp')}
             aria-invalid={Boolean(form.formState.errors.otp)}
           />
 
           {form.formState.errors.otp && (
-            <p className="text-xs text-destructive">{form.formState.errors.otp.message}</p>
+            <p className="inline-flex items-center gap-1 text-[11px] font-semibold text-destructive">
+              <ShieldAlert className="size-3 shrink-0" aria-hidden="true" />
+              <span>{form.formState.errors.otp.message}</span>
+            </p>
           )}
 
           <p className="text-xs text-muted-foreground">
@@ -164,17 +183,18 @@ export default function ResetPasswordForm() {
           type="submit"
           loading={mutation.isPending}
           loadingText="Resetting password..."
-          className="w-full"
+          className="h-11 w-full text-sm font-bold shadow-md shadow-primary/25 transition-all hover:shadow-lg hover:shadow-primary/35"
         >
           Reset password
         </LoadingButton>
 
-        <Link
-          href="/login"
-          className="block text-center text-xs text-muted-foreground transition-colors hover:text-foreground"
+        <Button
+          asChild
+          variant="ghost"
+          className="h-10 w-full text-xs text-muted-foreground hover:text-foreground"
         >
-          Back to login
-        </Link>
+          <Link href="/login">Back to login</Link>
+        </Button>
       </form>
     </AuthCard>
   );

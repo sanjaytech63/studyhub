@@ -27,7 +27,7 @@ export function MobileBottomNav() {
               key={item.href}
               href={item.href}
               aria-current={isActive ? 'page' : undefined}
-              className={`group flex h-12 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-full transition-all duration-200 active:scale-95 ${
+              className={`group flex h-10 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-full transition-all duration-200 active:scale-95 ${
                 isActive
                   ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/25'
                   : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
@@ -53,7 +53,7 @@ export function MobileBottomNav() {
           aria-label="Open navigation menu"
           aria-haspopup="dialog"
           aria-expanded={isMoreOpen}
-          className={`group flex h-12 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-full transition-all duration-200 active:scale-95 ${
+          className={`group flex h-10 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-full transition-all duration-200 active:scale-95 ${
             isMoreOpen
               ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/25'
               : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'

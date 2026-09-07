@@ -116,14 +116,14 @@ export function DashboardUserMenu({
         >
           <div
             aria-hidden="true"
-            className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/80 bg-primary text-xs font-semibold text-primary-foreground shadow-xs"
+            className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/80 bg-primary text-xs font-semibold text-primary-foreground shadow-xs"
           >
             {user.avatarUrl ? (
               <Image
                 src={user.avatarUrl}
                 alt=""
-                width={36}
-                height={36}
+                width={40}
+                height={40}
                 unoptimized
                 className="size-full object-cover"
               />
@@ -316,7 +316,7 @@ export function DashboardUserMenu({
                 void handleLogout();
               }}
               className={[
-                'flex h-9 w-full items-center gap-2',
+                'flex h-10 w-full items-center gap-2',
                 'rounded-lg px-3',
                 'text-sm',
                 'text-destructive',
@@ -355,7 +355,7 @@ function MenuLink({ href, icon, label, onClick }: MenuLinkProps) {
       role="menuitem"
       onClick={onClick}
       className={[
-        'flex h-9 items-center gap-2',
+        'flex h-10 items-center gap-2',
         'rounded-lg px-3',
         'text-sm text-muted-foreground',
         'transition-colors duration-150',

@@ -28,7 +28,7 @@ export function ContinueLearning({ courses }: ContinueLearningProps) {
         </div>
 
         <Button variant="ghost" size="sm" className="hidden shrink-0 sm:inline-flex">
-          <Link href="/learning">
+          <Link href="/learning" className="flex items-center gap-2">
             View all
             <ArrowRight className="size-4" />
           </Link>
@@ -70,7 +70,7 @@ function EmptyLearningState() {
         Start a course and your active learning progress will appear here.
       </p>
 
-      <Button size="sm" className="mt-4">
+      <Button className="mt-4">
         <Link href="/learning">Explore courses</Link>
       </Button>
     </div>

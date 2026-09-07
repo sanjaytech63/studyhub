@@ -113,7 +113,7 @@ export function TableEmpty({
     <tr>
       <td colSpan={colSpan} className="py-12 text-center">
         <div className="flex flex-col items-center justify-center space-y-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-muted-foreground">
+          <div className="flex h-10 w-12 items-center justify-center rounded-2xl bg-secondary text-muted-foreground">
             <Inbox className="h-6 w-6 stroke-[1.5]" />
           </div>
           <div>

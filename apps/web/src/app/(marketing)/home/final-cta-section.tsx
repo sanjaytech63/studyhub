@@ -127,11 +127,8 @@ function CtaContent() {
 
       {/* Actions */}
       <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
-        <Button
-          size="lg"
-          className="group min-h-11 w-full rounded-xl bg-primary px-6 font-bold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:bg-primary/90 hover:shadow-primary/35 active:scale-[0.98] sm:w-auto sm:px-7"
-        >
-          <Link href="/courses" className="inline-flex items-center justify-center gap-2">
+        <Button asChild>
+          <Link href="/courses">
             <span>Explore All Courses</span>
             <ArrowRight
               aria-hidden="true"
@@ -141,11 +138,11 @@ function CtaContent() {
         </Button>
 
         <Button
-          size="lg"
+          asChild
+
           variant="outline"
-          className="min-h-11 w-full rounded-xl border-white/15 bg-white/5 font-semibold text-zinc-200 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:bg-white/10 hover:text-white sm:w-auto"
         >
-          <Link href="/categories" className="inline-flex items-center justify-center gap-2">
+          <Link href="/courses">
             <Compass aria-hidden="true" className="size-4 text-zinc-400" />
             <span>Browse Categories</span>
           </Link>

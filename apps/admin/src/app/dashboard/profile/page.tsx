@@ -277,7 +277,7 @@ export default function AdminProfilePage() {
                 lastName={profile?.lastName}
                 email={profile?.email}
                 avatarUrl={profile?.avatarUrl}
-                size="lg"
+
                 isOnline={true}
                 className="h-20 w-20 text-lg"
               />

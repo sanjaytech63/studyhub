@@ -12,33 +12,35 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, error, leftIcon, rightIcon, ...props }, ref) => {
     return (
-      <div className="relative w-full">
-        {leftIcon && (
-          <div className="absolute inset-y-0 left-0 flex items-center justify-center pl-3 pointer-events-none text-muted-foreground">
-            {leftIcon}
-          </div>
-        )}
-        <input
-          type={type}
-          ref={ref}
-          className={cn(
-            'flex h-10 w-full rounded-lg border border-border/80 bg-secondary/50 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 transition-all duration-150',
-            'focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25 focus-visible:bg-secondary/80',
-            'disabled:cursor-not-allowed disabled:opacity-50',
-            leftIcon && 'pl-9',
-            rightIcon && 'pr-9',
-            error &&
-              'border-destructive/80 focus-visible:border-destructive focus-visible:ring-destructive/25',
-            className,
+      <div className="w-full">
+        <div className="relative w-full">
+          {leftIcon && (
+            <div className="absolute inset-y-0 left-0 flex items-center justify-center pl-3 pointer-events-none text-muted-foreground">
+              {leftIcon}
+            </div>
           )}
-          {...props}
-        />
-        {rightIcon && (
-          <div className="absolute inset-y-0 right-0 flex items-center justify-center pr-3 text-muted-foreground">
-            {rightIcon}
-          </div>
-        )}
-        {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
+          <input
+            type={type}
+            ref={ref}
+            className={cn(
+              'flex h-10 w-full rounded-lg border border-border/80 bg-secondary/50 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 transition-all duration-150',
+              'focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25 focus-visible:bg-secondary/80',
+              'disabled:cursor-not-allowed disabled:opacity-50',
+              leftIcon && 'pl-9',
+              rightIcon && 'pr-9',
+              error &&
+                'border-destructive/80 focus-visible:border-destructive focus-visible:ring-destructive/25',
+              className,
+            )}
+            {...props}
+          />
+          {rightIcon && (
+            <div className="absolute inset-y-0 right-0 flex items-center justify-center pr-3 text-muted-foreground">
+              {rightIcon}
+            </div>
+          )}
+        </div>
+        {error && <p className="mt-1.5 text-xs text-destructive">{error}</p>}
       </div>
     );
   },
@@ -53,7 +55,7 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, error, ...props }, ref) => {
     return (
-      <div className="relative w-full">
+      <div className="w-full">
         <textarea
           ref={ref}
           className={cn(
@@ -66,7 +68,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           )}
           {...props}
         />
-        {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
+        {error && <p className="mt-1.5 text-xs text-destructive">{error}</p>}
       </div>
     );
   },

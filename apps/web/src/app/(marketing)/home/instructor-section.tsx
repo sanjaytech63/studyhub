@@ -84,7 +84,7 @@ export function InstructorSection() {
       {/* Background Ambient Glow */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-80 w-full max-w-7xl -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent blur-3xl sm:h-125"
+        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-80 w-full max-w-7xl -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent blur-3xl sm:h-105"
       />
 
       <div className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8">
@@ -144,11 +144,8 @@ function InstructorMessage() {
       {/* CTA */}
       <div className="mt-8 border-t border-border/60 pt-6 sm:mt-10">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <Button
-            size="lg"
-            className="group min-h-11 w-full rounded-xl px-6 text-sm font-bold shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-primary/35 sm:w-auto"
-          >
-            <Link href="/instructors" className="flex gap-2 items-center">
+          <Button asChild>
+            <Link href="/courses" className="flex gap-2 items-center">
               <span>Start Teaching Today</span>
               <ArrowRight
                 aria-hidden="true"
