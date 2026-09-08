@@ -15,15 +15,17 @@ export const getMailClient = (): Transporter => {
   const port = serverConfig.email.port || 587;
   const secure = serverConfig.email.secure ?? port === 465;
 
+  const cleanPassword = serverConfig.email.password?.replace(/\s+/g, '');
+
   cachedClient = nodemailer.createTransport({
     host: serverConfig.email.host || 'localhost',
     port,
     secure,
-    ...(serverConfig.email.user && serverConfig.email.password
+    ...(serverConfig.email.user && cleanPassword
       ? {
           auth: {
-            user: serverConfig.email.user,
-            pass: serverConfig.email.password,
+            user: serverConfig.email.user.trim(),
+            pass: cleanPassword,
           },
         }
       : {}),

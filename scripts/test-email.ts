@@ -19,21 +19,24 @@ async function main() {
   console.log('       StudyHub SMTP Diagnostic & Test Tool         ');
   console.log('====================================================\n');
 
-  const host = process.env.SMTP_HOST?.trim();
+  const host = process.env.SMTP_HOST?.trim() || 'smtp.gmail.com';
   const portStr = process.env.SMTP_PORT?.trim();
-  const user = process.env.SMTP_USER?.trim();
-  const pass = process.env.SMTP_PASSWORD?.trim();
+  const user = process.env.SMTP_USER?.trim() || 'sanjaytech6375@gmail.com';
+  const rawPass = (process.argv[3] || process.env.SMTP_PASSWORD)?.trim();
+  const pass = rawPass?.replace(/\s+/g, '');
   const from =
     process.env.SMTP_FROM?.trim() || `"StudyHub" <${user || 'no-reply@studyhubonline.store'}>`;
-  const secure = process.env.SMTP_SECURE === 'true';
+  const secure = process.env.SMTP_SECURE === 'true' || portStr === '465';
 
-  const port = portStr ? parseInt(portStr, 10) : 587;
+  const port = portStr ? parseInt(portStr, 10) : secure ? 465 : 587;
 
-  console.log('Current Environment Variables:');
-  console.log(`- SMTP_HOST:     ${host || '(NOT SET - EMPTY)'}`);
-  console.log(`- SMTP_PORT:     ${portStr || '587 (default)'}`);
-  console.log(`- SMTP_USER:     ${user || '(NOT SET - EMPTY)'}`);
-  console.log(`- SMTP_PASSWORD: ${pass ? '******** (SET)' : '(NOT SET - EMPTY)'}`);
+  console.log('Current SMTP Configuration:');
+  console.log(`- SMTP_HOST:     ${host}`);
+  console.log(`- SMTP_PORT:     ${port}`);
+  console.log(`- SMTP_USER:     ${user}`);
+  console.log(
+    `- SMTP_PASSWORD: ${pass ? `******** (Length: ${pass.length} chars, spaces stripped)` : '(NOT SET - EMPTY)'}`,
+  );
   console.log(`- SMTP_FROM:     ${from}`);
   console.log(`- SMTP_SECURE:   ${secure}`);
   console.log(`- Target Email:  ${targetEmail}\n`);
@@ -41,7 +44,7 @@ async function main() {
   if (!host || !user || !pass) {
     console.error('❌ ERROR: SMTP credentials are not fully configured!');
     console.error(
-      'You need to provide SMTP_HOST, SMTP_USER, and SMTP_PASSWORD in your .env file.\n',
+      'You need to provide SMTP_HOST, SMTP_USER, and SMTP_PASSWORD in your .env file or as CLI arguments.\n',
     );
     console.log('To set up Gmail SMTP (Free & Recommended):');
     console.log('1. Go to your Google Account -> Security -> 2-Step Verification.');
