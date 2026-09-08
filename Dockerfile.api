@@ -84,4 +84,4 @@ COPY --from=build /app/packages/tsconfig ./packages/tsconfig
 
 EXPOSE 5000
 
-CMD ["npx", "tsx", "apps/api/src/server.ts"]
+CMD ["npx", "tsx", "--tsconfig", "apps/api/tsconfig.json", "apps/api/src/server.ts"]
