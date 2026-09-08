@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
 import { ShieldAlert } from 'lucide-react';
 import { AuthCard, AuthFooter, PasswordField } from '@/components/auth';
+import { OtpInput } from '@/components/auth/otp-input';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -124,7 +125,7 @@ export default function ResetPasswordForm() {
 
         {/* OTP */}
 
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <Label
             htmlFor="otp"
             className="text-xs font-bold uppercase tracking-wider text-muted-foreground"
@@ -132,25 +133,20 @@ export default function ResetPasswordForm() {
             Verification code
           </Label>
 
-          <Input
-            id="otp"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            maxLength={6}
-            placeholder="Enter 6-digit OTP"
-            className="h-11 text-sm font-medium"
-            {...form.register('otp')}
-            aria-invalid={Boolean(form.formState.errors.otp)}
+          <Controller
+            name="otp"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <OtpInput
+                value={field.value}
+                onChange={field.onChange}
+                disabled={mutation.isPending}
+                error={fieldState.error?.message}
+              />
+            )}
           />
 
-          {form.formState.errors.otp && (
-            <p className="inline-flex items-center gap-1 text-[11px] font-semibold text-destructive">
-              <ShieldAlert className="size-3 shrink-0" aria-hidden="true" />
-              <span>{form.formState.errors.otp.message}</span>
-            </p>
-          )}
-
-          <p className="text-xs text-muted-foreground">
+          <p className="text-center text-xs text-muted-foreground">
             Enter the 6-digit code sent to your email address.
           </p>
         </div>

@@ -1,47 +1,39 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { Input } from '@/components/ui/input';
+import { REGEXP_ONLY_DIGITS } from 'input-otp';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 
 interface OtpInputProps {
   readonly value: string;
   readonly onChange: (value: string) => void;
   readonly disabled?: boolean;
   readonly error?: string;
+  readonly length?: number;
 }
 
-const OTP_LENGTH = 6;
-
-export function OtpInput({ value, onChange, disabled = false, error }: OtpInputProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const nextValue = event.target.value.replace(/\D/g, '').slice(0, OTP_LENGTH);
-
-    onChange(nextValue);
-  }
-
+export function OtpInput({ value, onChange, disabled = false, error, length = 6 }: OtpInputProps) {
   return (
-    <div className="space-y-2">
-      <Input
-        ref={inputRef}
+    <div className="flex flex-col items-center justify-center space-y-2.5 w-full">
+      <InputOTP
+        maxLength={length}
         value={value}
-        onChange={handleChange}
-        inputMode="numeric"
-        autoComplete="one-time-code"
-        maxLength={OTP_LENGTH}
-        placeholder="000000"
+        onChange={onChange}
         disabled={disabled}
-        aria-label="6-digit verification code"
-        aria-invalid={Boolean(error)}
-        className="h-10 text-center text-lg font-semibold tracking-[0.45em]"
-      />
+        pattern={REGEXP_ONLY_DIGITS}
+        autoFocus
+      >
+        <InputOTPGroup className="gap-2 sm:gap-3 justify-center">
+          {Array.from({ length }).map((_, index) => (
+            <InputOTPSlot
+              key={index}
+              index={index}
+              className={error ? 'border-destructive/80' : undefined}
+            />
+          ))}
+        </InputOTPGroup>
+      </InputOTP>
 
-      {error ? <p className="text-center text-xs text-destructive">{error}</p> : null}
+      {error ? <p className="text-center text-xs font-semibold text-destructive">{error}</p> : null}
     </div>
   );
 }
