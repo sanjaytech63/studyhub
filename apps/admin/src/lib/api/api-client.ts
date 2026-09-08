@@ -1,6 +1,10 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000/api/v1';
+const rawApiUrl = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000/api/v1').replace(
+  /\/+$/,
+  '',
+);
+const API_URL = rawApiUrl.endsWith('/api/v1') ? rawApiUrl : `${rawApiUrl}/api/v1`;
 
 const ACCESS_TOKEN_KEY = 'studyhub_admin_access_token';
 const REFRESH_TOKEN_KEY = 'studyhub_admin_refresh_token';

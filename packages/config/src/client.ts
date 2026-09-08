@@ -13,6 +13,9 @@ const getRequiredPublicEnv = (name: string, value: string | undefined): string =
 const apiUrl = getRequiredPublicEnv('NEXT_PUBLIC_API_URL', process.env.NEXT_PUBLIC_API_URL);
 const appUrl = getRequiredPublicEnv('NEXT_PUBLIC_APP_URL', process.env.NEXT_PUBLIC_APP_URL);
 
+const cleanApiUrl = apiUrl.replace(/\/+$/, '');
+const normalizedApiUrl = cleanApiUrl.endsWith('/api/v1') ? cleanApiUrl : `${cleanApiUrl}/api/v1`;
+
 export const clientConfig = Object.freeze({
   app: {
     url: appUrl,
@@ -20,7 +23,7 @@ export const clientConfig = Object.freeze({
   },
 
   api: {
-    baseUrl: apiUrl.replace(/\/+$/, ''),
+    baseUrl: normalizedApiUrl,
     timeout: 15_000,
   },
 });

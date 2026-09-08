@@ -34,7 +34,7 @@ WORKDIR /app
 
 COPY . .
 
-ARG NEXT_PUBLIC_API_URL=https://api.studyhubonline.store
+ARG NEXT_PUBLIC_API_URL=https://api.studyhubonline.store/api/v1
 ARG NEXT_PUBLIC_APP_URL=https://admin.studyhubonline.store
 ARG NEXT_PUBLIC_APP_NAME="StudyHub Admin"
 

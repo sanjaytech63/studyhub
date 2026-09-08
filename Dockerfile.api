@@ -84,6 +84,7 @@ COPY --from=build /app/packages/logger ./packages/logger
 COPY --from=build /app/packages/types ./packages/types
 COPY --from=build /app/packages/validation ./packages/validation
 COPY --from=build /app/packages/tsconfig ./packages/tsconfig
+COPY --from=build /app/scripts ./scripts
 
 EXPOSE 5000
 

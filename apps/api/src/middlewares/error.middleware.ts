@@ -39,28 +39,37 @@ export const errorMiddleware: ErrorRequestHandler = (error, req, res, _next) => 
   /*
    * Known application errors
    */
-  if (error instanceof AppError) {
+  const isAppError =
+    error instanceof AppError ||
+    (error &&
+      typeof error === 'object' &&
+      'statusCode' in error &&
+      typeof (error as Record<string, unknown>).statusCode === 'number' &&
+      'code' in error);
+
+  if (isAppError) {
+    const appErr = error as AppError;
     logger.warn(
       {
-        err: error,
+        err: appErr,
         requestId,
         method: req.method,
         url: req.originalUrl,
-        code: error.code,
-        statusCode: error.statusCode,
+        code: appErr.code,
+        statusCode: appErr.statusCode,
       },
       'Application error',
     );
 
-    res.status(error.statusCode).json({
+    res.status(appErr.statusCode).json({
       success: false,
 
       error: {
-        code: error.code,
-        message: error.message,
-        ...(error.details !== undefined
+        code: appErr.code,
+        message: appErr.message,
+        ...(appErr.details !== undefined
           ? {
-              details: error.details,
+              details: appErr.details,
             }
           : {}),
         requestId,

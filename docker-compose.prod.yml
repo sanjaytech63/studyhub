@@ -41,7 +41,7 @@ services:
       context: .
       dockerfile: Dockerfile.web
       args:
-        - NEXT_PUBLIC_API_URL=https://api.studyhubonline.store
+        - NEXT_PUBLIC_API_URL=https://api.studyhubonline.store/api/v1
         - NEXT_PUBLIC_APP_URL=https://studyhubonline.store
         - NEXT_PUBLIC_APP_NAME=StudyHub
     container_name: studyhub-web
@@ -62,7 +62,7 @@ services:
       context: .
       dockerfile: Dockerfile.admin
       args:
-        - NEXT_PUBLIC_API_URL=https://api.studyhubonline.store
+        - NEXT_PUBLIC_API_URL=https://api.studyhubonline.store/api/v1
         - NEXT_PUBLIC_APP_URL=https://admin.studyhubonline.store
         - NEXT_PUBLIC_APP_NAME="StudyHub Admin"
     container_name: studyhub-admin
