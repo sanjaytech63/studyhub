@@ -11,10 +11,20 @@ const router = Router();
 
 const apiPrefix = serverConfig.app.apiPrefix;
 
-router.use(`${apiPrefix}/health`, healthRoutes);
-router.use(`${apiPrefix}/auth`, authRoutes);
-router.use(`${apiPrefix}/me`, meRouter);
-router.use(`${apiPrefix}`, roleRoutes);
-router.use(`${apiPrefix}/admin`, adminUserRoutes);
+const registerRoutes = (prefix: string) => {
+  router.use(`${prefix}/health`, healthRoutes);
+  router.use(`${prefix}/auth`, authRoutes);
+  router.use(`${prefix}/me`, meRouter);
+  router.use(`${prefix}`, roleRoutes);
+  router.use(`${prefix}/admin`, adminUserRoutes);
+};
+
+// Register versioned routes (e.g. /api/v1/auth/login)
+registerRoutes(apiPrefix);
+
+// Register root routes (e.g. /auth/login) if prefix is configured
+if (apiPrefix) {
+  registerRoutes('');
+}
 
 export default router;
