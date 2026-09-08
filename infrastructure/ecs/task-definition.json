@@ -1,0 +1,62 @@
+{
+  "family": "studyhub-api-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::<AWS_ACCOUNT_ID>:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::<AWS_ACCOUNT_ID>:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "studyhub-api",
+      "image": "<AWS_ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com/studyhub-api:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "NODE_ENV", "value": "production" },
+        { "name": "PORT", "value": "5000" },
+        { "name": "WEB_URL", "value": "https://studyhubonline.store" },
+        { "name": "ADMIN_URL", "value": "https://admin.studyhubonline.store" },
+        { "name": "API_URL", "value": "https://api.studyhubonline.store" },
+        { "name": "API_PREFIX", "value": "/api/v1" },
+        {
+          "name": "CORS_ORIGIN",
+          "value": "https://studyhubonline.store,https://www.studyhubonline.store,https://admin.studyhubonline.store"
+        },
+        { "name": "OTP_EXPIRES_IN", "value": "300" },
+        { "name": "AWS_REGION", "value": "ap-south-1" }
+      ],
+      "secrets": [
+        {
+          "name": "DATABASE_URL",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:<AWS_ACCOUNT_ID>:secret:studyhub/production/database-url"
+        },
+        {
+          "name": "REDIS_URL",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:<AWS_ACCOUNT_ID>:secret:studyhub/production/redis-url"
+        },
+        {
+          "name": "JWT_ACCESS_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:<AWS_ACCOUNT_ID>:secret:studyhub/production/jwt:JWT_ACCESS_SECRET::"
+        },
+        {
+          "name": "JWT_REFRESH_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:<AWS_ACCOUNT_ID>:secret:studyhub/production/jwt:JWT_REFRESH_SECRET::"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/studyhub-api",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

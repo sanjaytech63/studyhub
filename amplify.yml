@@ -2,31 +2,47 @@ version: 1
 
 applications:
   - appRoot: apps/web
-
     frontend:
-      buildPath: /
-
       phases:
         preBuild:
           commands:
-            - nvm use 24
+            - nvm use 24 || nvm install 24
             - node --version
             - npm --version
-            - echo "=== START npm ci ==="
             - HUSKY=0 npm ci --ignore-scripts
-            - echo "=== npm ci COMPLETE ==="
-
         build:
           commands:
-            - echo "=== START WEB BUILD ==="
+            - echo "=== BUILDING WEB ==="
+            - env | grep -E '^(NEXT_PUBLIC_|NODE_ENV)' >> .env.production
             - npm run build:web
-            - echo "=== WEB BUILD COMPLETE ==="
-
       artifacts:
         baseDirectory: apps/web/.next
         files:
           - '**/*'
-
       cache:
         paths:
           - .npm/**/*
+          - apps/web/.next/cache/**/*
+
+  - appRoot: apps/admin
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - nvm use 24 || nvm install 24
+            - node --version
+            - npm --version
+            - HUSKY=0 npm ci --ignore-scripts
+        build:
+          commands:
+            - echo "=== BUILDING ADMIN ==="
+            - env | grep -E '^(NEXT_PUBLIC_|NODE_ENV)' >> .env.production
+            - npm run build:admin
+      artifacts:
+        baseDirectory: apps/admin/.next
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - .npm/**/*
+          - apps/admin/.next/cache/**/*

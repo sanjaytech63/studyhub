@@ -1,0 +1,104 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: studyhub-redis
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - '127.0.0.1:6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - studyhub-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: studyhub-api
+    restart: always
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - '127.0.0.1:5000:5000'
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - studyhub-network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      args:
+        - NEXT_PUBLIC_API_URL=https://api.studyhubonline.store
+        - NEXT_PUBLIC_APP_URL=https://studyhubonline.store
+        - NEXT_PUBLIC_APP_NAME=StudyHub
+    container_name: studyhub-web
+    restart: always
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    ports:
+      - '127.0.0.1:3000:3000'
+    networks:
+      - studyhub-network
+
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile.admin
+      args:
+        - NEXT_PUBLIC_API_URL=https://api.studyhubonline.store
+        - NEXT_PUBLIC_APP_URL=https://admin.studyhubonline.store
+        - NEXT_PUBLIC_APP_NAME="StudyHub Admin"
+    container_name: studyhub-admin
+    restart: always
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - HOSTNAME=0.0.0.0
+    ports:
+      - '127.0.0.1:3001:3001'
+    networks:
+      - studyhub-network
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: studyhub-worker
+    restart: always
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - studyhub-network
+
+volumes:
+  redis_data:
+    driver: local
+
+networks:
+  studyhub-network:
+    driver: bridge
