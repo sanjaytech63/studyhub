@@ -6,8 +6,14 @@ const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
 };
 
+const needsSsl =
+  serverConfig.app.isProduction ||
+  serverConfig.database.url.includes('rds.amazonaws.com') ||
+  serverConfig.database.url.includes('sslmode=require');
+
 const adapter = new PrismaPg({
   connectionString: serverConfig.database.url,
+  ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
 });
 
 export const prisma =
