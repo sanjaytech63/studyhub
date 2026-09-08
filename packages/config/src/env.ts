@@ -35,7 +35,13 @@ const findWorkspaceRoot = (startDirectory: string): string | undefined => {
 const workspaceRoot = findWorkspaceRoot(process.cwd());
 
 if (workspaceRoot) {
-  dotenv.config({
-    path: path.join(workspaceRoot, '.env'),
-  });
+  const isProd = process.env.NODE_ENV === 'production';
+  const prodEnvPath = path.join(workspaceRoot, '.env.production');
+  const defaultEnvPath = path.join(workspaceRoot, '.env');
+
+  if (isProd && fs.existsSync(prodEnvPath)) {
+    dotenv.config({ path: prodEnvPath });
+  } else if (fs.existsSync(defaultEnvPath)) {
+    dotenv.config({ path: defaultEnvPath });
+  }
 }
