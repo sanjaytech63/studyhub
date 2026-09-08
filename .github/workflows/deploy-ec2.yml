@@ -24,7 +24,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST || '15.206.223.108' }}
           username: ${{ secrets.EC2_USER || 'ubuntu' }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY || secrets.SSH_KEY || secrets.SSH_PRIVATE_KEY || secrets.EC2_KEY || vars.EC2_SSH_KEY || vars.SSH_KEY }}
           port: 22
           timeout: 1800s
           command_timeout: 1800s
