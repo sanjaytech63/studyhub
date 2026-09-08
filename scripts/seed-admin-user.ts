@@ -17,6 +17,15 @@ async function main() {
 
   console.log(`Setting up admin user for ${email}...`);
 
+  // Ensure avatarUrl column exists if migration hasn't run yet
+  try {
+    await prisma.$executeRawUnsafe(
+      'ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "avatarUrl" VARCHAR(1000);',
+    );
+  } catch (e) {
+    // Ignore if already exists or fails
+  }
+
   // 1. Ensure ADMIN role exists
   let adminRole = await prisma.role.findUnique({
     where: { name: 'ADMIN' },
