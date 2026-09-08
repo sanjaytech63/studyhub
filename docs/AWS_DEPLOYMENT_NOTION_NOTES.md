@@ -1,123 +1,194 @@
-# 📘 StudyHub AWS Production Deployment — Notion Notes
+# 📘 StudyHub AWS Production Deployment — Notion Runbook
 
-> **Status:** 🟡 In Progress / Active Deployment  
+> **Status:** 🟢 **Production Live & Verified (SSL Active)**  
 > **Project:** StudyHub Monorepo (`web`, `admin`, `api`, `worker`)  
-> **Primary Domain:** `studyhubonline.store`  
+> **Primary Domain:** [studyhubonline.store](https://studyhubonline.store)  
 > **AWS Region:** `ap-south-1` (Asia Pacific - Mumbai)  
-> **Server Elastic IP:** `15.206.223.108`  
-> **Last Updated:** September 8, 2026
+> **Elastic IP:** `15.206.223.108`  
+> **Date:** September 8, 2026  
+> **Author:** Sanjay & DeepMind Antigravity
 
 ---
 
-## 📌 Executive Summary & Architecture
+## 📌 1. Architecture Overview
 
-Deploying the **StudyHub** monorepo using **Subdomain Architecture (Option 1)**:
+StudyHub is deployed on AWS using a **Single-Server High-Density Docker Architecture** with an isolated AWS RDS PostgreSQL database:
 
-- 🌐 **Web App:** `https://studyhubonline.store` & `https://www.studyhubonline.store` (Next.js 16, Port 3000)
-- 🛡️ **Admin Portal:** `https://admin.studyhubonline.store` (Next.js 16, Port 3001)
-- ⚡ **Backend API:** `https://api.studyhubonline.store` (Express / Node.js 24, Port 5000)
-- 🗄️ **Database:** AWS RDS PostgreSQL (`studyhub-prod-db` in Mumbai `ap-south-1`)
-- 🚀 **Cache / Queues:** Upstash Redis (or Dockerized Redis)
-- 🔄 **Reverse Proxy:** Nginx with Let's Encrypt Wildcard / Multi-domain SSL (Certbot)
-
----
-
-## 🛠️ Infrastructure Inventory
-
-| Resource               | Identifier / Value                                           | Notes                                      |
-| :--------------------- | :----------------------------------------------------------- | :----------------------------------------- |
-| **VPC**                | `vpc-080ee16ec1b11057e`                                      | `studyhub-prod` VPC                        |
-| **EC2 Instance**       | `i-0ccd30b73fe597ae7`                                        | Ubuntu 24.04 LTS (`t3.medium`, 30 GB gp3)  |
-| **Elastic Public IP**  | `15.206.223.108`                                             | Static public IPv4 attached to EC2         |
-| **Private IP**         | `10.0.87.55`                                                 | Subnet `studyhub-private-2b`               |
-| **Public Route Table** | `rtb-032c88d4d3472f501`                                      | `studyhub-public-rt` (has IGW `0.0.0.0/0`) |
-| **RDS Endpoint**       | `studyhub-prod-db.cngoksag0z0e.ap-south-1.rds.amazonaws.com` | PostgreSQL 18.3, Port 5432                 |
-| **RDS Username**       | `studyhub_admin`                                             | Master database user                       |
-| **Security Group**     | `sg-006dabca578c89482`                                       | `studyhub-web-sg` (Ports 22, 80, 443 open) |
-
----
-
-## 🌐 DNS Setup (GoDaddy)
-
-Add 4 `A` records pointing to your Elastic IP **`15.206.223.108`**:
-
-| Type | Name / Host | Target Value     | TTL      | Status                                   |
-| :--- | :---------- | :--------------- | :------- | :--------------------------------------- |
-| `A`  | `@`         | `15.206.223.108` | 1/2 Hour | ✅ Configured                            |
-| `A`  | `www`       | `15.206.223.108` | 1/2 Hour | ✅ Configured (Deleted old Vercel CNAME) |
-| `A`  | `admin`     | `15.206.223.108` | 1/2 Hour | ✅ Configured                            |
-| `A`  | `api`       | `15.206.223.108` | 1/2 Hour | ✅ Configured                            |
+```
+[ Internet User / Browser ]
+             │
+      HTTPS (Port 443)
+             ▼
+   [ Elastic IP: 15.206.223.108 ]
+             │
+    [ Nginx Reverse Proxy + Let's Encrypt SSL ]
+    ├── studyhubonline.store / www  ──> 127.0.0.1:3000 (studyhub-web Next.js)
+    ├── admin.studyhubonline.store ──> 127.0.0.1:3001 (studyhub-admin Next.js)
+    └── api.studyhubonline.store   ──> 127.0.0.1:5000 (studyhub-api Express)
+             │
+    [ Internal Docker Network: studyhub-network ]
+    ├── studyhub-redis  (Port 6379)
+    ├── studyhub-worker (Background Jobs / BullMQ)
+             │
+      VPC Peering / Security Group Rule
+             ▼
+    [ AWS RDS PostgreSQL: studyhub-prod-db:5432 ]
+```
 
 ---
 
-## 🐛 Issues Encountered & Solutions Applied
+## 🛠️ 2. Cloud & Infrastructure Inventory
+
+| Resource                | Identifier / Value                | Details & Configuration                                                |
+| :---------------------- | :-------------------------------- | :--------------------------------------------------------------------- |
+| **AWS VPC**             | `vpc-080ee16ec1b11057e`           | CIDR: `10.0.0.0/16` (`studyhub-prod`)                                  |
+| **EC2 Server**          | `i-0ccd30b73fe597ae7`             | Ubuntu 24.04 LTS (`t3.medium`, 30 GB gp3)                              |
+| **Server Elastic IP**   | `15.206.223.108`                  | Static public IPv4 attached to EC2                                     |
+| **Private IP**          | `10.0.87.55`                      | Subnet `studyhub-private-2b`                                           |
+| **Route Table**         | `rtb-032c88d4d3472f501`           | `studyhub-public-rt` (`0.0.0.0/0` -> Internet Gateway)                 |
+| **EC2 Security Group**  | `sg-006dabca578c89482`            | Inbound: 22 (SSH), 80 (HTTP), 443 (HTTPS)                              |
+| **RDS PostgreSQL**      | `studyhub-prod-db`                | Endpoint: `studyhub-prod-db.cngoksag0z0e.ap-south-1.rds.amazonaws.com` |
+| **RDS Port & DB**       | Port `5432` / Database `studyhub` | PostgreSQL 18.3, Master User: `studyhub_admin`                         |
+| **RDS Security Group**  | `sg-0ef77fb4a0998ff9a`            | Inbound: Port 5432 from `10.0.0.0/16` (VPC)                            |
+| **Redis Cache**         | `studyhub-redis`                  | Docker Redis 7 with AOF persistence                                    |
+| **Memory Optimization** | 4GB Swap Space                    | `/swapfile` active to prevent OOM build crashes                        |
+
+---
+
+## 🌐 3. GoDaddy DNS Configuration
+
+| Type  | Host / Name | Points To (Elastic IP) | TTL      | Purpose                                             | Status  |
+| :---- | :---------- | :--------------------- | :------- | :-------------------------------------------------- | :------ |
+| **A** | `@`         | `15.206.223.108`       | 1/2 Hour | Root domain `https://studyhubonline.store`          | ✅ Live |
+| **A** | `www`       | `15.206.223.108`       | 1/2 Hour | Redirect / WWW alias                                | ✅ Live |
+| **A** | `admin`     | `15.206.223.108`       | 1/2 Hour | Admin Portal `https://admin.studyhubonline.store`   | ✅ Live |
+| **A** | `api`       | `15.206.223.108`       | 1/2 Hour | Backend REST API `https://api.studyhubonline.store` | ✅ Live |
+
+---
+
+## 🐛 4. Problems Encountered & Solutions Applied
 
 ### Issue 1: SSH Port 22 Connection Timed Out
 
-> **Symptom:** `ssh: connect to host 15.206.223.108 port 22: Connection timed out`  
-> **Root Cause:** The EC2 instance was launched inside `studyhub-private-2b` (`10.0.80.0/20`), which was routed only to a NAT Gateway (`studyhub-private-rt`). Instances in private route tables cannot receive inbound traffic from the internet, even with an Elastic IP.  
-> **Fix:** In **VPC** → **Route Tables** → **`studyhub-public-rt` (`rtb-032c88d4d3472f501`)** → **Edit Subnet Associations** → checked `studyhub-private-2b`. This instantly granted the instance direct Internet Gateway access.
+- **Symptom:** `ssh: connect to host 15.206.223.108 port 22: Connection timed out`
+- **Root Cause:** The EC2 was launched in subnet `studyhub-private-2b`, which was associated with `studyhub-private-rt` pointing only to a NAT Gateway. Private route tables cannot receive incoming internet traffic.
+- **Solution:** Re-associated `studyhub-private-2b` with `studyhub-public-rt` (`rtb-032c88d4d3472f501`) which routes directly to the AWS Internet Gateway.
 
-### Issue 2: Next.js Standalone Build in Monorepo
+### Issue 2: SSH Disconnections & Memory Exhaustion During Builds
 
-> **Root Cause:** Next.js production Docker builds fail without `.next/standalone`.  
-> **Fix:** Added `output: 'standalone'` to both `apps/web/next.config.ts` and `apps/admin/next.config.ts`. Created `Dockerfile.admin` and configured build arguments for client-side environment variables.
+- **Symptom:** `client_loop: send disconnect: Connection reset` and build freezes during Next.js and Prisma compilations.
+- **Root Cause:** Compiling Next.js 16 across multiple containers simultaneously consumed 100% CPU and exhausted the 4GB RAM of the instance.
+- **Solution:**
+  1. Created a 4GB persistent swap file: `sudo fallocate -l 4G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile`.
+  2. Added SSH keep-alive flag: `ssh -o ServerAliveInterval=60 ...`.
+  3. Built images sequentially rather than all at once.
 
-### Issue 3: SSH Client Disconnect during Heavy Docker Pulls
+### Issue 3: Next.js Missing Standalone Output
 
-> **Symptom:** `client_loop: send disconnect: Connection reset`  
-> **Fix:** Added keep-alive flags to SSH command: `-o ServerAliveInterval=60`. Switched to running database migrations directly inside the built API container rather than running a heavy standalone temporary container.
+- **Symptom:** Docker container build couldn't locate `.next/standalone`.
+- **Root Cause:** Next.js in a monorepo doesn't emit standalone output by default.
+- **Solution:** Added `output: 'standalone'` to `apps/web/next.config.ts` and `apps/admin/next.config.ts`.
+
+### Issue 4: Admin Docker Build Missing `public/` Folder
+
+- **Symptom:** `COPY --from=build /app/apps/admin/public ./apps/admin/public` returned `failed: not found`.
+- **Root Cause:** `apps/admin` did not have static assets and thus had no `public` directory created in git.
+- **Solution:** Added `RUN mkdir -p apps/admin/public` inside `Dockerfile.admin` and added `apps/admin/public/.gitkeep`.
+
+### Issue 5: Prisma 7 Build-Time Generate Failure
+
+- **Symptom:** `prisma generate` failed in Docker build with `Cannot resolve environment variable: DATABASE_URL`.
+- **Root Cause:** Prisma 7 requires `DATABASE_URL` even during client generation.
+- **Solution:** Passed a dummy build-time connection string: `DATABASE_URL="postgresql://build:build@localhost:5432/build" npm run db:generate`.
+
+### Issue 6: Node 24 ESM Module Resolution Error
+
+- **Symptom:** `Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@/utils'` and `Cannot find module '/app/apps/worker/dist/config/logger'`.
+- **Root Cause:** Node 24 strictly enforces ESM file extensions (`.js`) on compiled outputs and ignores TypeScript path aliases at runtime.
+- **Solution:** Configured `Dockerfile.api` and `Dockerfile.worker` to launch via `npx tsx --tsconfig ...`, allowing native TypeScript and ESM path resolution in production.
+
+### Issue 7: Missing `package.json` in API Runtime Container
+
+- **Symptom:** `npm error enoent Could not read package.json: no such file or directory, open '/app/package.json'`.
+- **Root Cause:** Runtime stage only copied subpackages and omitted `/app/package.json`, preventing npm workspaces from executing.
+- **Solution:** Added `COPY --from=build /app/package.json /app/package-lock.json ./` to `Dockerfile.api` and `Dockerfile.worker`.
+
+### Issue 8: RDS PostgreSQL Port 5432 Connection Timed Out
+
+- **Symptom:** `Error: P1001: Can't reach database server at studyhub-prod-db...:5432`.
+- **Root Cause:** The RDS Security Group (`sg-0ef77fb4a0998ff9a`) only allowed incoming traffic from itself. Traffic from the EC2 instance's security group was blocked by AWS.
+- **Solution:** Added an Inbound Rule to `sg-0ef77fb4a0998ff9a` for **Type: PostgreSQL (5432)** with **Source: `10.0.0.0/16`** (the VPC CIDR). Database migrations immediately succeeded.
 
 ---
 
-## 📋 Step-by-Step Deployment Runbook
+## 🚀 5. Daily Server Management Runbook
 
-### Step 1: Connect to Server via SSH
+### Connecting to the Server
 
 ```powershell
 ssh -o ServerAliveInterval=60 -i "C:\Users\Sanjay\Downloads\studyhub-key.pem" ubuntu@15.206.223.108
 ```
 
-### Step 2: Write Production Environment (`.env.production`)
-
-Run this single-line command inside `~/studyhub` (Base64-encoded to prevent terminal truncation):
-
-```bash
-echo "Tk9ERV9FTlY9cHJvZHVjdGlvbgpBUElfVVJMPWh0dHBzOi8vYXBpLnN0dWR5aHVib25saW5lLnN0b3JlCkFQSV9QUkVGSVg9L2FwaS92MQpXRUJfVVJMPWh0dHBzOi8vc3R1ZHlodWJvbmxpbmUuc3RvcmUKQURNSU5fVVJMPWh0dHBzOi8vYWRtaW4uc3R1ZHlodWJvbmxpbmUuc3RvcmUKTkVYVF9QVUJMSUNfQVBQX1VSTD1odHRwczovL3N0dWR5aHVib25saW5lLnN0b3JlCk5FWFRfUFVCTElDX0FQSV9VUkw9aHR0cHM6Ly9hcGkuc3R1ZHlodWJvbmxpbmUuc3RvcmUKTkVYVF9QVUJMSUNfQVBQX05BTUU9U3R1ZHlIdWIKUE9SVD01MDAwCkxPR19MRVZFTD1pbmZvCkRBVEFCQVNFX1VSTD1wb3N0Z3Jlc3FsOi8vc3R1ZHlodWJfYWRtaW46U3R1ZHlIdWIyMDI2JTIxUGFzc0BzdHVkeWh1Yi1wcm9kLWRiLmNuZ29rc2FnMHowZS5hcC1zb3V0aC0xLnJkcy5hbWF6b25hd3MuY29tOjU0MzIvc3R1ZHlodWI/c2NoZW1hPXB1YmxpYwpSRURJU19VUkw9cmVkaXNzOi8vZGVmYXVsdDpnUUFBQUFBQUFiNm9BQUlnY0RFMlpURTBaVE00T1dNMFlUZzBOVE5sT1dNek9XUTBNRGcwT0dZM1pUVTNOUUBtYWpvci1oYXdrLTExNDM0NC51cHN0YXNoLmlvOjYzNzkKSldUX0FDQ0VTU19TRUNSRVQ9YThmNGM5YjJlMWQwNDczODU2MjkxYTBjN2U1ZjNiMmQxODQ5NjczMDJjNWU3MTgyOTRhNmI1YzNkMmUxZjBhOQpKV1RfUkVGUkVTSF9TRUNSRVQ9N2UxYjljM2Q1YTBmMjg0NjEwNzM4NTkyYzRlNmExYjhkMmYwMzk0ODU3NjFhMmIzYzRkNWU2ZjdhOGI5YzBkMQpKV1RfQUNDRVNTX0VYUElSRVNfSU49MTVtCkpXVF9SRUZSRVNIX0VYUElSRVNfSU49N2QKT1RQX0VYUElSRVNfSU49MzAwClNNVFBfSE9TVD1zYW5kYm94LnNtdHAubWFpbHRyYXAuaW8KU01UUF9QT1JUPTI1MjUKU01UUF9VU0VSPTZjNDU5YzZhOTFiNDhjClNNVFBfUEFTU1dPUkQ9ZjAzNDZiNjVhYmNhYzkKU01UUF9GUk9NPSJTdHVkeUh1YiA8bm8tcmVwbHlAc3R1ZHlodWJvbmxpbmUuc3RvcmU+IgpTTVRQX1NFQ1VSRT1mYWxzZQpDTE9VRElOQVJZX0NMT1VEX05BTUU9c2d4aTFicHYKQ0xPVURJTkFSWV9BUElfS0VZPTc0MzY1NDY5NzgyOTk5NApDTE9VRElOQVJZX0FQSV9TRUNSRVQ9RjB3b3R0TFFwVzJPX2pqZFB3MFdUU2lKRHhjCkFXU19SRUdJT049YXAtc291dGgtMQpDT1JTX09SSUdJTj1odHRwczovL3N0dWR5aHVib25saW5lLnN0b3JlLGh0dHBzOi8vd3d3LnN0dWR5aHVib25saW5lLnN0b3JlLGh0dHBzOi8vYWRtaW4uc3R1ZHlodWJvbmxpbmUuc3RvcmUK" | base64 -d > ~/studyhub/.env.production
-```
-
-### Step 3: Build & Launch Docker Containers
+### Checking Status of All Services
 
 ```bash
 cd ~/studyhub
-docker compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.prod.yml ps
 ```
 
-### Step 4: Run Database Migrations
+### Viewing Real-Time Logs
 
 ```bash
-docker compose -f docker-compose.prod.yml exec api npm run db:deploy --workspace=@studyhub/database
+# View API logs
+docker logs -f studyhub-api
+
+# View Worker logs
+docker logs -f studyhub-worker
+
+# View Web logs
+docker logs -f studyhub-web
+
+# View Admin logs
+docker logs -f studyhub-admin
 ```
 
-### Step 5: Configure Nginx & Activate SSL
+### Applying Future Database Migrations
 
 ```bash
-sudo cp infrastructure/nginx/studyhub.conf /etc/nginx/sites-available/studyhub.conf
-sudo ln -s /etc/nginx/sites-available/studyhub.conf /etc/nginx/sites-enabled/
-sudo rm -f /etc/nginx/sites-enabled/default
+docker compose -f docker-compose.prod.yml exec -w /app/packages/database api npx prisma migrate deploy --config prisma.config.ts
+```
+
+### Pulling Updates & Rebuilding (CI/CD Workflow)
+
+```bash
+cd ~/studyhub
+git pull origin main
+
+# Rebuild specific updated service (e.g. web):
+docker compose -f docker-compose.prod.yml up -d --build web
+
+# Or rebuild API:
+docker compose -f docker-compose.prod.yml up -d --build api
+```
+
+### Nginx & SSL Certificate Management
+
+```bash
+# Test Nginx configuration
 sudo nginx -t
+
+# Reload Nginx
 sudo systemctl reload nginx
 
-# Issue Let's Encrypt SSL certificates
-sudo certbot --nginx -d studyhubonline.store -d www.studyhubonline.store -d admin.studyhubonline.store -d api.studyhubonline.store
+# Certificates auto-renew via Certbot systemd timer:
+sudo certbot renew --dry-run
 ```
 
 ---
 
-## 🎯 Verification Matrix
+## 🎯 6. Verified Live Endpoints
 
-- [ ] **Web Application:** `https://studyhubonline.store`
-- [ ] **Admin Portal:** `https://admin.studyhubonline.store`
-- [ ] **API Health Endpoint:** `https://api.studyhubonline.store/api/v1/health`
-- [ ] **Database Connection:** Verified through API health check (`database: "connected"`)
-- [ ] **SSL Certificates:** A-grade rating with automatic 90-day renewal via systemd certbot timer
+- 🌐 **Web Application:** [https://studyhubonline.store](https://studyhubonline.store)
+- 🛡️ **Admin Portal:** [https://admin.studyhubonline.store](https://admin.studyhubonline.store)
+- ⚡ **API Readiness (DB Connected):** [https://api.studyhubonline.store/api/v1/health/ready](https://api.studyhubonline.store/api/v1/health/ready)
+- 💓 **API Liveness Probe:** [https://api.studyhubonline.store/api/v1/health/live](https://api.studyhubonline.store/api/v1/health/live)
