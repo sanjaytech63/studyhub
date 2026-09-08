@@ -10,6 +10,7 @@
  *   npx tsx scripts/test-email.ts sanjaytech6375@gmail.com
  */
 
+import 'dotenv/config';
 import nodemailer from 'nodemailer';
 
 async function main() {
