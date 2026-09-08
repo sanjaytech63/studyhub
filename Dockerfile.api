@@ -46,7 +46,8 @@ WORKDIR /app
 COPY . .
 
 # Generate Prisma Client
-RUN npm run db:generate --workspace=@studyhub/database
+RUN DATABASE_URL="postgresql://build:build@localhost:5432/build" \
+    npm run db:generate --workspace=@studyhub/database
 
 # Build database package
 RUN npm run build --workspace=@studyhub/database
