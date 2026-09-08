@@ -7,8 +7,6 @@ FROM node:24-alpine AS base
 
 WORKDIR /app
 
-ENV NODE_ENV=production
-
 # ------------------------------------------------------------
 # Dependency manifests
 # ------------------------------------------------------------
@@ -31,8 +29,8 @@ COPY packages/validation/package.json ./packages/validation/
 # Therefore scripts must exist before npm ci.
 COPY scripts ./scripts
 
-# Install dependencies
-RUN npm ci
+# Install dependencies including devDependencies for build
+RUN npm ci --include=dev
 
 
 # ============================================================

@@ -7,8 +7,6 @@ FROM node:24-alpine AS base
 
 WORKDIR /app
 
-ENV NODE_ENV=production
-
 # ------------------------------------------------------------
 # Dependency manifests
 # ------------------------------------------------------------
@@ -23,7 +21,7 @@ COPY packages/tsconfig/package.json ./packages/tsconfig/
 # Root prepare script
 COPY scripts ./scripts
 
-RUN npm ci
+RUN npm ci --include=dev
 
 
 # ============================================================
