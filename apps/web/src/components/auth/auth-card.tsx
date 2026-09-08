@@ -15,16 +15,16 @@ export function AuthCard({ title, description, children, footer, showLogo = true
     <div className="w-full">
       {/* Top Emblem like Admin Login Page */}
       {showLogo && (
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-7">
           <Link
             href="/"
-            className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-primary to-primary/80 shadow-xl shadow-primary/25 border border-primary/40 mb-4 transition-transform hover:scale-105 active:scale-95"
+            className="inline-flex h-13 w-13 items-center justify-center rounded-2xl bg-gradient-to-tr from-primary to-primary/80 shadow-xl shadow-primary/25 border border-primary/40 mb-3.5 transition-transform hover:scale-105 active:scale-95"
             aria-label="StudyHub home"
           >
-            <BookOpen className="h-7 w-7 text-primary-foreground" />
+            <BookOpen className="h-6 w-6 text-primary-foreground" />
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">{title}</h1>
-          <p className="mt-1.5 text-xs text-muted-foreground">{description}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{title}</h1>
+          <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground">{description}</p>
         </div>
       )}
 

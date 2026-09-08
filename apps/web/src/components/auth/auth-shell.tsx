@@ -11,7 +11,7 @@ interface AuthShellProps {
 
 export function AuthShell({ children }: AuthShellProps) {
   return (
-    <div className="relative min-h-dvh bg-background text-foreground overflow-hidden">
+    <div className="relative min-h-dvh flex flex-col bg-background text-foreground overflow-x-hidden">
       {/* Background ambient gradient blurs */}
       <div className="pointer-events-none absolute -top-40 -left-40 h-106 w-96 rounded-full bg-primary/15 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-40 -right-40 h-106 w-96 rounded-full bg-purple-500/10 blur-3xl" />
@@ -22,7 +22,7 @@ export function AuthShell({ children }: AuthShellProps) {
       {/* Top Header */}
       <header
         className={[
-          'fixed inset-x-0 top-0 z-40',
+          'sticky top-0 z-40',
           'border-b border-border/50',
           'bg-background/80',
           'backdrop-blur-xl',
@@ -47,7 +47,7 @@ export function AuthShell({ children }: AuthShellProps) {
       </header>
 
       {/* Main Content Area */}
-      <main className="relative z-10 flex min-h-dvh items-center justify-center px-4 py-24 sm:px-6">
+      <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-8 sm:py-12 sm:px-6">
         <div className="w-full max-w-md animate-in fade-in zoom-in-95 duration-300">{children}</div>
       </main>
     </div>
