@@ -1,18 +1,19 @@
-# 📘 StudyHub AWS Production Deployment — Notion Runbook
+# 📘 StudyHub AWS Production & CI/CD Master Runbook
 
-> **Status:** 🟢 **Production Live & Verified (SSL Active)**  
+> **Status:** 🟢 **Production Live & SSL Secured**  
 > **Project:** StudyHub Monorepo (`web`, `admin`, `api`, `worker`)  
-> **Primary Domain:** [studyhubonline.store](https://studyhubonline.store)  
+> **Primary Domain:** [https://studyhubonline.store](https://studyhubonline.store)  
 > **AWS Region:** `ap-south-1` (Asia Pacific - Mumbai)  
 > **Elastic IP:** `15.206.223.108`  
-> **Date:** September 8, 2026  
+> **Database:** AWS RDS PostgreSQL (`studyhub-prod-db`)  
+> **Last Updated:** September 8, 2026  
 > **Author:** Sanjay & DeepMind Antigravity
 
 ---
 
-## 📌 1. Architecture Overview
+## 📌 1. Production Architecture Overview
 
-StudyHub is deployed on AWS using a **Single-Server High-Density Docker Architecture** with an isolated AWS RDS PostgreSQL database:
+StudyHub runs on AWS using a **Single-Server High-Density Docker Architecture** with an isolated AWS RDS PostgreSQL database and automated GitHub Actions CI/CD:
 
 ```
 [ Internet User / Browser ]
@@ -30,7 +31,7 @@ StudyHub is deployed on AWS using a **Single-Server High-Density Docker Architec
     ├── studyhub-redis  (Port 6379)
     ├── studyhub-worker (Background Jobs / BullMQ)
              │
-      VPC Peering / Security Group Rule
+      VPC Security Group Inbound Rule (Port 5432 with SSL)
              ▼
     [ AWS RDS PostgreSQL: studyhub-prod-db:5432 ]
 ```
@@ -49,7 +50,7 @@ StudyHub is deployed on AWS using a **Single-Server High-Density Docker Architec
 | **EC2 Security Group**  | `sg-006dabca578c89482`            | Inbound: 22 (SSH), 80 (HTTP), 443 (HTTPS)                              |
 | **RDS PostgreSQL**      | `studyhub-prod-db`                | Endpoint: `studyhub-prod-db.cngoksag0z0e.ap-south-1.rds.amazonaws.com` |
 | **RDS Port & DB**       | Port `5432` / Database `studyhub` | PostgreSQL 18.3, Master User: `studyhub_admin`                         |
-| **RDS Security Group**  | `sg-0ef77fb4a0998ff9a`            | Inbound: Port 5432 from `10.0.0.0/16` (VPC)                            |
+| **RDS Security Group**  | `sg-0ef77fb4a0998ff9a`            | Inbound: Port 5432 from `10.0.0.0/16` (VPC CIDR)                       |
 | **Redis Cache**         | `studyhub-redis`                  | Docker Redis 7 with AOF persistence                                    |
 | **Memory Optimization** | 4GB Swap Space                    | `/swapfile` active to prevent OOM build crashes                        |
 
@@ -66,129 +67,140 @@ StudyHub is deployed on AWS using a **Single-Server High-Density Docker Architec
 
 ---
 
-## 🐛 4. Problems Encountered & Solutions Applied
+## 🔄 4. Local vs. Production Environment Comparison
 
-### Issue 1: SSH Port 22 Connection Timed Out
-
-- **Symptom:** `ssh: connect to host 15.206.223.108 port 22: Connection timed out`
-- **Root Cause:** The EC2 was launched in subnet `studyhub-private-2b`, which was associated with `studyhub-private-rt` pointing only to a NAT Gateway. Private route tables cannot receive incoming internet traffic.
-- **Solution:** Re-associated `studyhub-private-2b` with `studyhub-public-rt` (`rtb-032c88d4d3472f501`) which routes directly to the AWS Internet Gateway.
-
-### Issue 2: SSH Disconnections & Memory Exhaustion During Builds
-
-- **Symptom:** `client_loop: send disconnect: Connection reset` and build freezes during Next.js and Prisma compilations.
-- **Root Cause:** Compiling Next.js 16 across multiple containers simultaneously consumed 100% CPU and exhausted the 4GB RAM of the instance.
-- **Solution:**
-  1. Created a 4GB persistent swap file: `sudo fallocate -l 4G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile`.
-  2. Added SSH keep-alive flag: `ssh -o ServerAliveInterval=60 ...`.
-  3. Built images sequentially rather than all at once.
-
-### Issue 3: Next.js Missing Standalone Output
-
-- **Symptom:** Docker container build couldn't locate `.next/standalone`.
-- **Root Cause:** Next.js in a monorepo doesn't emit standalone output by default.
-- **Solution:** Added `output: 'standalone'` to `apps/web/next.config.ts` and `apps/admin/next.config.ts`.
-
-### Issue 4: Admin Docker Build Missing `public/` Folder
-
-- **Symptom:** `COPY --from=build /app/apps/admin/public ./apps/admin/public` returned `failed: not found`.
-- **Root Cause:** `apps/admin` did not have static assets and thus had no `public` directory created in git.
-- **Solution:** Added `RUN mkdir -p apps/admin/public` inside `Dockerfile.admin` and added `apps/admin/public/.gitkeep`.
-
-### Issue 5: Prisma 7 Build-Time Generate Failure
-
-- **Symptom:** `prisma generate` failed in Docker build with `Cannot resolve environment variable: DATABASE_URL`.
-- **Root Cause:** Prisma 7 requires `DATABASE_URL` even during client generation.
-- **Solution:** Passed a dummy build-time connection string: `DATABASE_URL="postgresql://build:build@localhost:5432/build" npm run db:generate`.
-
-### Issue 6: Node 24 ESM Module Resolution Error
-
-- **Symptom:** `Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@/utils'` and `Cannot find module '/app/apps/worker/dist/config/logger'`.
-- **Root Cause:** Node 24 strictly enforces ESM file extensions (`.js`) on compiled outputs and ignores TypeScript path aliases at runtime.
-- **Solution:** Configured `Dockerfile.api` and `Dockerfile.worker` to launch via `npx tsx --tsconfig ...`, allowing native TypeScript and ESM path resolution in production.
-
-### Issue 7: Missing `package.json` in API Runtime Container
-
-- **Symptom:** `npm error enoent Could not read package.json: no such file or directory, open '/app/package.json'`.
-- **Root Cause:** Runtime stage only copied subpackages and omitted `/app/package.json`, preventing npm workspaces from executing.
-- **Solution:** Added `COPY --from=build /app/package.json /app/package-lock.json ./` to `Dockerfile.api` and `Dockerfile.worker`.
-
-### Issue 8: RDS PostgreSQL Port 5432 Connection Timed Out
-
-- **Symptom:** `Error: P1001: Can't reach database server at studyhub-prod-db...:5432`.
-- **Root Cause:** The RDS Security Group (`sg-0ef77fb4a0998ff9a`) only allowed incoming traffic from itself. Traffic from the EC2 instance's security group was blocked by AWS.
-- **Solution:** Added an Inbound Rule to `sg-0ef77fb4a0998ff9a` for **Type: PostgreSQL (5432)** with **Source: `10.0.0.0/16`** (the VPC CIDR). Database migrations immediately succeeded.
+| Configuration           | Local Development (`.env`)                  | Production EC2 (`.env.production`)              |
+| :---------------------- | :------------------------------------------ | :---------------------------------------------- |
+| **`NODE_ENV`**          | `development`                               | `production`                                    |
+| **Web App URL**         | `http://localhost:3000`                     | `https://studyhubonline.store`                  |
+| **Admin Portal URL**    | `http://localhost:3001`                     | `https://admin.studyhubonline.store`            |
+| **API Base URL**        | `http://localhost:5000/api/v1`              | `https://api.studyhubonline.store/api/v1`       |
+| **PostgreSQL Database** | `localhost:5432/studyhub` _(no SSL needed)_ | AWS RDS PostgreSQL _(automatic SSL encryption)_ |
+| **Redis Cache**         | `redis://localhost:6379`                    | `redis://redis:6379` _(Docker service name)_    |
 
 ---
 
-## 🚀 5. Daily Server Management Runbook
+## ⚡ 5. Database & Migration Commands Cheat Sheet
 
-### Connecting to the Server
+Convenience scripts are configured in the root `package.json` so you never have to remember long workspace commands:
 
-```powershell
-ssh -o ServerAliveInterval=60 -i "C:\Users\Sanjay\Downloads\studyhub-key.pem" ubuntu@15.206.223.108
+| Action                           | Local Development (VS Code Terminal)           | Production (EC2 / CI-CD)                                                |
+| :------------------------------- | :--------------------------------------------- | :---------------------------------------------------------------------- |
+| **Generate Prisma Client**       | `npm run db:generate`                          | Automatically executed inside Docker build                              |
+| **Create New Migration**         | `npm run db:migrate` _(prompts for name)_      | Not run on prod (migrations are created locally)                        |
+| **Deploy Pending Migrations**    | `npm run db:deploy`                            | Automatically run by GitHub Actions CI/CD!                              |
+| **Database GUI (Prisma Studio)** | `npm run db:studio` _(opens `localhost:5555`)_ | N/A (local development only)                                            |
+| **Seed Roles & Admin User**      | `npm run seed:admin`                           | `docker compose -f docker-compose.prod.yml exec api npm run seed:admin` |
+
+---
+
+## 🚀 6. Automated GitHub Actions CI/CD Pipeline
+
+You **never need to SSH manually** to deploy code! The deployment pipeline is located at `.github/workflows/deploy-ec2.yml`.
+
+### One-Time Setup: Add 3 Secrets in GitHub
+
+In GitHub $\to$ **`sanjaytech63/studyhub`** $\to$ **Settings** $\to$ **Secrets and variables** $\to$ **Actions** $\to$ **New repository secret**:
+
+| Secret Name       | Value                                                           |
+| :---------------- | :-------------------------------------------------------------- |
+| **`EC2_HOST`**    | `15.206.223.108`                                                |
+| **`EC2_USER`**    | `ubuntu`                                                        |
+| **`EC2_SSH_KEY`** | Entire contents of `C:\Users\Sanjay\Downloads\studyhub-key.pem` |
+
+### The Professional Branching Strategy (Git Flow)
+
+**Rule: Never push directly to `main`!**
+
 ```
-
-### Checking Status of All Services
-
-```bash
-cd ~/studyhub
-docker compose -f docker-compose.prod.yml ps
-```
-
-### Viewing Real-Time Logs
-
-```bash
-# View API logs
-docker logs -f studyhub-api
-
-# View Worker logs
-docker logs -f studyhub-worker
-
-# View Web logs
-docker logs -f studyhub-web
-
-# View Admin logs
-docker logs -f studyhub-admin
-```
-
-### Applying Future Database Migrations
-
-```bash
-docker compose -f docker-compose.prod.yml exec -w /app/packages/database api npx prisma migrate deploy --config prisma.config.ts
-```
-
-### Pulling Updates & Rebuilding (CI/CD Workflow)
-
-```bash
-cd ~/studyhub
-git pull origin main
-
-# Rebuild specific updated service (e.g. web):
-docker compose -f docker-compose.prod.yml up -d --build web
-
-# Or rebuild API:
-docker compose -f docker-compose.prod.yml up -d --build api
-```
-
-### Nginx & SSL Certificate Management
-
-```bash
-# Test Nginx configuration
-sudo nginx -t
-
-# Reload Nginx
-sudo systemctl reload nginx
-
-# Certificates auto-renew via Certbot systemd timer:
-sudo certbot renew --dry-run
+[ Your Local VS Code ]
+       │
+1. Create Branch: `git checkout -b feature/my-feature`
+2. Code & Commit: `git commit -m "feat: add new feature"`
+3. Push Branch: `git push -u origin feature/my-feature`
+       │
+[ GitHub Pull Request ]
+       │
+4. Open PR to `main` -> GitHub CI validates format, lint & typecheck
+5. Click "Merge pull request"
+       │
+[ Automated GitHub Actions CD ]
+       │
+6. GitHub connects to EC2 via SSH
+7. Runs `git pull origin main`
+8. Applies pending Prisma migrations to RDS PostgreSQL
+9. Rebuilds and restarts updated Docker containers
+10. Prunes old Docker cache -> Live in seconds!
 ```
 
 ---
 
-## 🎯 6. Verified Live Endpoints
+## 🐛 7. Complete Troubleshooting Log & Fixes Applied
+
+### 1. SSH Port 22 Connection Timed Out
+
+- **Cause:** EC2 was in private route table routed only to a NAT Gateway.
+- **Fix:** Associated `studyhub-private-2b` with `studyhub-public-rt` (Internet Gateway).
+
+### 2. Next.js Monorepo Standalone Output
+
+- **Cause:** Next.js didn't emit standalone output folders.
+- **Fix:** Added `output: 'standalone'` in `apps/web/next.config.ts` and `apps/admin/next.config.ts`.
+
+### 3. SSH Connection Reset & OOM During Docker Builds
+
+- **Cause:** Compiling Next.js 16 across multiple containers simultaneously consumed 100% CPU and physical RAM.
+- **Fix:** Created a 4GB persistent Swap file (`/swapfile`), added `-o ServerAliveInterval=60` to SSH, and built containers sequentially.
+
+### 4. Admin Docker Build Missing `public/` Directory
+
+- **Cause:** `apps/admin` lacked static assets, breaking the Dockerfile `COPY` step.
+- **Fix:** Added `RUN mkdir -p apps/admin/public` and added `.gitkeep`.
+
+### 5. Prisma 7 Build-Time Generate Failure
+
+- **Cause:** Prisma 7 requires `DATABASE_URL` during client generation.
+- **Fix:** Passed dummy build-time variable: `DATABASE_URL="postgresql://build:build@localhost:5432/build" npm run db:generate`.
+
+### 6. Node 24 ESM Module Resolution (API & Worker)
+
+- **Cause:** Node 24 ESM strictly enforces `.js` extensions on compiled relative imports.
+- **Fix:** Configured `Dockerfile.api` and `Dockerfile.worker` to launch via `npx tsx --tsconfig ...`.
+
+### 7. Missing `package.json` in API Runtime Container
+
+- **Cause:** Runtime stage omitted root `package.json`, causing npm workspace commands to fail.
+- **Fix:** Added `COPY --from=build /app/package.json /app/package-lock.json ./` to both Dockerfiles.
+
+### 8. RDS PostgreSQL Port 5432 Inbound Rule
+
+- **Cause:** RDS Security Group only allowed traffic from itself, blocking EC2 (`10.0.87.55`).
+- **Fix:** Added an Inbound Rule to `sg-0ef77fb4a0998ff9a` for PostgreSQL port 5432 from `10.0.0.0/16` (VPC CIDR).
+
+### 9. Route Prefix Mismatch (`/auth/login` vs `/api/v1/auth/login`)
+
+- **Cause:** Frontend sent requests to `/auth/login` while backend was mounted under `/api/v1/auth/login`.
+- **Fix:** Mounted routes at both `/api/v1` and root `/` in Express API, and normalized client config URLs to guarantee `/api/v1`.
+
+### 10. `no pg_hba.conf entry ... no encryption` (SSL Error)
+
+- **Cause:** AWS RDS PostgreSQL strictly enforces SSL/TLS encryption. Node-postgres tried unencrypted connections.
+- **Fix:** Enabled automatic SSL (`ssl: { rejectUnauthorized: false }`) in `packages/database/src/client.ts` for RDS and production connections.
+
+### 11. Missing `User.avatarUrl` Column
+
+- **Cause:** `avatarUrl` existed in `schema.prisma` but had no migration generated.
+- **Fix:** Created migration `20260824000000_add_avatar_url` and added safe check to `seed-admin-user.ts`.
+
+### 12. Missing `STUDENT` Role & Admin 403 Forbidden Errors
+
+- **Cause:** Database was completely unseeded; `STUDENT` role was missing (breaking signup) and `ADMIN` role had no `RolePermission` entries (breaking admin pages with 403).
+- **Fix:** Enhanced `scripts/seed-admin-user.ts` to bootstrap all 3 roles (`STUDENT`, `INSTRUCTOR`, `ADMIN`), all 26 permissions, and grant full RBAC privileges to `ADMIN`.
+
+---
+
+## 🎯 8. Verified Live Production Endpoints
 
 - 🌐 **Web Application:** [https://studyhubonline.store](https://studyhubonline.store)
 - 🛡️ **Admin Portal:** [https://admin.studyhubonline.store](https://admin.studyhubonline.store)
-- ⚡ **API Readiness (DB Connected):** [https://api.studyhubonline.store/api/v1/health/ready](https://api.studyhubonline.store/api/v1/health/ready)
-- 💓 **API Liveness Probe:** [https://api.studyhubonline.store/api/v1/health/live](https://api.studyhubonline.store/api/v1/health/live)
+- ⚡ **Backend API Health:** [https://api.studyhubonline.store/api/v1/health/ready](https://api.studyhubonline.store/api/v1/health/ready)
