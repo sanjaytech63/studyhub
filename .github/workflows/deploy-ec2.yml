@@ -14,6 +14,7 @@ jobs:
   deploy:
     name: Deploy to Production EC2
     runs-on: ubuntu-latest
+    environment: EC2_HOST
 
     steps:
       - name: Checkout Code
