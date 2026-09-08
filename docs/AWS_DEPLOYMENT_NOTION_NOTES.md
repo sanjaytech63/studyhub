@@ -197,9 +197,68 @@ In GitHub $\to$ **`sanjaytech63/studyhub`** $\to$ **Settings** $\to$ **Secrets a
 - **Cause:** Database was completely unseeded; `STUDENT` role was missing (breaking signup) and `ADMIN` role had no `RolePermission` entries (breaking admin pages with 403).
 - **Fix:** Enhanced `scripts/seed-admin-user.ts` to bootstrap all 3 roles (`STUDENT`, `INSTRUCTOR`, `ADMIN`), all 26 permissions, and grant full RBAC privileges to `ADMIN`.
 
+### 13. Email / OTP Not Received (Registration & Forgot Password)
+
+- **Cause:**
+  1. `SMTP_HOST`, `SMTP_USER`, and `SMTP_PASSWORD` were empty in `.env.production` (no mail server was configured).
+  2. `resendEmailVerificationOtp` in `auth.service.ts` generated OTPs in the DB but was missing the call to dispatch the email.
+  3. `sendMail` had no safety check or fallback, so invalid or missing SMTP settings caused requests to fail or hang.
+- **Fix:**
+  1. Updated `mail.service.ts` and `mail.client.ts` with resilience: if SMTP is not configured, it logs the simulated email and raw OTP directly to Docker/console logs (`docker logs studyhub-api`) so development and testing are never blocked.
+  2. Added missing `sendEmailVerificationOtpEmail` dispatch in `resendEmailVerificationOtp`.
+  3. Wrapped email dispatches in try-catch blocks to prevent email delivery errors from breaking account creation.
+  4. Added `Enter OTP & Reset Password` direct navigation button on the forgot password page.
+  5. Created `scripts/test-email.ts` (`npm run test:email`) for one-command SMTP diagnostics and testing.
+
 ---
 
-## 🎯 8. Verified Live Production Endpoints
+## 📧 8. How to Configure SMTP for Real Email / OTP Delivery
+
+To receive real OTP emails in user inboxes (for Registration, Forgot Password, and Email Change), configure your SMTP provider:
+
+### Option A: Free Gmail SMTP (Fastest — 2 Minutes)
+
+1. Go to your **Google Account** $\to$ **Security** $\to$ **2-Step Verification**.
+2. Scroll to the bottom and click **App passwords**.
+3. Create a new app password named `StudyHub`.
+4. Copy the generated 16-character code (e.g. `abcd efgh ijkl mnop`).
+5. In `.env.production` on EC2 (or `.env` locally), configure:
+   ```env
+   SMTP_HOST=smtp.gmail.com
+   SMTP_PORT=587
+   SMTP_USER=your-email@gmail.com
+   SMTP_PASSWORD=abcdefghijklmnop
+   SMTP_FROM="StudyHub <your-email@gmail.com>"
+   SMTP_SECURE=false
+   ```
+
+### Option B: AWS SES (Mumbai ap-south-1)
+
+1. In AWS Console $\to$ **Amazon SES** $\to$ **SMTP Settings** $\to$ **Create SMTP Credentials**.
+2. Verify your domain `studyhubonline.store` or sender email in SES.
+3. In `.env.production`, configure:
+   ```env
+   SMTP_HOST=email-smtp.ap-south-1.amazonaws.com
+   SMTP_PORT=587
+   SMTP_USER=<SES_SMTP_USERNAME>
+   SMTP_PASSWORD=<SES_SMTP_PASSWORD>
+   SMTP_FROM="StudyHub <no-reply@studyhubonline.store>"
+   SMTP_SECURE=false
+   ```
+
+### Test Email Command:
+
+```bash
+# Locally
+npm run test:email your-email@gmail.com
+
+# On EC2 Production Container
+docker compose -f docker-compose.prod.yml exec api npm run test:email your-email@gmail.com
+```
+
+---
+
+## 🎯 9. Verified Live Production Endpoints
 
 - 🌐 **Web Application:** [https://studyhubonline.store](https://studyhubonline.store)
 - 🛡️ **Admin Portal:** [https://admin.studyhubonline.store](https://admin.studyhubonline.store)

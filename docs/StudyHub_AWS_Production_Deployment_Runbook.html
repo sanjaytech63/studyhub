@@ -1,457 +1,460 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>StudyHub AWS Production & CI/CD Master Runbook</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  <head>
+    <meta charset="UTF-8" />
+    <title>StudyHub AWS Production & CI/CD Master Runbook</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-    @page {
-      size: A4;
-      margin: 1.4cm;
-    }
+      @page {
+        size: A4;
+        margin: 1.4cm;
+      }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      color: #37352f;
-      background-color: #ffffff;
-      line-height: 1.55;
-      font-size: 13px;
-      margin: 0;
-      padding: 0;
-    }
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Helvetica,
+          Arial,
+          sans-serif;
+        color: #37352f;
+        background-color: #ffffff;
+        line-height: 1.55;
+        font-size: 13px;
+        margin: 0;
+        padding: 0;
+      }
 
-    .container {
-      max-width: 840px;
-      margin: 0 auto;
-    }
+      .container {
+        max-width: 840px;
+        margin: 0 auto;
+      }
 
-    h1 {
-      font-size: 26px;
-      font-weight: 700;
-      margin-top: 0;
-      margin-bottom: 8px;
-      color: #111827;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+      h1 {
+        font-size: 26px;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 8px;
+        color: #111827;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-    h2 {
-      font-size: 16px;
-      font-weight: 600;
-      color: #1f2937;
-      border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 5px;
-      margin-top: 24px;
-      margin-bottom: 12px;
-      page-break-after: avoid;
-    }
+      h2 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1f2937;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 5px;
+        margin-top: 24px;
+        margin-bottom: 12px;
+        page-break-after: avoid;
+      }
 
-    h3 {
-      font-size: 14px;
-      font-weight: 600;
-      color: #374151;
-      margin-top: 14px;
-      margin-bottom: 5px;
-      page-break-after: avoid;
-    }
+      h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-top: 14px;
+        margin-bottom: 5px;
+        page-break-after: avoid;
+      }
 
-    p {
-      margin: 6px 0;
-    }
+      p {
+        margin: 6px 0;
+      }
 
-    .callout {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-left: 4px solid #3b82f6;
-      border-radius: 6px;
-      padding: 10px 14px;
-      margin: 12px 0;
-      font-size: 12.5px;
-    }
+      .callout {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #3b82f6;
+        border-radius: 6px;
+        padding: 10px 14px;
+        margin: 12px 0;
+        font-size: 12.5px;
+      }
 
-    .callout.success {
-      background: #f0fdf4;
-      border-color: #bbf7d0;
-      border-left-color: #22c55e;
-    }
+      .callout.success {
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+        border-left-color: #22c55e;
+      }
 
-    .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      font-size: 10.5px;
-      font-weight: 600;
-      border-radius: 9999px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        font-size: 10.5px;
+        font-weight: 600;
+        border-radius: 9999px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
 
-    .badge.green {
-      background-color: #dcfce7;
-      color: #15803d;
-    }
+      .badge.green {
+        background-color: #dcfce7;
+        color: #15803d;
+      }
 
-    .badge.blue {
-      background-color: #dbeafe;
-      color: #1d4ed8;
-    }
+      .badge.blue {
+        background-color: #dbeafe;
+        color: #1d4ed8;
+      }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 12px 0;
-      font-size: 12.5px;
-      page-break-inside: avoid;
-    }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0;
+        font-size: 12.5px;
+        page-break-inside: avoid;
+      }
 
-    th, td {
-      border: 1px solid #e5e7eb;
-      padding: 7px 10px;
-      text-align: left;
-    }
+      th,
+      td {
+        border: 1px solid #e5e7eb;
+        padding: 7px 10px;
+        text-align: left;
+      }
 
-    th {
-      background-color: #f9fafb;
-      font-weight: 600;
-      color: #374151;
-    }
+      th {
+        background-color: #f9fafb;
+        font-weight: 600;
+        color: #374151;
+      }
 
-    pre {
-      background-color: #1e293b;
-      color: #f8fafc;
-      padding: 10px 14px;
-      border-radius: 6px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11.5px;
-      overflow-x: auto;
-      margin: 8px 0;
-      line-height: 1.45;
-      page-break-inside: avoid;
-    }
+      pre {
+        background-color: #1e293b;
+        color: #f8fafc;
+        padding: 10px 14px;
+        border-radius: 6px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11.5px;
+        overflow-x: auto;
+        margin: 8px 0;
+        line-height: 1.45;
+        page-break-inside: avoid;
+      }
 
-    code {
-      font-family: 'JetBrains Mono', monospace;
-      background: #f1f5f9;
-      color: #0f172a;
-      padding: 1px 4px;
-      border-radius: 4px;
-      font-size: 11.5px;
-    }
+      code {
+        font-family: 'JetBrains Mono', monospace;
+        background: #f1f5f9;
+        color: #0f172a;
+        padding: 1px 4px;
+        border-radius: 4px;
+        font-size: 11.5px;
+      }
 
-    pre code {
-      background: transparent;
-      color: inherit;
-      padding: 0;
-    }
+      pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+      }
 
-    .issue-card {
-      border: 1px solid #e2e8f0;
-      border-radius: 5px;
-      padding: 9px 12px;
-      margin-bottom: 9px;
-      background-color: #ffffff;
-      page-break-inside: avoid;
-    }
+      .issue-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 5px;
+        padding: 9px 12px;
+        margin-bottom: 9px;
+        background-color: #ffffff;
+        page-break-inside: avoid;
+      }
 
-    .issue-card .title {
-      font-weight: 600;
-      color: #b91c1c;
-      margin-bottom: 3px;
-      font-size: 12.5px;
-    }
+      .issue-card .title {
+        font-weight: 600;
+        color: #b91c1c;
+        margin-bottom: 3px;
+        font-size: 12.5px;
+      }
 
-    .issue-card .cause {
-      color: #4b5563;
-      font-size: 12px;
-      margin-bottom: 2px;
-    }
+      .issue-card .cause {
+        color: #4b5563;
+        font-size: 12px;
+        margin-bottom: 2px;
+      }
 
-    .issue-card .solution {
-      color: #15803d;
-      font-size: 12px;
-      font-weight: 500;
-    }
+      .issue-card .solution {
+        color: #15803d;
+        font-size: 12px;
+        font-weight: 500;
+      }
 
-    .arch-diagram {
-      background: #0f172a;
-      color: #38bdf8;
-      padding: 12px 16px;
-      border-radius: 6px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      line-height: 1.4;
-      margin: 12px 0;
-      page-break-inside: avoid;
-    }
+      .arch-diagram {
+        background: #0f172a;
+        color: #38bdf8;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        line-height: 1.4;
+        margin: 12px 0;
+        page-break-inside: avoid;
+      }
 
-    .meta-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-      background: #f8fafc;
-      padding: 10px 14px;
-      border-radius: 6px;
-      border: 1px solid #e2e8f0;
-      margin-bottom: 14px;
-      font-size: 12.5px;
-    }
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        background: #f8fafc;
+        padding: 10px 14px;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 14px;
+        font-size: 12.5px;
+      }
 
-    .meta-item {
-      display: flex;
-      flex-direction: column;
-    }
+      .meta-item {
+        display: flex;
+        flex-direction: column;
+      }
 
-    .meta-label {
-      font-size: 10.5px;
-      text-transform: uppercase;
-      color: #64748b;
-      font-weight: 600;
-    }
+      .meta-label {
+        font-size: 10.5px;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 600;
+      }
 
-    .meta-val {
-      font-weight: 600;
-      color: #0f172a;
-    }
+      .meta-val {
+        font-weight: 600;
+        color: #0f172a;
+      }
 
-    .page-break {
-      page-break-before: always;
-    }
-  </style>
-</head>
-<body>
+      .page-break {
+        page-break-before: always;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📘 StudyHub AWS Production & CI/CD Master Runbook</h1>
 
-<div class="container">
-  <h1>📘 StudyHub AWS Production & CI/CD Master Runbook</h1>
-  
-  <div class="meta-grid">
-    <div class="meta-item">
-      <span class="meta-label">Primary Domain</span>
-      <span class="meta-val">https://studyhubonline.store</span>
-    </div>
-    <div class="meta-item">
-      <span class="meta-label">Deployment Status</span>
-      <span class="meta-val"><span class="badge green">🟢 Live & SSL Secured</span></span>
-    </div>
-    <div class="meta-item">
-      <span class="meta-label">AWS Region & Elastic IP</span>
-      <span class="meta-val">ap-south-1 (Mumbai) • 15.206.223.108</span>
-    </div>
-    <div class="meta-item">
-      <span class="meta-label">Database</span>
-      <span class="meta-val">AWS RDS PostgreSQL 18.3 (studyhub-prod-db)</span>
-    </div>
-  </div>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Primary Domain</span>
+          <span class="meta-val">https://studyhubonline.store</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Deployment Status</span>
+          <span class="meta-val"><span class="badge green">🟢 Live & SSL Secured</span></span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">AWS Region & Elastic IP</span>
+          <span class="meta-val">ap-south-1 (Mumbai) • 15.206.223.108</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Database</span>
+          <span class="meta-val">AWS RDS PostgreSQL 18.3 (studyhub-prod-db)</span>
+        </div>
+      </div>
 
-  <h2>1. Production Architecture Overview</h2>
-  <div class="arch-diagram">
-[ Internet User / Browser ]
-           │
-    HTTPS (Port 443)
-           ▼
- [ AWS Elastic IP: 15.206.223.108 ]
-           │
- [ Nginx Reverse Proxy + Let's Encrypt SSL ]
- ├── studyhubonline.store / www ──> 127.0.0.1:3000 (studyhub-web Next.js)
- ├── admin.studyhubonline.store──> 127.0.0.1:3001 (studyhub-admin Next.js)
- └── api.studyhubonline.store  ──> 127.0.0.1:5000 (studyhub-api Express)
-           │
- [ Internal Docker Network: studyhub-network ]
- ├── studyhub-redis  (Port 6379)
- └── studyhub-worker (Background Queues / BullMQ)
-           │
-    VPC Security Group Inbound Rule (Port 5432 with SSL)
-           ▼
- [ AWS RDS PostgreSQL: studyhub-prod-db:5432 ]
-  </div>
+      <h2>1. Production Architecture Overview</h2>
+      <div class="arch-diagram">
+        [ Internet User / Browser ] │ HTTPS (Port 443) ▼ [ AWS Elastic IP: 15.206.223.108 ] │ [
+        Nginx Reverse Proxy + Let's Encrypt SSL ] ├── studyhubonline.store / www ──> 127.0.0.1:3000
+        (studyhub-web Next.js) ├── admin.studyhubonline.store──> 127.0.0.1:3001 (studyhub-admin
+        Next.js) └── api.studyhubonline.store ──> 127.0.0.1:5000 (studyhub-api Express) │ [ Internal
+        Docker Network: studyhub-network ] ├── studyhub-redis (Port 6379) └── studyhub-worker
+        (Background Queues / BullMQ) │ VPC Security Group Inbound Rule (Port 5432 with SSL) ▼ [ AWS
+        RDS PostgreSQL: studyhub-prod-db:5432 ]
+      </div>
 
-  <h2>2. Cloud & Infrastructure Inventory</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Resource</th>
-        <th>Identifier / Value</th>
-        <th>Purpose & Notes</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>AWS VPC</strong></td>
-        <td><code>vpc-080ee16ec1b11057e</code></td>
-        <td>CIDR: <code>10.0.0.0/16</code></td>
-      </tr>
-      <tr>
-        <td><strong>EC2 Server</strong></td>
-        <td><code>i-0ccd30b73fe597ae7</code></td>
-        <td>Ubuntu 24.04 LTS (<code>t3.medium</code>, 30GB gp3)</td>
-      </tr>
-      <tr>
-        <td><strong>Elastic IP</strong></td>
-        <td><code>15.206.223.108</code></td>
-        <td>Static Public IPv4 attached to EC2</td>
-      </tr>
-      <tr>
-        <td><strong>EC2 Security Group</strong></td>
-        <td><code>sg-006dabca578c89482</code></td>
-        <td>Inbound: Port 22 (SSH), 80 (HTTP), 443 (HTTPS)</td>
-      </tr>
-      <tr>
-        <td><strong>RDS PostgreSQL</strong></td>
-        <td><code>studyhub-prod-db</code></td>
-        <td>Endpoint: <code>studyhub-prod-db.cngoksag0z0e.ap-south-1.rds.amazonaws.com</code></td>
-      </tr>
-      <tr>
-        <td><strong>RDS Security Group</strong></td>
-        <td><code>sg-0ef77fb4a0998ff9a</code></td>
-        <td>Inbound: Port 5432 open to VPC CIDR <code>10.0.0.0/16</code></td>
-      </tr>
-      <tr>
-        <td><strong>Swap Space</strong></td>
-        <td><code>/swapfile</code> (4GB)</td>
-        <td>Prevents OOM during Next.js production builds</td>
-      </tr>
-    </tbody>
-  </table>
+      <h2>2. Cloud & Infrastructure Inventory</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Resource</th>
+            <th>Identifier / Value</th>
+            <th>Purpose & Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>AWS VPC</strong></td>
+            <td><code>vpc-080ee16ec1b11057e</code></td>
+            <td>CIDR: <code>10.0.0.0/16</code></td>
+          </tr>
+          <tr>
+            <td><strong>EC2 Server</strong></td>
+            <td><code>i-0ccd30b73fe597ae7</code></td>
+            <td>Ubuntu 24.04 LTS (<code>t3.medium</code>, 30GB gp3)</td>
+          </tr>
+          <tr>
+            <td><strong>Elastic IP</strong></td>
+            <td><code>15.206.223.108</code></td>
+            <td>Static Public IPv4 attached to EC2</td>
+          </tr>
+          <tr>
+            <td><strong>EC2 Security Group</strong></td>
+            <td><code>sg-006dabca578c89482</code></td>
+            <td>Inbound: Port 22 (SSH), 80 (HTTP), 443 (HTTPS)</td>
+          </tr>
+          <tr>
+            <td><strong>RDS PostgreSQL</strong></td>
+            <td><code>studyhub-prod-db</code></td>
+            <td>
+              Endpoint: <code>studyhub-prod-db.cngoksag0z0e.ap-south-1.rds.amazonaws.com</code>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>RDS Security Group</strong></td>
+            <td><code>sg-0ef77fb4a0998ff9a</code></td>
+            <td>Inbound: Port 5432 open to VPC CIDR <code>10.0.0.0/16</code></td>
+          </tr>
+          <tr>
+            <td><strong>Swap Space</strong></td>
+            <td><code>/swapfile</code> (4GB)</td>
+            <td>Prevents OOM during Next.js production builds</td>
+          </tr>
+        </tbody>
+      </table>
 
-  <h2>3. DNS Configuration (GoDaddy)</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Host</th>
-        <th>Target Value</th>
-        <th>TTL</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>A</code></td>
-        <td><code>@</code></td>
-        <td><code>15.206.223.108</code></td>
-        <td>1/2 Hour</td>
-        <td><span class="badge green">Active</span></td>
-      </tr>
-      <tr>
-        <td><code>A</code></td>
-        <td><code>www</code></td>
-        <td><code>15.206.223.108</code></td>
-        <td>1/2 Hour</td>
-        <td><span class="badge green">Active</span></td>
-      </tr>
-      <tr>
-        <td><code>A</code></td>
-        <td><code>admin</code></td>
-        <td><code>15.206.223.108</code></td>
-        <td>1/2 Hour</td>
-        <td><span class="badge green">Active</span></td>
-      </tr>
-      <tr>
-        <td><code>A</code></td>
-        <td><code>api</code></td>
-        <td><code>15.206.223.108</code></td>
-        <td>1/2 Hour</td>
-        <td><span class="badge green">Active</span></td>
-      </tr>
-    </tbody>
-  </table>
+      <h2>3. DNS Configuration (GoDaddy)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Host</th>
+            <th>Target Value</th>
+            <th>TTL</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>A</code></td>
+            <td><code>@</code></td>
+            <td><code>15.206.223.108</code></td>
+            <td>1/2 Hour</td>
+            <td><span class="badge green">Active</span></td>
+          </tr>
+          <tr>
+            <td><code>A</code></td>
+            <td><code>www</code></td>
+            <td><code>15.206.223.108</code></td>
+            <td>1/2 Hour</td>
+            <td><span class="badge green">Active</span></td>
+          </tr>
+          <tr>
+            <td><code>A</code></td>
+            <td><code>admin</code></td>
+            <td><code>15.206.223.108</code></td>
+            <td>1/2 Hour</td>
+            <td><span class="badge green">Active</span></td>
+          </tr>
+          <tr>
+            <td><code>A</code></td>
+            <td><code>api</code></td>
+            <td><code>15.206.223.108</code></td>
+            <td>1/2 Hour</td>
+            <td><span class="badge green">Active</span></td>
+          </tr>
+        </tbody>
+      </table>
 
-  <div class="page-break"></div>
+      <div class="page-break"></div>
 
-  <h2>4. Local vs. Production Environment Comparison</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Configuration</th>
-        <th>Local Development (<code>.env</code>)</th>
-        <th>Production EC2 (<code>.env.production</code>)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong><code>NODE_ENV</code></strong></td>
-        <td><code>development</code></td>
-        <td><code>production</code></td>
-      </tr>
-      <tr>
-        <td><strong>Web App URL</strong></td>
-        <td><code>http://localhost:3000</code></td>
-        <td><code>https://studyhubonline.store</code></td>
-      </tr>
-      <tr>
-        <td><strong>Admin Portal URL</strong></td>
-        <td><code>http://localhost:3001</code></td>
-        <td><code>https://admin.studyhubonline.store</code></td>
-      </tr>
-      <tr>
-        <td><strong>API Base URL</strong></td>
-        <td><code>http://localhost:5000/api/v1</code></td>
-        <td><code>https://api.studyhubonline.store/api/v1</code></td>
-      </tr>
-      <tr>
-        <td><strong>PostgreSQL Database</strong></td>
-        <td><code>localhost:5432/studyhub</code> <em>(no SSL)</em></td>
-        <td>AWS RDS PostgreSQL <em>(automatic SSL encryption)</em></td>
-      </tr>
-      <tr>
-        <td><strong>Redis Cache</strong></td>
-        <td><code>redis://localhost:6379</code></td>
-        <td><code>redis://redis:6379</code> <em>(Docker service name)</em></td>
-      </tr>
-    </tbody>
-  </table>
+      <h2>4. Local vs. Production Environment Comparison</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Configuration</th>
+            <th>Local Development (<code>.env</code>)</th>
+            <th>Production EC2 (<code>.env.production</code>)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong><code>NODE_ENV</code></strong>
+            </td>
+            <td><code>development</code></td>
+            <td><code>production</code></td>
+          </tr>
+          <tr>
+            <td><strong>Web App URL</strong></td>
+            <td><code>http://localhost:3000</code></td>
+            <td><code>https://studyhubonline.store</code></td>
+          </tr>
+          <tr>
+            <td><strong>Admin Portal URL</strong></td>
+            <td><code>http://localhost:3001</code></td>
+            <td><code>https://admin.studyhubonline.store</code></td>
+          </tr>
+          <tr>
+            <td><strong>API Base URL</strong></td>
+            <td><code>http://localhost:5000/api/v1</code></td>
+            <td><code>https://api.studyhubonline.store/api/v1</code></td>
+          </tr>
+          <tr>
+            <td><strong>PostgreSQL Database</strong></td>
+            <td><code>localhost:5432/studyhub</code> <em>(no SSL)</em></td>
+            <td>AWS RDS PostgreSQL <em>(automatic SSL encryption)</em></td>
+          </tr>
+          <tr>
+            <td><strong>Redis Cache</strong></td>
+            <td><code>redis://localhost:6379</code></td>
+            <td><code>redis://redis:6379</code> <em>(Docker service name)</em></td>
+          </tr>
+        </tbody>
+      </table>
 
-  <h2>5. Database & Migration Commands Cheat Sheet</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Action</th>
-        <th>Local Command (VS Code)</th>
-        <th>Production (EC2 / CI-CD)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Generate Prisma Client</strong></td>
-        <td><code>npm run db:generate</code></td>
-        <td>Automatically run in Docker build</td>
-      </tr>
-      <tr>
-        <td><strong>Create New Migration</strong></td>
-        <td><code>npm run db:migrate</code></td>
-        <td>Created locally in VS Code</td>
-      </tr>
-      <tr>
-        <td><strong>Deploy Migrations</strong></td>
-        <td><code>npm run db:deploy</code></td>
-        <td><strong>Automatically run by GitHub Actions CI/CD!</strong></td>
-      </tr>
-      <tr>
-        <td><strong>Database GUI (Studio)</strong></td>
-        <td><code>npm run db:studio</code></td>
-        <td>N/A (local development only)</td>
-      </tr>
-      <tr>
-        <td><strong>Seed Roles & Admin</strong></td>
-        <td><code>npm run seed:admin</code></td>
-        <td><code>docker compose -f docker-compose.prod.yml exec api npm run seed:admin</code></td>
-      </tr>
-    </tbody>
-  </table>
+      <h2>5. Database & Migration Commands Cheat Sheet</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Local Command (VS Code)</th>
+            <th>Production (EC2 / CI-CD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Generate Prisma Client</strong></td>
+            <td><code>npm run db:generate</code></td>
+            <td>Automatically run in Docker build</td>
+          </tr>
+          <tr>
+            <td><strong>Create New Migration</strong></td>
+            <td><code>npm run db:migrate</code></td>
+            <td>Created locally in VS Code</td>
+          </tr>
+          <tr>
+            <td><strong>Deploy Migrations</strong></td>
+            <td><code>npm run db:deploy</code></td>
+            <td><strong>Automatically run by GitHub Actions CI/CD!</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Database GUI (Studio)</strong></td>
+            <td><code>npm run db:studio</code></td>
+            <td>N/A (local development only)</td>
+          </tr>
+          <tr>
+            <td><strong>Seed Roles & Admin</strong></td>
+            <td><code>npm run seed:admin</code></td>
+            <td>
+              <code>docker compose -f docker-compose.prod.yml exec api npm run seed:admin</code>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-  <h2>6. Automated GitHub Actions CI/CD Pipeline</h2>
-  <div class="callout">
-    <p><strong>Pipeline Location:</strong> <code>.github/workflows/deploy-ec2.yml</code></p>
-    <p><strong>Required GitHub Secrets (One-Time Setup):</strong></p>
-    <ul>
-      <li><code>EC2_HOST</code>: <code>15.206.223.108</code></li>
-      <li><code>EC2_USER</code>: <code>ubuntu</code></li>
-      <li><code>EC2_SSH_KEY</code>: Full contents of <code>studyhub-key.pem</code></li>
-    </ul>
-  </div>
+      <h2>6. Automated GitHub Actions CI/CD Pipeline</h2>
+      <div class="callout">
+        <p><strong>Pipeline Location:</strong> <code>.github/workflows/deploy-ec2.yml</code></p>
+        <p><strong>Required GitHub Secrets (One-Time Setup):</strong></p>
+        <ul>
+          <li><code>EC2_HOST</code>: <code>15.206.223.108</code></li>
+          <li><code>EC2_USER</code>: <code>ubuntu</code></li>
+          <li><code>EC2_SSH_KEY</code>: Full contents of <code>studyhub-key.pem</code></li>
+        </ul>
+      </div>
 
-  <h3>Git Branching Workflow (No Direct Push to Main)</h3>
-  <pre># 1. Start a feature in VS Code:
+      <h3>Git Branching Workflow (No Direct Push to Main)</h3>
+      <pre>
+# 1. Start a feature in VS Code:
 git checkout -b feature/my-feature
 
 # 2. Commit and push:
@@ -462,89 +465,170 @@ git push -u origin feature/my-feature
 # 3. On GitHub: Open PR -> Merge pull request
 # 4. GitHub Actions automatically connects to EC2, runs migrations, rebuilds & goes live!</pre>
 
-  <div class="page-break"></div>
+      <div class="page-break"></div>
 
-  <h2>7. Complete Troubleshooting Log & Fixes Applied</h2>
+      <h2>7. Complete Troubleshooting Log & Fixes Applied</h2>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 1. SSH Connection Timeout</div>
-    <div class="cause"><strong>Cause:</strong> EC2 was launched in a private subnet route table with no IGW route.</div>
-    <div class="solution"><strong>Solution:</strong> Associated subnet with <code>studyhub-public-rt</code> (Internet Gateway route).</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 1. SSH Connection Timeout</div>
+        <div class="cause">
+          <strong>Cause:</strong> EC2 was launched in a private subnet route table with no IGW
+          route.
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Associated subnet with
+          <code>studyhub-public-rt</code> (Internet Gateway route).
+        </div>
+      </div>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 2. Next.js Monorepo Standalone Output</div>
-    <div class="cause"><strong>Cause:</strong> Next.js builds failed in Docker without standalone directory.</div>
-    <div class="solution"><strong>Solution:</strong> Added <code>output: 'standalone'</code> in <code>apps/web/next.config.ts</code> and <code>apps/admin/next.config.ts</code>.</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 2. Next.js Monorepo Standalone Output</div>
+        <div class="cause">
+          <strong>Cause:</strong> Next.js builds failed in Docker without standalone directory.
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Added <code>output: 'standalone'</code> in
+          <code>apps/web/next.config.ts</code> and <code>apps/admin/next.config.ts</code>.
+        </div>
+      </div>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 3. Memory Spikes & SSH Resets During Builds</div>
-    <div class="cause"><strong>Cause:</strong> Next.js compilations across 4 containers consumed 100% CPU/RAM.</div>
-    <div class="solution"><strong>Solution:</strong> Created a 4GB Swap file (<code>/swapfile</code>), added SSH keepalive, and built sequentially.</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 3. Memory Spikes & SSH Resets During Builds</div>
+        <div class="cause">
+          <strong>Cause:</strong> Next.js compilations across 4 containers consumed 100% CPU/RAM.
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Created a 4GB Swap file (<code>/swapfile</code>), added SSH
+          keepalive, and built sequentially.
+        </div>
+      </div>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 4. Admin Docker Build Missing public/ Folder</div>
-    <div class="cause"><strong>Cause:</strong> <code>apps/admin</code> lacked a public folder, breaking Docker <code>COPY</code>.</div>
-    <div class="solution"><strong>Solution:</strong> Added <code>RUN mkdir -p apps/admin/public</code> and created <code>.gitkeep</code>.</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 4. Admin Docker Build Missing public/ Folder</div>
+        <div class="cause">
+          <strong>Cause:</strong> <code>apps/admin</code> lacked a public folder, breaking Docker
+          <code>COPY</code>.
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Added <code>RUN mkdir -p apps/admin/public</code> and created
+          <code>.gitkeep</code>.
+        </div>
+      </div>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 5. Prisma 7 Build-Time Generate Failure</div>
-    <div class="cause"><strong>Cause:</strong> Prisma 7 requires <code>DATABASE_URL</code> even during client generation.</div>
-    <div class="solution"><strong>Solution:</strong> Passed dummy <code>DATABASE_URL="postgresql://build:build@localhost:5432/build"</code>.</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 5. Prisma 7 Build-Time Generate Failure</div>
+        <div class="cause">
+          <strong>Cause:</strong> Prisma 7 requires <code>DATABASE_URL</code> even during client
+          generation.
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Passed dummy
+          <code>DATABASE_URL="postgresql://build:build@localhost:5432/build"</code>.
+        </div>
+      </div>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 6. Node 24 ESM Module Resolution (API & Worker)</div>
-    <div class="cause"><strong>Cause:</strong> Node 24 strictly requires <code>.js</code> extensions on compiled relative imports.</div>
-    <div class="solution"><strong>Solution:</strong> Configured Dockerfiles to launch via <code>npx tsx --tsconfig ...</code>.</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 6. Node 24 ESM Module Resolution (API & Worker)</div>
+        <div class="cause">
+          <strong>Cause:</strong> Node 24 strictly requires <code>.js</code> extensions on compiled
+          relative imports.
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Configured Dockerfiles to launch via
+          <code>npx tsx --tsconfig ...</code>.
+        </div>
+      </div>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 7. Missing package.json in Runtime Container</div>
-    <div class="cause"><strong>Cause:</strong> Omitted root <code>package.json</code>, breaking npm workspace resolution.</div>
-    <div class="solution"><strong>Solution:</strong> Added <code>COPY --from=build /app/package.json /app/package-lock.json ./</code>.</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 7. Missing package.json in Runtime Container</div>
+        <div class="cause">
+          <strong>Cause:</strong> Omitted root <code>package.json</code>, breaking npm workspace
+          resolution.
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Added
+          <code>COPY --from=build /app/package.json /app/package-lock.json ./</code>.
+        </div>
+      </div>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 8. RDS PostgreSQL Port 5432 Inbound Rule</div>
-    <div class="cause"><strong>Cause:</strong> RDS Security Group blocked EC2 private IP (<code>10.0.87.55</code>).</div>
-    <div class="solution"><strong>Solution:</strong> Added Inbound Rule for PostgreSQL 5432 from VPC CIDR <code>10.0.0.0/16</code>.</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 8. RDS PostgreSQL Port 5432 Inbound Rule</div>
+        <div class="cause">
+          <strong>Cause:</strong> RDS Security Group blocked EC2 private IP
+          (<code>10.0.87.55</code>).
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Added Inbound Rule for PostgreSQL 5432 from VPC CIDR
+          <code>10.0.0.0/16</code>.
+        </div>
+      </div>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 9. Route Prefix Mismatch (/auth/login vs /api/v1/auth/login)</div>
-    <div class="cause"><strong>Cause:</strong> Frontend called <code>/auth/login</code> while backend mounted at <code>/api/v1/auth/login</code>.</div>
-    <div class="solution"><strong>Solution:</strong> Mounted routes at both <code>/api/v1</code> and <code>/</code>, and normalized client config URLs.</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 9. Route Prefix Mismatch (/auth/login vs /api/v1/auth/login)</div>
+        <div class="cause">
+          <strong>Cause:</strong> Frontend called <code>/auth/login</code> while backend mounted at
+          <code>/api/v1/auth/login</code>.
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Mounted routes at both <code>/api/v1</code> and <code>/</code>,
+          and normalized client config URLs.
+        </div>
+      </div>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 10. AWS RDS SSL Connection Rejection (no encryption)</div>
-    <div class="cause"><strong>Cause:</strong> AWS RDS strictly requires SSL; node-postgres attempted unencrypted connections.</div>
-    <div class="solution"><strong>Solution:</strong> Enabled automatic SSL (<code>ssl: { rejectUnauthorized: false }</code>) in <code>packages/database/src/client.ts</code>.</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 10. AWS RDS SSL Connection Rejection (no encryption)</div>
+        <div class="cause">
+          <strong>Cause:</strong> AWS RDS strictly requires SSL; node-postgres attempted unencrypted
+          connections.
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Enabled automatic SSL (<code
+            >ssl: { rejectUnauthorized: false }</code
+          >) in <code>packages/database/src/client.ts</code>.
+        </div>
+      </div>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 11. Missing User.avatarUrl Column</div>
-    <div class="cause"><strong>Cause:</strong> <code>avatarUrl</code> was in schema but had no migration generated.</div>
-    <div class="solution"><strong>Solution:</strong> Created migration <code>20260824000000_add_avatar_url</code> and added safe check to seed script.</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 11. Missing User.avatarUrl Column</div>
+        <div class="cause">
+          <strong>Cause:</strong> <code>avatarUrl</code> was in schema but had no migration
+          generated.
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Created migration
+          <code>20260824000000_add_avatar_url</code> and added safe check to seed script.
+        </div>
+      </div>
 
-  <div class="issue-card">
-    <div class="title">⚠️ 12. Missing STUDENT Role & Admin 403 Forbidden Errors</div>
-    <div class="cause"><strong>Cause:</strong> Database was missing <code>STUDENT</code> role and <code>ROLE_PERMISSION_MANAGE</code> permissions for <code>ADMIN</code>.</div>
-    <div class="solution"><strong>Solution:</strong> Enhanced <code>seed-admin-user.ts</code> to bootstrap all 3 roles, 26 permissions, and grant full RBAC to Admin.</div>
-  </div>
+      <div class="issue-card">
+        <div class="title">⚠️ 12. Missing STUDENT Role & Admin 403 Forbidden Errors</div>
+        <div class="cause">
+          <strong>Cause:</strong> Database was missing <code>STUDENT</code> role and
+          <code>ROLE_PERMISSION_MANAGE</code> permissions for <code>ADMIN</code>.
+        </div>
+        <div class="solution">
+          <strong>Solution:</strong> Enhanced <code>seed-admin-user.ts</code> to bootstrap all 3
+          roles, 26 permissions, and grant full RBAC to Admin.
+        </div>
+      </div>
 
-  <h2>8. Verified Live Production Endpoints</h2>
-  <div class="callout success">
-    <p>✅ <strong>Main Web Application:</strong> <a href="https://studyhubonline.store">https://studyhubonline.store</a></p>
-    <p>✅ <strong>Admin Management Portal:</strong> <a href="https://admin.studyhubonline.store">https://admin.studyhubonline.store</a></p>
-    <p>✅ <strong>Backend API Health:</strong> <a href="https://api.studyhubonline.store/api/v1/health/ready">https://api.studyhubonline.store/api/v1/health/ready</a></p>
-  </div>
-</div>
-
-</body>
+      <h2>8. Verified Live Production Endpoints</h2>
+      <div class="callout success">
+        <p>
+          ✅ <strong>Main Web Application:</strong>
+          <a href="https://studyhubonline.store">https://studyhubonline.store</a>
+        </p>
+        <p>
+          ✅ <strong>Admin Management Portal:</strong>
+          <a href="https://admin.studyhubonline.store">https://admin.studyhubonline.store</a>
+        </p>
+        <p>
+          ✅ <strong>Backend API Health:</strong>
+          <a href="https://api.studyhubonline.store/api/v1/health/ready"
+            >https://api.studyhubonline.store/api/v1/health/ready</a
+          >
+        </p>
+      </div>
+    </div>
+  </body>
 </html>

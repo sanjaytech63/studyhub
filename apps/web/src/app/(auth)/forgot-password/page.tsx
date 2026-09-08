@@ -54,6 +54,16 @@ export default function ForgotPasswordPage() {
             password reset screen.
           </p>
 
+          <Button asChild className="w-full">
+            <Link
+              href={`/reset-password?email=${encodeURIComponent(
+                form.getValues('email').trim().toLowerCase(),
+              )}`}
+            >
+              Enter OTP & Reset Password
+            </Link>
+          </Button>
+
           <Button
             type="button"
             variant="outline"

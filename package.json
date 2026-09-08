@@ -26,6 +26,7 @@
     "db:studio": "npm run db:studio --workspace=@studyhub/database",
     "db:seed": "npm run db:seed --workspace=@studyhub/database",
     "seed:admin": "npx tsx scripts/seed-admin-user.ts",
+    "test:email": "npx tsx scripts/test-email.ts",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",

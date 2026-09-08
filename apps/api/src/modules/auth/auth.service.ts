@@ -1,4 +1,5 @@
 import { serverConfig } from '@studyhub/config/server';
+import { logger } from '@/config/logger';
 import { HTTP_STATUS } from '@/utils/http-status';
 import { isPrismaKnownRequestError } from '@/utils/prisma-error';
 
@@ -132,11 +133,18 @@ export const register = async (input: RegisterInput) => {
     // IMPORTANT:
     // Send the raw OTP only after the user + OTP
     // have been successfully persisted.
-    await sendEmailVerificationOtpEmail({
-      email: user.email,
-      firstName: user.firstName,
-      otp,
-    });
+    try {
+      await sendEmailVerificationOtpEmail({
+        email: user.email,
+        firstName: user.firstName,
+        otp,
+      });
+    } catch (mailError) {
+      logger.error(
+        { err: mailError, userId: user.id },
+        '[AUTH] Failed to dispatch verification email',
+      );
+    }
 
     return {
       userId: user.id,
@@ -439,6 +447,19 @@ export const resendEmailVerificationOtp = async (input: ResendOtpInput) => {
     });
   });
 
+  try {
+    await sendEmailVerificationOtpEmail({
+      email: user.email,
+      firstName: user.firstName,
+      otp,
+    });
+  } catch (mailError) {
+    logger.error(
+      { err: mailError, userId: user.id },
+      '[AUTH] Failed to dispatch resend verification email',
+    );
+  }
+
   return {
     email: user.email,
     expiresIn: serverConfig.otp.expiresIn,
@@ -582,11 +603,18 @@ export const forgotPassword = async (email: string): Promise<void> => {
   /*
    * Send the raw OTP to the user's email.
    */
-  await sendPasswordResetOtpEmail({
-    email: user.email,
-    firstName: user.firstName,
-    otp,
-  });
+  try {
+    await sendPasswordResetOtpEmail({
+      email: user.email,
+      firstName: user.firstName,
+      otp,
+    });
+  } catch (mailError) {
+    logger.error(
+      { err: mailError, userId: user.id },
+      '[AUTH] Failed to dispatch password reset email',
+    );
+  }
 };
 
 export const resetPassword = async (input: ResetPasswordInput): Promise<void> => {
