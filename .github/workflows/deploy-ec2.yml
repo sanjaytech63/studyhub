@@ -1,0 +1,57 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Production EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER || 'ubuntu' }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          timeout: 1800s
+          command_timeout: 1800s
+          script: |
+            set -e
+            echo "🚀 Starting automated deployment on EC2..."
+
+            cd ~/studyhub
+
+            # 1. Pull latest code from main
+            echo "📥 Pulling latest changes from main branch..."
+            git pull origin main
+
+            # 2. Run Database Migrations
+            echo "🗄️ Applying database migrations to RDS PostgreSQL..."
+            docker compose -f docker-compose.prod.yml exec -w /app/packages/database api npx prisma migrate deploy --config prisma.config.ts || true
+
+            # 3. Build and restart containers gracefully
+            echo "📦 Building and restarting production containers..."
+            docker compose -f docker-compose.prod.yml up -d --build
+
+            # 4. Clean up dangling images to save disk space
+            echo "🧹 Pruning unused Docker cache..."
+            docker image prune -f
+
+            # 5. Check container health status
+            echo "✅ Container status:"
+            docker compose -f docker-compose.prod.yml ps
+
+            echo "🎉 Deployment completed successfully!"
