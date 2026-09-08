@@ -20,6 +20,7 @@ COPY apps/api/package.json ./apps/api/
 COPY packages/config/package.json ./packages/config/
 COPY packages/database/package.json ./packages/database/
 COPY packages/logger/package.json ./packages/logger/
+COPY packages/tsconfig/package.json ./packages/tsconfig/
 COPY packages/types/package.json ./packages/types/
 COPY packages/validation/package.json ./packages/validation/
 
@@ -82,6 +83,7 @@ COPY --from=build /app/packages/config ./packages/config
 COPY --from=build /app/packages/logger ./packages/logger
 COPY --from=build /app/packages/types ./packages/types
 COPY --from=build /app/packages/validation ./packages/validation
+COPY --from=build /app/packages/tsconfig ./packages/tsconfig
 
 EXPOSE 5000
 

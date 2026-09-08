@@ -18,6 +18,7 @@ COPY package.json package-lock.json ./
 COPY apps/web/package.json ./apps/web/
 
 COPY packages/config/package.json ./packages/config/
+COPY packages/tsconfig/package.json ./packages/tsconfig/
 
 # Root prepare script
 COPY scripts ./scripts
