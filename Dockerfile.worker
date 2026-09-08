@@ -35,7 +35,7 @@ COPY scripts ./scripts
 # Install dependencies
 # ------------------------------------------------------------
 
-RUN npm ci
+RUN npm ci --include=dev
 
 
 # ============================================================
@@ -103,11 +103,8 @@ COPY --from=build /app/node_modules ./node_modules
 # Worker package
 # ------------------------------------------------------------
 
-COPY --from=build /app/apps/worker/package.json \
-    ./apps/worker/package.json
-
-COPY --from=build /app/apps/worker/dist \
-    ./apps/worker/dist
+COPY --from=build /app/apps/worker \
+    ./apps/worker
 
 # ------------------------------------------------------------
 # Database package
@@ -139,4 +136,4 @@ COPY --from=build /app/packages/validation \
 # Start worker
 # ------------------------------------------------------------
 
-CMD ["node", "apps/worker/dist/worker.js"]
+CMD ["npx", "tsx", "--tsconfig", "apps/worker/tsconfig.json", "apps/worker/src/worker.ts"]
