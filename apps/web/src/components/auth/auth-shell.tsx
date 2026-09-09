@@ -11,10 +11,12 @@ interface AuthShellProps {
 
 export function AuthShell({ children }: AuthShellProps) {
   return (
-    <div className="relative min-h-dvh flex flex-col bg-background text-foreground overflow-x-hidden">
-      {/* Background ambient gradient blurs */}
-      <div className="pointer-events-none absolute -top-40 -left-40 h-106 w-96 rounded-full bg-primary/15 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 h-106 w-96 rounded-full bg-purple-500/10 blur-3xl" />
+    <div className="relative min-h-dvh flex flex-col bg-background text-foreground">
+      {/* Background ambient gradient blurs confined within an overflow-hidden wrapper */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -left-40 h-106 w-96 rounded-full bg-primary/15 blur-3xl" />
+        <div className="absolute -bottom-40 -right-40 h-106 w-96 rounded-full bg-purple-500/10 blur-3xl" />
+      </div>
 
       {/* Grid pattern overlay */}
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
