@@ -164,7 +164,7 @@ function InstructorsBentoCard() {
             {INSTRUCTOR_AVATARS.map((mentor) => (
               <div
                 key={mentor.name}
-                className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-card p-2 pr-3 shadow-xs transition-transform hover:-translate-y-0.5"
+                className="flex items-center gap-2.5 rounded-lg border border-border/60 bg-card p-2 pr-3 shadow-xs transition-transform hover:-translate-y-0.5"
               >
                 <Avatar className="size-7">
                   <AvatarImage src={mentor.src} alt={mentor.name} />
@@ -208,7 +208,7 @@ function HandsOnBentoCard() {
         </div>
 
         {/* Visual Code Mockup */}
-        <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950 p-4 font-mono text-xs shadow-md">
+        <div className="overflow-hidden rounded-lg border border-slate-800 bg-slate-950 p-4 font-mono text-xs shadow-md">
           <div className="flex items-center justify-between text-slate-500 border-b border-slate-800 pb-2 mb-3">
             <span className="flex items-center gap-1.5 text-[11px] text-emerald-400">
               <Code2 className="size-3.5" /> app.test.ts
@@ -324,7 +324,7 @@ function CredentialsBentoCard() {
         {/* Certificate Badge Mockup */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-border/60 bg-background/80 p-4 backdrop-blur-xs">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500">
               <CheckCircle2 className="size-5" />
             </div>
             <div>

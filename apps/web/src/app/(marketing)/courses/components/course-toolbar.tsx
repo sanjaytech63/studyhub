@@ -51,7 +51,7 @@ export function CourseToolbar({ filters }: CourseToolbarProps) {
   };
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card p-3 sm:p-4 shadow-xs">
+    <div className="flex flex-col gap-3 rounded-lg border border-border/60 bg-card p-3 sm:p-4 shadow-xs">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* Search Bar */}
         <div className="relative flex-1">

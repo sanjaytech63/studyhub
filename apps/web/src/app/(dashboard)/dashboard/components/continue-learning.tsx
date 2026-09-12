@@ -59,8 +59,8 @@ export function ContinueLearning({ courses }: ContinueLearningProps) {
 
 function EmptyLearningState() {
   return (
-    <div className="flex min-h-48 flex-col items-center justify-center rounded-xl border border-dashed border-border/70 bg-muted/20 px-6 text-center">
-      <div className="flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+    <div className="flex min-h-48 flex-col items-center justify-center rounded-lg border border-dashed border-border/70 bg-muted/20 px-6 text-center">
+      <div className="flex size-10 items-center justify-center rounded-lg bg-muted text-muted-foreground">
         <BookOpen className="size-5" />
       </div>
 

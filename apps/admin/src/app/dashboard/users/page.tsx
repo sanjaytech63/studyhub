@@ -58,34 +58,47 @@ import {
   type UpdateUserFormValues,
 } from '@/lib/admin/users.schema';
 import { getApiErrorMessage } from '@/lib/api/api-client';
+import { useUrlFilters } from '@/hooks/use-url-filters';
 
 export default function UsersDirectoryPage() {
-  // Search & Filter State
-  const [page, setPage] = React.useState(1);
-  const [search, setSearch] = React.useState('');
-  const [debouncedSearch, setDebouncedSearch] = React.useState('');
-  const [statusFilter, setStatusFilter] = React.useState<UserStatus | 'ALL'>('ALL');
-  const [roleFilter, setRoleFilter] = React.useState<string>('ALL');
-  const [sortBy, setSortBy] = React.useState<'createdAt' | 'email' | 'firstName' | 'status'>(
-    'createdAt',
-  );
-  const [sortOrder, setSortOrder] = React.useState<'asc' | 'desc'>('desc');
+  const { filters, updateFilters } = useUrlFilters<{
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: UserStatus | 'ALL';
+    roleId?: string;
+    sortBy?: 'createdAt' | 'email' | 'firstName' | 'status';
+    sortOrder?: 'asc' | 'desc';
+  }>({
+    page: 1,
+    limit: 10,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+  });
 
-  // Debounce search
+  const page = filters.page ?? 1;
+  const limit = filters.limit ?? 10;
+  const statusFilter = (filters.status as UserStatus | 'ALL') || 'ALL';
+  const roleFilter = filters.roleId || 'ALL';
+  const sortBy = filters.sortBy || 'createdAt';
+  const sortOrder = filters.sortOrder || 'desc';
+
+  const [search, setSearch] = React.useState(filters.search || '');
+
+  // Debounce search update to URL
   React.useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedSearch(search);
-      setPage(1);
-    }, 300);
+      updateFilters({ search: search.trim() || undefined, page: 1 });
+    }, 350);
     return () => clearTimeout(handler);
-  }, [search]);
+  }, [search, updateFilters]);
 
   // Query Users
   const { data, isLoading, isFetching, refetch } = useQuery(
     adminUsersQueryOptions({
       page,
-      limit: 10,
-      search: debouncedSearch || undefined,
+      limit,
+      search: filters.search || undefined,
       status: statusFilter === 'ALL' ? undefined : statusFilter,
       roleId: roleFilter === 'ALL' ? undefined : roleFilter,
       sortBy,
@@ -281,8 +294,7 @@ export default function UsersDirectoryPage() {
               value={roleFilter}
               onValueChange={(val) => {
                 if (val) {
-                  setRoleFilter(val);
-                  setPage(1);
+                  updateFilters({ roleId: val === 'ALL' ? undefined : val, page: 1 });
                 }
               }}
             >
@@ -310,9 +322,7 @@ export default function UsersDirectoryPage() {
                     'createdAt' | 'email' | 'firstName' | 'status',
                     'asc' | 'desc',
                   ];
-                  setSortBy(sb);
-                  setSortOrder(so);
-                  setPage(1);
+                  updateFilters({ sortBy: sb, sortOrder: so, page: 1 });
                 }
               }}
             >
@@ -339,8 +349,7 @@ export default function UsersDirectoryPage() {
               <button
                 key={status}
                 onClick={() => {
-                  setStatusFilter(status);
-                  setPage(1);
+                  updateFilters({ status: status === 'ALL' ? undefined : status, page: 1 });
                 }}
                 className={`px-3 py-1 rounded-full text-xs font-medium font-mono transition-all select-none cursor-pointer ${
                   isSelected
@@ -525,7 +534,7 @@ export default function UsersDirectoryPage() {
           totalPages={data.pagination.totalPages}
           total={data.pagination.total}
           limit={data.pagination.limit}
-          onPageChange={setPage}
+          onPageChange={(p) => updateFilters({ page: p })}
           hasNext={data.pagination.hasNext}
           hasPrev={data.pagination.hasPrev}
         />

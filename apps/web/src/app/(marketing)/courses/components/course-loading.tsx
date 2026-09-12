@@ -12,16 +12,16 @@ export default function Loading() {
       </div>
 
       {/* Toolbar Skeleton */}
-      <Skeleton className="h-14 w-full rounded-xl" />
+      <Skeleton className="h-14 w-full rounded-lg" />
 
       {/* Body Skeleton Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="hidden lg:block lg:col-span-1">
-          <Skeleton className="h-105 w-full rounded-xl" />
+          <Skeleton className="h-105 w-full rounded-lg" />
         </div>
         <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex flex-col space-y-3 rounded-xl border border-border/40 p-4">
+            <div key={i} className="flex flex-col space-y-3 rounded-lg border border-border/40 p-4">
               <Skeleton className="aspect-video w-full rounded-lg" />
               <Skeleton className="h-4 w-3/4 rounded-md" />
               <Skeleton className="h-3 w-1/2 rounded-md" />

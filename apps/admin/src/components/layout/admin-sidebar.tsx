@@ -3,7 +3,24 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Users, ShieldAlert, KeyRound, LogOut, Sparkles, X } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Users,
+  ShieldAlert,
+  KeyRound,
+  LogOut,
+  Sparkles,
+  X,
+  BookOpen,
+  PlusCircle,
+  FolderTree,
+  GraduationCap,
+  Receipt,
+  CreditCard,
+  Tag,
+  MessageSquare,
+  BarChart3,
+} from 'lucide-react';
 import { cn } from '../ui/button';
 import { Avatar } from '../ui/avatar';
 import { Badge } from '../ui/badge';
@@ -27,9 +44,70 @@ const NAV_SECTIONS: readonly NavSection[] = [
     title: 'Overview',
     items: [
       {
-        title: 'Dashboard',
+        title: 'Console Dashboard',
         href: '/dashboard',
         icon: LayoutDashboard,
+      },
+      {
+        title: 'LMS Analytics',
+        href: '/dashboard/analytics',
+        icon: BarChart3,
+      },
+    ],
+  },
+  {
+    title: 'LMS & Courses',
+    items: [
+      {
+        title: 'Courses Directory',
+        href: '/dashboard/courses',
+        icon: BookOpen,
+      },
+      {
+        title: 'Course Builder',
+        href: '/dashboard/courses/new',
+        icon: PlusCircle,
+        badge: 'New',
+      },
+      {
+        title: 'Categories',
+        href: '/dashboard/categories',
+        icon: FolderTree,
+      },
+      {
+        title: 'Enrollments',
+        href: '/dashboard/enrollments',
+        icon: GraduationCap,
+      },
+    ],
+  },
+  {
+    title: 'Commerce & Sales',
+    items: [
+      {
+        title: 'Student Orders',
+        href: '/dashboard/orders',
+        icon: Receipt,
+      },
+      {
+        title: 'Payments Ledger',
+        href: '/dashboard/payments',
+        icon: CreditCard,
+      },
+      {
+        title: 'Coupons & Vouchers',
+        href: '/dashboard/coupons',
+        icon: Tag,
+      },
+    ],
+  },
+  {
+    title: 'Quality & Community',
+    items: [
+      {
+        title: 'Reviews Moderation',
+        href: '/dashboard/reviews',
+        icon: MessageSquare,
       },
     ],
   },
@@ -111,7 +189,7 @@ export function AdminSidebar({
         {/* Brand Header */}
         <div className="flex h-16 shrink-0 items-center justify-between px-5 border-b border-border/60">
           <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-primary-hover shadow-md shadow-primary/25 border border-primary/40 group-hover:scale-105 transition-transform">
+            <div className="flex h-10 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-primary-hover shadow-md shadow-primary/25 border border-primary/40 group-hover:scale-105 transition-transform">
               <Sparkles className="h-4.5 w-4.5 text-white" />
             </div>
             <div>
@@ -188,7 +266,7 @@ export function AdminSidebar({
           ))}
 
           {/* Quick System Status Card */}
-          <div className="rounded-xl border border-border/70 bg-secondary/30 p-3 text-xs space-y-2">
+          <div className="rounded-lg border border-border/70 bg-secondary/30 p-3 text-xs space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-medium text-muted-foreground">API Gateway</span>
               <span className="flex items-center gap-1 text-[11px] text-emerald-400 font-mono">

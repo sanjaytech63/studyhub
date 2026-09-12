@@ -218,7 +218,7 @@ export default function RegisterPage() {
         />
 
         {/* Terms and Conditions Container */}
-        <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5 transition-colors hover:border-border">
+        <div className="rounded-lg border border-border/60 bg-muted/30 p-3.5 transition-colors hover:border-border">
           <div className="flex items-start gap-3">
             <Controller
               name="terms"

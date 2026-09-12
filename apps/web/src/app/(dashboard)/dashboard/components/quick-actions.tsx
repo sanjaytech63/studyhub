@@ -42,7 +42,7 @@ export function QuickActions() {
               key={action.href}
               href={action.href}
               className={[
-                'group flex items-center gap-3 rounded-xl px-2.5 py-2.5',
+                'group flex items-center gap-3 rounded-lg px-2.5 py-2.5',
                 'transition-colors',
                 'hover:bg-muted/60',
                 'focus-visible:outline-none',

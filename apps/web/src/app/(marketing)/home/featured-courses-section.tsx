@@ -1,11 +1,16 @@
+'use client';
+
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, Sparkles } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 import { CourseCard } from './course-card';
-import { featuredCourses } from './data/featured-courses';
+import { type FeaturedCourse } from './data/featured-courses';
+import { useCourses } from '@/lib/courses/course.queries';
 
 /* ==========================================================================
    TYPES
@@ -16,16 +21,11 @@ interface DiscoveryFilter {
   readonly value: string;
 }
 
-/* ==========================================================================
-   DATA
-========================================================================== */
-
 const DISCOVERY_FILTERS: readonly DiscoveryFilter[] = [
   { label: 'All courses', value: 'all' },
-  { label: 'Development', value: 'web-development' },
-  { label: 'Design', value: 'ui-ux-design' },
-  { label: 'Business', value: 'business' },
-  { label: 'Data', value: 'data-science' },
+  { label: 'Full Stack & Web', value: 'Full Stack & Web' },
+  { label: 'System Design', value: 'System Design & Microservices' },
+  { label: 'Cloud & DevOps', value: 'Cloud, DevOps & Kubernetes' },
 ];
 
 /* ==========================================================================
@@ -33,6 +33,53 @@ const DISCOVERY_FILTERS: readonly DiscoveryFilter[] = [
 ========================================================================== */
 
 export function FeaturedCoursesSection() {
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const { data, isLoading } = useCourses({ limit: 12 });
+
+  const mappedCourses: FeaturedCourse[] = useMemo(() => {
+    if (!data?.courses || data.courses.length === 0) return [];
+
+    return data.courses.map((c) => ({
+      id: c.id,
+      slug: c.slug,
+      title: c.title,
+      description: c.subtitle || c.description || '',
+      thumbnail:
+        c.thumbnailUrl ||
+        'https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80',
+      category: {
+        name: c.category?.name || 'Software Engineering',
+        slug: c.category?.slug || 'development',
+      },
+      instructor: {
+        id: c.instructor?.id || 'inst-1',
+        name: c.instructor?.user
+          ? `${c.instructor.user.firstName} ${c.instructor.user.lastName ?? ''}`.trim()
+          : 'StudyHub Architect',
+        avatar:
+          c.instructor?.user?.avatarUrl ||
+          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+      },
+      level: (c.level ? c.level.charAt(0) + c.level.slice(1).toLowerCase() : 'Intermediate') as
+        'Beginner' | 'Intermediate' | 'Advanced',
+      rating: c.rating ?? 4.9,
+      reviewCount: c.reviewCount ?? 120,
+      duration: `${Math.round((c.totalDurationMinutes || 180) / 60)}h`,
+      price: c.price,
+      originalPrice: c.originalPrice ?? undefined,
+      currency: 'INR' as const,
+      discountPercentage:
+        c.originalPrice && c.originalPrice > c.price
+          ? Math.round(((c.originalPrice - c.price) / c.originalPrice) * 100)
+          : undefined,
+    }));
+  }, [data]);
+
+  const filteredCourses = useMemo(() => {
+    if (selectedCategory === 'all') return mappedCourses;
+    return mappedCourses.filter((c) => c.category.name === selectedCategory);
+  }, [mappedCourses, selectedCategory]);
+
   return (
     <section
       aria-labelledby="featured-courses-heading"
@@ -46,8 +93,62 @@ export function FeaturedCoursesSection() {
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <FeaturedCoursesHeader />
-        <CourseDiscoveryFilters />
-        <CourseGrid />
+
+        {/* Discovery Filter Tabs */}
+        <nav aria-label="Course categories filter" className="mt-8 lg:mt-10">
+          <div className="no-scrollbar overflow-x-auto pb-2 pt-1">
+            <div className="flex min-w-max items-center gap-2.5">
+              {DISCOVERY_FILTERS.map((filter) => {
+                const active = selectedCategory === filter.value;
+                return (
+                  <button
+                    key={filter.value}
+                    type="button"
+                    onClick={() => setSelectedCategory(filter.value)}
+                    aria-current={active ? 'page' : undefined}
+                    className={`inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-4 text-xs font-semibold transition-all duration-300 ${
+                      active
+                        ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25 ring-2 ring-primary/20'
+                        : 'border border-border/60 bg-card/60 text-muted-foreground hover:border-border hover:bg-card hover:text-foreground'
+                    }`}
+                  >
+                    {active && <Check aria-hidden="true" className="size-3.5" />}
+                    <span>{filter.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div className="mt-4 h-px w-full bg-linear-to-r from-transparent via-border/80 to-transparent" />
+        </nav>
+
+        {/* Dynamic Grid */}
+        {isLoading ? (
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex flex-col space-y-3 rounded-2xl border border-border/60 bg-card/50 p-4"
+              >
+                <Skeleton className="aspect-16/10 w-full rounded-lg" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+                <div className="pt-4 flex justify-between">
+                  <Skeleton className="h-6 w-16" />
+                  <Skeleton className="h-6 w-20" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredCourses.length === 0 ? (
+          <FeaturedCoursesEmptyState />
+        ) : (
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {filteredCourses.map((course, index) => (
+              <CourseCard key={course.id} course={course} priority={index < 2} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
@@ -100,72 +201,6 @@ function FeaturedCoursesHeader() {
 }
 
 /* ==========================================================================
-   DISCOVERY FILTERS
-========================================================================== */
-
-function CourseDiscoveryFilters() {
-  return (
-    <nav aria-label="Course categories filter" className="mt-8 lg:mt-10">
-      <div className="no-scrollbar overflow-x-auto pb-2 pt-1">
-        <div className="flex min-w-max items-center gap-2.5">
-          {DISCOVERY_FILTERS.map((filter, index) => (
-            <DiscoveryFilterPill key={filter.value} filter={filter} active={index === 0} />
-          ))}
-        </div>
-      </div>
-      <div className="mt-4 h-px w-full bg-linear-to-r from-transparent via-border/80 to-transparent" />
-    </nav>
-  );
-}
-
-/* ==========================================================================
-   DISCOVERY FILTER PILL
-========================================================================== */
-
-interface DiscoveryFilterPillProps {
-  filter: DiscoveryFilter;
-  active: boolean;
-}
-
-function DiscoveryFilterPill({ filter, active }: DiscoveryFilterPillProps) {
-  const href =
-    filter.value === 'all' ? '/courses' : `/courses?category=${encodeURIComponent(filter.value)}`;
-
-  return (
-    <Link
-      href={href}
-      aria-current={active ? 'page' : undefined}
-      className={`inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-4 text-xs font-semibold transition-all duration-300 ${
-        active
-          ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25 ring-2 ring-primary/20'
-          : 'border border-border/60 bg-card/60 text-muted-foreground hover:border-border hover:bg-card hover:text-foreground'
-      }`}
-    >
-      {active && <Check aria-hidden="true" className="size-3.5" />}
-      <span>{filter.label}</span>
-    </Link>
-  );
-}
-
-/* ==========================================================================
-   COURSE GRID
-========================================================================== */
-
-function CourseGrid() {
-  if (featuredCourses.length === 0) {
-    return <FeaturedCoursesEmptyState />;
-  }
-
-  return (
-    <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-      {featuredCourses.map((course, index) => (
-        <CourseCard key={course.id} course={course} priority={index < 2} />
-      ))}
-    </div>
-  );
-}
-
-/* ==========================================================================
    EMPTY STATE
 ========================================================================== */
 
@@ -186,10 +221,11 @@ function FeaturedCoursesEmptyState() {
 
         <Button
           variant="outline"
-          className="mt-6 rounded-xl border-border/80 bg-card hover:border-primary/30 hover:bg-card hover:text-primary"
+          className="mt-6 rounded-lg border-border/80 bg-card hover:border-primary/30 hover:bg-card hover:text-primary"
+          asChild
         >
-          <Link href="/categories" className="inline-flex items-center gap-2">
-            <span>Browse Categories</span>
+          <Link href="/courses" className="inline-flex items-center gap-2">
+            <span>Browse Courses</span>
             <ArrowRight aria-hidden="true" className="size-4" />
           </Link>
         </Button>

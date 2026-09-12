@@ -2,16 +2,21 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ChevronRight, LogIn, Sparkles, X } from 'lucide-react';
 
 import { navItems } from './navigation';
 import { useMobileNavigation } from './mobile-navigation-provider';
 import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/store/auth.store';
+import { useLogoutMutation } from '@/lib/auth/auth.mutations';
 
 export function MobileMoreMenu() {
+  const router = useRouter();
   const pathname = usePathname();
   const { isMoreOpen, closeMore } = useMobileNavigation();
+  const { isAuthenticated, user } = useAuthStore();
+  const logoutMutation = useLogoutMutation();
 
   // Close menu on route changes
   React.useEffect(() => {
@@ -111,7 +116,7 @@ export function MobileMoreMenu() {
                   >
                     <div className="flex items-center gap-3.5">
                       <div
-                        className={`flex size-9 items-center justify-center rounded-xl ${
+                        className={`flex size-9 items-center justify-center rounded-lg ${
                           isActive
                             ? 'bg-primary-foreground/20 text-primary-foreground'
                             : 'bg-background border border-border/60 text-muted-foreground'
@@ -131,21 +136,58 @@ export function MobileMoreMenu() {
 
           {/* Authentication Actions Footer */}
           <div className="border-t border-border/60 bg-muted/20 p-4 sm:p-5">
-            <div className="grid grid-cols-2 gap-3">
-              <Button asChild variant="outline" className="h-11 rounded-xl">
-                <Link href="/login" onClick={closeMore}>
-                  <LogIn className="size-4 mr-1.5" />
-                  <span>Log In</span>
-                </Link>
-              </Button>
+            {!isAuthenticated ? (
+              <div className="grid grid-cols-2 gap-3">
+                <Button asChild variant="outline" className="h-11 rounded-lg">
+                  <Link href="/login" onClick={closeMore}>
+                    <LogIn className="size-4 mr-1.5" />
+                    <span>Log In</span>
+                  </Link>
+                </Button>
 
-              <Button asChild variant="default" className="h-11 rounded-xl">
-                <Link href="/register" onClick={closeMore}>
-                  <Sparkles className="size-4 mr-1.5" />
-                  <span>Get Started</span>
-                </Link>
-              </Button>
-            </div>
+                <Button asChild variant="default" className="h-11 rounded-lg">
+                  <Link href="/register" onClick={closeMore}>
+                    <Sparkles className="size-4 mr-1.5" />
+                    <span>Get Started</span>
+                  </Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 px-1">
+                  <div className="flex size-9 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground text-xs">
+                    {user?.firstName?.[0]?.toUpperCase() ?? 'U'}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-bold text-foreground truncate">
+                      {user?.firstName} {user?.lastName ?? ''}
+                    </p>
+                    <p className="text-[11px] font-mono text-muted-foreground truncate">
+                      {user?.email}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <Button asChild variant="outline" size="sm" className="rounded-lg">
+                    <Link href="/profile" onClick={closeMore}>
+                      Settings
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="rounded-lg"
+                    onClick={() => {
+                      closeMore();
+                      void logoutMutation.mutateAsync().finally(() => router.replace('/login'));
+                    }}
+                  >
+                    Sign Out
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

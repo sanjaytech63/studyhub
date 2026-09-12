@@ -103,7 +103,7 @@ function CtaContent() {
       {/* Icon */}
       <div
         aria-hidden="true"
-        className="mt-5 flex size-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-primary shadow-inner backdrop-blur-md sm:mt-6 sm:size-12 sm:rounded-2xl"
+        className="mt-5 flex size-11 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-primary shadow-inner backdrop-blur-md sm:mt-6 sm:size-12 sm:rounded-2xl"
       >
         <BookOpen className="size-5 sm:size-6" />
       </div>
@@ -160,7 +160,7 @@ function CtaBenefitsCard() {
   return (
     <aside
       aria-label="StudyHub platform advantages"
-      className="relative min-w-0 overflow-hidden rounded-xl border border-white/10 bg-white/4 p-4 shadow-xl backdrop-blur-xl sm:rounded-2xl sm:p-6"
+      className="relative min-w-0 overflow-hidden rounded-lg border border-white/10 bg-white/4 p-4 shadow-xl backdrop-blur-xl sm:rounded-2xl sm:p-6"
     >
       {/* Accent */}
       <div className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-primary/60 to-transparent" />
@@ -169,7 +169,7 @@ function CtaBenefitsCard() {
       <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
         <div
           aria-hidden="true"
-          className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary sm:rounded-xl"
+          className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary sm:rounded-lg"
         >
           <CheckCircle2 className="size-4 sm:size-5" />
         </div>
@@ -195,7 +195,7 @@ function CtaBenefitsCard() {
       </ul>
 
       {/* Social Proof */}
-      <div className="mt-5 flex items-center justify-between gap-3 rounded-lg border border-white/5 bg-white/2 p-3 text-[10px] text-zinc-400 sm:mt-6 sm:rounded-xl sm:text-xs">
+      <div className="mt-5 flex items-center justify-between gap-3 rounded-lg border border-white/5 bg-white/2 p-3 text-[10px] text-zinc-400 sm:mt-6 sm:rounded-lg sm:text-xs">
         <div className="flex min-w-0 items-center gap-2">
           <Users aria-hidden="true" className="size-3.5 shrink-0 text-primary sm:size-4" />
           <span className="truncate font-medium">Active Students</span>

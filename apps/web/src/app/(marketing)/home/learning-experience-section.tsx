@@ -453,7 +453,7 @@ function LessonDetailsSection() {
           <Button
             variant="outline"
             size="icon"
-            className="size-10 rounded-xl"
+            className="size-10 rounded-lg"
             aria-label="Previous lesson"
           >
             <SkipBack className="size-4" />
@@ -461,7 +461,7 @@ function LessonDetailsSection() {
           <Button
             variant="default"
             size="icon"
-            className="size-10 rounded-xl shadow-md shadow-primary/20"
+            className="size-10 rounded-lg shadow-md shadow-primary/20"
             aria-label="Play/Pause lesson"
           >
             <PlayCircle className="size-4" />
@@ -469,7 +469,7 @@ function LessonDetailsSection() {
           <Button
             variant="outline"
             size="icon"
-            className="size-10 rounded-xl"
+            className="size-10 rounded-lg"
             aria-label="Next lesson"
           >
             <SkipForward className="size-4" />
@@ -503,7 +503,7 @@ function ProductBenefitsGrid() {
             className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-6 backdrop-blur-md transition-all duration-300 hover:border-primary/40 hover:bg-card hover:shadow-xl"
           >
             <div className="flex items-center gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary transition-transform group-hover:scale-110">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary transition-transform group-hover:scale-110">
                 <Icon className="size-5" />
               </div>
               <h3 className="text-base font-bold text-foreground">{benefit.title}</h3>

@@ -60,7 +60,7 @@ export function RecentActivity() {
 
             return (
               <div key={activity.id} className="flex items-center gap-4 px-5 py-4 sm:px-6">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
                   <Icon className="size-4.5" />
                 </div>
 

@@ -45,8 +45,8 @@ function SelectTrigger({
         data-slot="select-trigger"
         data-size={size}
         className={cn(
-          'flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-border/80 bg-secondary/50 px-3 py-2 text-sm text-foreground transition-all duration-150 cursor-pointer outline-none select-none',
-          'focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25 focus-visible:bg-secondary/80',
+          'flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-border/80 bg-secondary/40 px-3.5 py-2 text-xs text-foreground transition-all duration-150 cursor-pointer outline-none select-none',
+          'focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25 focus-visible:bg-secondary/70',
           'disabled:cursor-not-allowed disabled:opacity-50',
           size === 'sm' && 'h-8 text-xs px-2.5',
           error &&
@@ -66,6 +66,46 @@ function SelectTrigger({
     </div>
   );
 }
+
+export interface NativeSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  readonly error?: string;
+  readonly leftIcon?: React.ReactNode;
+}
+
+export const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
+  ({ className, error, leftIcon, children, ...props }, ref) => {
+    return (
+      <div className="relative w-full">
+        {leftIcon && (
+          <div className="absolute inset-y-0 left-0 flex items-center justify-center pl-3 pointer-events-none text-muted-foreground">
+            {leftIcon}
+          </div>
+        )}
+        <select
+          ref={ref}
+          className={cn(
+            'flex h-10 w-full items-center rounded-lg border border-border/80 bg-secondary/40 px-3.5 py-2 text-xs text-foreground transition-all duration-150 cursor-pointer appearance-none outline-none select-none',
+            'focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25 focus-visible:bg-secondary/70',
+            'disabled:cursor-not-allowed disabled:opacity-50 pr-9',
+            leftIcon && 'pl-9',
+            error &&
+              'border-destructive/80 focus-visible:border-destructive focus-visible:ring-destructive/25',
+            className,
+          )}
+          {...props}
+        >
+          {children}
+        </select>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground">
+          <ChevronDownIcon className="h-4 w-4" />
+        </div>
+        {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
+      </div>
+    );
+  },
+);
+
+NativeSelect.displayName = 'NativeSelect';
 
 function SelectContent({
   className,
@@ -94,7 +134,7 @@ function SelectContent({
         <SelectPrimitive.Popup
           data-slot="select-content"
           className={cn(
-            'relative isolate z-50 max-h-72 w-(--anchor-width) min-w-[8rem] overflow-hidden rounded-xl border border-border/80 bg-card/95 text-card-foreground shadow-2xl backdrop-blur-xl p-1',
+            'relative isolate z-50 max-h-72 w-(--anchor-width) min-w-[8rem] overflow-hidden rounded-lg border border-border/80 bg-card/95 text-card-foreground shadow-2xl backdrop-blur-xl p-1',
             'animate-in fade-in-0 zoom-in-95 duration-150',
             className,
           )}

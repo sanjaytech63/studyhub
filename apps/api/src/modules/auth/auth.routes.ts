@@ -25,17 +25,3 @@ router.post('/reset-password', resetPasswordController);
 router.post('/change-password', requireAuth, changePasswordController);
 
 export default router;
-
-// router.get(
-//   '/users',
-//   requireAuth,
-//   requirePermission('user:read'),
-//   getUsersController,
-// );
-
-// router.post(
-//   '/courses/:id/publish',
-//   requireAuth,
-//   requirePermission('course:publish'),
-//   publishCourseController,
-// );

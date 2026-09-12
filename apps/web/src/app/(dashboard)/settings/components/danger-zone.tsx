@@ -45,7 +45,7 @@ export function DangerZone() {
   return (
     <section
       aria-labelledby="danger-zone-title"
-      className="rounded-xl border border-destructive/20 bg-destructive/3"
+      className="rounded-lg border border-destructive/20 bg-destructive/3"
     >
       <div className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div className="flex min-w-0 items-start gap-3">

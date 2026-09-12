@@ -1,10 +1,26 @@
+'use client';
+
+import React, { useMemo } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Compass, Sparkles, type LucideIcon } from 'lucide-react';
+import {
+  ArrowRight,
+  Compass,
+  Sparkles,
+  Code2,
+  Server,
+  Cloud,
+  Cpu,
+  Database,
+  Palette,
+  Layers,
+  type LucideIcon,
+} from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
-import { courseCategories } from './data/categories';
+import { useCategories } from '@/lib/courses/course.queries';
 
 /* ==========================================================================
    TYPES
@@ -20,11 +36,38 @@ export interface CourseCategory {
   readonly isPopular?: boolean;
 }
 
+const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
+  'full-stack-and-web': Code2,
+  'system-design-and-microservices': Server,
+  'cloud-devops-and-kubernetes': Cloud,
+  'data-engineering-and-kafka': Database,
+  'ai-and-applied-machine-learning': Cpu,
+  'mobile-app-engineering': Layers,
+  'ui-ux-design-systems': Palette,
+};
+
 /* ==========================================================================
    CATEGORIES SECTION
 ========================================================================== */
 
 export function CategoriesSection() {
+  const { data: rawCategories, isLoading } = useCategories();
+
+  const categories: CourseCategory[] = useMemo(() => {
+    if (!rawCategories || rawCategories.length === 0) return [];
+
+    return rawCategories.map((cat, idx) => ({
+      id: cat.id,
+      slug: cat.slug || cat.id,
+      name: cat.name,
+      description:
+        cat.description || 'Master hands-on engineering skills with real-world architecture.',
+      courseCount: (cat as unknown as { _count?: { courses?: number } })._count?.courses ?? 0,
+      icon: CATEGORY_ICON_MAP[cat.slug] || Code2,
+      isPopular: idx < 2,
+    }));
+  }, [rawCategories]);
+
   return (
     <section
       aria-labelledby="categories-heading"
@@ -39,13 +82,34 @@ export function CategoriesSection() {
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <CategoriesHeader />
 
-        <ul className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:mt-12 lg:grid-cols-4">
-          {courseCategories.map((category) => (
-            <li key={category.id} className="h-full">
-              <CategoryCard category={category} />
-            </li>
-          ))}
-        </ul>
+        {isLoading ? (
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:mt-12 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-44 rounded-2xl border border-border/60 bg-card/50 p-6 space-y-3"
+              >
+                <Skeleton className="size-10 rounded-lg" />
+                <Skeleton className="h-5 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+              </div>
+            ))}
+          </div>
+        ) : categories.length === 0 ? (
+          <div className="mt-10 rounded-2xl border border-dashed border-border/80 bg-card/40 p-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              Categories are being curated. Check back shortly!
+            </p>
+          </div>
+        ) : (
+          <ul className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:mt-12 lg:grid-cols-4">
+            {categories.map((category) => (
+              <li key={category.id} className="h-full">
+                <CategoryCard category={category} />
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );
@@ -73,21 +137,21 @@ function CategoriesHeader() {
         >
           Explore by{' '}
           <span className="bg-linear-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-            category.
+            specialization.
           </span>
         </h2>
 
         <p className="mt-3.5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-          Discover structured paths designed to equip you with practical skills across high-demand
-          disciplines.
+          Dive into structured learning paths tailored for modern software architects and full stack
+          engineers.
         </p>
       </div>
 
       <Link
-        href="/categories"
+        href="/courses"
         className="group inline-flex items-center gap-2 self-start rounded-lg border border-border/80 bg-card/60 px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs backdrop-blur-md transition-all duration-300 hover:border-primary/30 hover:bg-card hover:text-primary hover:shadow-md sm:self-auto"
       >
-        <span>View all categories</span>
+        <span>All specializations</span>
         <ArrowRight
           aria-hidden="true"
           className="size-4 transition-transform duration-300 group-hover:translate-x-1"
@@ -102,81 +166,53 @@ function CategoriesHeader() {
 ========================================================================== */
 
 interface CategoryCardProps {
-  category: CourseCategory;
+  readonly category: CourseCategory;
 }
 
 function CategoryCard({ category }: CategoryCardProps) {
   const Icon = category.icon;
 
   return (
-    <Link
-      href={`/courses?category=${encodeURIComponent(category.slug)}`}
-      aria-label={`Explore ${category.name}, ${formatCourseCount(category.courseCount)}`}
-      className="group block h-full rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-    >
-      <Card className="relative flex h-full min-h-55 flex-col justify-between overflow-hidden rounded-2xl border border-border/60 bg-card/50 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:bg-card hover:shadow-xl hover:shadow-black/5 group-focus-visible:border-ring">
-        {/* Popular Tag Indicator */}
-        {category.isPopular && (
-          <div className="absolute right-4 top-4">
-            <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-              <Sparkles className="size-2.5" /> Popular
-            </span>
-          </div>
-        )}
-
-        {/* Top Icon & Arrow */}
+    <Card className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border-border/60 bg-card/60 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-card hover:shadow-xl hover:shadow-primary/5">
+      <div>
         <div className="flex items-center justify-between">
-          <div className="flex size-12 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-lg group-hover:shadow-primary/20">
+          <div className="flex size-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary transition-colors duration-300 group-hover:border-primary/40 group-hover:bg-primary group-hover:text-primary-foreground">
             <Icon aria-hidden="true" className="size-6" />
           </div>
 
-          {!category.isPopular && (
-            <div
-              aria-hidden="true"
-              className="flex size-8 items-center justify-center rounded-lg border border-transparent text-muted-foreground transition-all duration-300 group-hover:border-border/60 group-hover:bg-muted/50 group-hover:text-foreground"
+          {category.isPopular && (
+            <Badge
+              variant="outline"
+              className="inline-flex items-center gap-1 rounded-full border-primary/30 bg-primary/10 text-[10px] font-bold uppercase tracking-wider text-primary"
             >
-              <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-            </div>
+              <Sparkles className="size-2.5" />
+              <span>Popular</span>
+            </Badge>
           )}
         </div>
 
-        {/* Body Description */}
-        <div className="mt-6">
-          <h3 className="text-lg font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
-            {category.name}
-          </h3>
+        <h3 className="mt-5 text-lg font-bold tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary">
+          {category.name}
+        </h3>
 
-          <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-            {category.description}
-          </p>
-        </div>
+        <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+          {category.description}
+        </p>
+      </div>
 
-        {/* Footer Meta */}
-        <div className="mt-6 flex items-center justify-between border-t border-border/60 pt-4 text-xs font-semibold">
-          <span className="text-muted-foreground transition-colors group-hover:text-foreground">
-            {formatCourseCount(category.courseCount)}
-          </span>
+      <div className="mt-6 flex items-center justify-between border-t border-border/40 pt-4">
+        <span className="text-xs font-semibold text-muted-foreground">
+          {category.courseCount > 0 ? `${category.courseCount} Courses` : 'Courses available'}
+        </span>
 
-          <span className="inline-flex items-center gap-1 text-primary">
-            <span>Explore</span>
-            <ArrowRight
-              aria-hidden="true"
-              className="size-3 transition-transform duration-300 group-hover:translate-x-0.5"
-            />
-          </span>
-        </div>
-
-        {/* Bottom Hover Progress Line Accent */}
-        <div className="absolute inset-x-0 bottom-0 h-0.5 bg-linear-to-r from-transparent via-primary/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      </Card>
-    </Link>
+        <Link
+          href={`/courses?category=${category.slug}`}
+          className="inline-flex items-center gap-1 text-xs font-bold text-primary transition-transform duration-200 group-hover:translate-x-1"
+        >
+          <span>Explore</span>
+          <ArrowRight aria-hidden="true" className="size-3.5" />
+        </Link>
+      </div>
+    </Card>
   );
-}
-
-/* ==========================================================================
-   FORMATTERS
-========================================================================== */
-
-function formatCourseCount(count: number) {
-  return `${count.toLocaleString('en-IN')} ${count === 1 ? 'course' : 'courses'}`;
 }

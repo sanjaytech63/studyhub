@@ -141,7 +141,7 @@ export function DashboardUserMenu({
           aria-label="Open account menu"
           onClick={() => setOpen((current) => !current)}
           className={[
-            'flex w-full items-center gap-3 rounded-xl p-2',
+            'flex w-full items-center gap-3 rounded-lg p-2',
             'text-left',
             'transition-colors duration-200',
             'hover:bg-muted/70',
@@ -157,7 +157,7 @@ export function DashboardUserMenu({
             aria-hidden="true"
             className={[
               'flex size-9 shrink-0 items-center',
-              'justify-center rounded-xl overflow-hidden',
+              'justify-center rounded-lg overflow-hidden',
               'bg-primary',
               'text-xs font-semibold',
               'text-primary-foreground',
@@ -221,7 +221,7 @@ export function DashboardUserMenu({
                 ? 'absolute bottom-full mb-2 left-12 w-64'
                 : 'absolute bottom-full mb-2 left-0 w-full min-w-64',
             'overflow-hidden',
-            'rounded-xl',
+            'rounded-lg',
             'border border-border/70',
             'bg-background/95',
             'p-1.5',
@@ -239,7 +239,7 @@ export function DashboardUserMenu({
                 className={[
                   'flex size-10 shrink-0',
                   'items-center justify-center',
-                  'rounded-xl overflow-hidden',
+                  'rounded-lg overflow-hidden',
                   'bg-primary',
                   'text-sm font-semibold',
                   'text-primary-foreground',

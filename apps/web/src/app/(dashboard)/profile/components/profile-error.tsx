@@ -16,7 +16,7 @@ export function ProfileError({ message, onRetry }: ProfileErrorProps) {
         <p className="mt-1.5 text-sm text-muted-foreground">Manage your personal information.</p>
       </div>
 
-      <div className="max-w-3xl rounded-xl border border-destructive/20 bg-card p-6">
+      <div className="max-w-3xl rounded-lg border border-destructive/20 bg-card p-6">
         <h2 className="text-sm font-semibold">Unable to load profile</h2>
 
         <p className="mt-1 text-sm text-muted-foreground">

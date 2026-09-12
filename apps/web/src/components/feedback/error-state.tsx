@@ -19,7 +19,7 @@ export function ErrorState({
     <section
       role="alert"
       aria-labelledby="error-state-title"
-      className="rounded-xl border border-destructive/20 bg-card p-6"
+      className="rounded-lg border border-destructive/20 bg-card p-6"
     >
       <div className="flex gap-4">
         <div

@@ -41,7 +41,10 @@ export function setAccessToken(token: string | null) {
   accessToken = token;
   writeStorage(ACCESS_TOKEN_KEY, token);
 }
-export function getAccessToken() {
+export function getAccessToken(): string | null {
+  if (!accessToken && isBrowser()) {
+    accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+  }
   return accessToken;
 }
 export function clearAccessToken() {
@@ -53,7 +56,10 @@ export function setRefreshToken(token: string | null) {
   refreshToken = token;
   writeStorage(REFRESH_TOKEN_KEY, token);
 }
-export function getRefreshToken() {
+export function getRefreshToken(): string | null {
+  if (!refreshToken && isBrowser()) {
+    refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+  }
   return refreshToken;
 }
 export function clearRefreshToken() {
@@ -65,7 +71,10 @@ export function setSessionId(value: string | null) {
   sessionId = value;
   writeStorage(SESSION_ID_KEY, value);
 }
-export function getSessionId() {
+export function getSessionId(): string | null {
+  if (!sessionId && isBrowser()) {
+    sessionId = localStorage.getItem(SESSION_ID_KEY);
+  }
   return sessionId;
 }
 export function clearSessionId() {
@@ -96,8 +105,13 @@ export const apiClient = axios.create({
 // Request interceptor — attach access token
 apiClient.interceptors.request.use(
   (config) => {
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    const token = getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    // For FormData uploads, let the browser/Axios calculate the multipart boundary
+    if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
     }
     return config;
   },

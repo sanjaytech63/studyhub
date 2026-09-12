@@ -30,7 +30,7 @@ const buttonVariants = cva(
       size: {
         sm: 'h-8 px-3 text-xs rounded-lg',
         md: 'h-10 px-4 py-2 text-sm rounded-lg',
-        lg: 'h-10 px-6 text-base rounded-xl',
+        lg: 'h-10 px-6 text-base rounded-lg',
         icon: 'h-10 w-10 p-0 rounded-lg',
         iconSm: 'h-8 w-8 p-0 rounded-md',
       },
@@ -75,7 +75,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {!isLoading && leftIcon && (
           <span className="inline-flex items-center justify-center shrink-0">{leftIcon}</span>
         )}
-        {children && <span className="inline-flex items-center">{children}</span>}
+        {children && <span className="inline-flex items-center pb-0.75">{children}</span>}
         {!isLoading && rightIcon && (
           <span className="inline-flex items-center justify-center shrink-0">{rightIcon}</span>
         )}

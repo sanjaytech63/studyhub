@@ -26,7 +26,7 @@ export function DashboardHeader() {
             size="icon"
             onClick={openMobileSidebar}
             aria-label="Open mobile navigation"
-            className="size-10 rounded-xl border-border/60 bg-muted/20 md:hidden"
+            className="size-10 rounded-lg border-border/60 bg-muted/20 md:hidden"
           >
             <Menu className="size-5 text-muted-foreground" />
           </Button>

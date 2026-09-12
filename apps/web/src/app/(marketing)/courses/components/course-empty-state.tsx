@@ -11,7 +11,7 @@ export function CourseEmptyState() {
 
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/80 bg-card/50 p-8 sm:p-12 text-center my-6">
-      <div className="flex size-12 items-center justify-center rounded-xl bg-muted/80 text-muted-foreground mb-4">
+      <div className="flex size-12 items-center justify-center rounded-lg bg-muted/80 text-muted-foreground mb-4">
         <SearchX className="size-6" />
       </div>
       <h3 className="text-base font-bold text-foreground tracking-tight">

@@ -36,7 +36,7 @@ export default function CookiesPage() {
         </p>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/20 p-4">
             <Lock className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
               <h4 className="text-sm font-semibold text-foreground">Authentication & Security</h4>
@@ -46,7 +46,7 @@ export default function CookiesPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/20 p-4">
             <Settings2 className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
               <h4 className="text-sm font-semibold text-foreground">Preferences & Theme</h4>
@@ -56,7 +56,7 @@ export default function CookiesPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/20 p-4">
             <BarChart2 className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
               <h4 className="text-sm font-semibold text-foreground">Performance & Analytics</h4>
@@ -66,7 +66,7 @@ export default function CookiesPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/20 p-4">
             <Cookie className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
               <h4 className="text-sm font-semibold text-foreground">Session State</h4>
@@ -172,14 +172,14 @@ export default function CookiesPage() {
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Link
             href="/privacy"
-            className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
+            className="inline-flex items-center gap-2 rounded-lg border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
           >
             <Shield className="size-4 text-primary" />
             <span>Read Privacy Policy</span>
           </Link>
           <Link
             href="/terms"
-            className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
+            className="inline-flex items-center gap-2 rounded-lg border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
           >
             <span>Terms of Service</span>
           </Link>

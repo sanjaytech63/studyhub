@@ -5,6 +5,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 import { PageLoader } from '../feedback/page-loader';
 
+import { clearAuthTokens } from '@/lib/api/api-client';
+
 const PROTECTED_ROUTES = [
   '/dashboard',
   '/learning',
@@ -33,7 +35,6 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const isInitialized = useAuthStore((state) => state.isInitialized);
-
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
@@ -42,10 +43,9 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     if (isProtectedRoute(pathname) && !isAuthenticated) {
+      clearAuthTokens();
       const callbackUrl = encodeURIComponent(`${pathname}${window.location.search}`);
-
       router.replace(`/login?callbackUrl=${callbackUrl}`);
-
       return;
     }
 
@@ -55,11 +55,11 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   }, [isInitialized, isAuthenticated, pathname, router]);
 
   if (!isInitialized) {
-    return <PageLoader />;
+    return <PageLoader message="Loading StudyHub..." />;
   }
 
   if (isProtectedRoute(pathname) && !isAuthenticated) {
-    return null;
+    return <PageLoader message="Redirecting to login..." />;
   }
 
   return children;

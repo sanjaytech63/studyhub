@@ -426,7 +426,7 @@ export default function AdminProfilePage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="p-3.5 rounded-xl border border-border/60 bg-secondary/30 space-y-1">
+            <div className="p-3.5 rounded-lg border border-border/60 bg-secondary/30 space-y-1">
               <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
                 Current Registered Email
               </span>

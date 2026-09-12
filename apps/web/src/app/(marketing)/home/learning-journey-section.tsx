@@ -167,7 +167,7 @@ function JourneyStepCard({ step, index, total }: JourneyStepCardProps) {
         {/* Top Header Row within Card */}
         <div className="flex items-center justify-between">
           {/* Icon Badge */}
-          <div className="flex size-12 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
+          <div className="flex size-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
             <Icon aria-hidden="true" className="size-6" />
           </div>
 

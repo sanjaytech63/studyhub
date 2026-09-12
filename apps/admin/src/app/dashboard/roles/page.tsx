@@ -161,7 +161,7 @@ export default function RolesManagementPage() {
       {/* Stats Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card className="p-4 flex items-center gap-4">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/20">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
             <Shield className="h-5 w-5" />
           </div>
           <div>
@@ -171,7 +171,7 @@ export default function RolesManagementPage() {
         </Card>
 
         <Card className="p-4 flex items-center gap-4">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 border border-amber-500/20">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/20">
             <Lock className="h-5 w-5" />
           </div>
           <div>
@@ -181,7 +181,7 @@ export default function RolesManagementPage() {
         </Card>
 
         <Card className="p-4 flex items-center gap-4">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-500/10 text-purple-500 border border-purple-500/20">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-purple-500/10 text-purple-500 border border-purple-500/20">
             <KeyRound className="h-5 w-5" />
           </div>
           <div>
@@ -195,7 +195,7 @@ export default function RolesManagementPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isRolesLoading ? (
           Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-64 rounded-xl bg-card/40 animate-pulse" />
+            <div key={i} className="h-64 rounded-lg bg-card/40 animate-pulse" />
           ))
         ) : roles && roles.length > 0 ? (
           roles.map((role) => {
@@ -237,7 +237,7 @@ export default function RolesManagementPage() {
                     </div>
                   </div>
 
-                  {/* Sample Permissions Badges */}
+                  {/* Permissions Badges Preview */}
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-1.5">
                       Assigned Privileges

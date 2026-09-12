@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Card } from './card';
+import { Badge } from './badge';
 import { cn } from './button';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
@@ -59,7 +60,7 @@ export function StatCard({
   return (
     <Card
       className={cn(
-        'group relative p-5 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5',
+        'group relative p-5 rounded-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5',
         accentClasses.border,
         className,
       )}
@@ -67,16 +68,14 @@ export function StatCard({
       {/* Background ambient radial glow */}
       <div
         className={cn(
-          'pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-gradient-to-b opacity-25 blur-2xl transition-opacity group-hover:opacity-40',
+          'pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-linear-to-b opacity-25 blur-2xl transition-opacity group-hover:opacity-40',
           accentClasses.glow,
         )}
       />
 
       <div className="relative flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            {title}
-          </p>
+          <p className="text-xs font-medium  tracking-wider text-muted-foreground">{title}</p>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="font-mono text-3xl font-semibold tracking-tight text-foreground tabular-nums">
               {value}
@@ -85,7 +84,7 @@ export function StatCard({
         </div>
         <div
           className={cn(
-            'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl shadow-inner',
+            'flex h-11 w-11 shrink-0 items-center justify-center rounded-lg shadow-inner',
             accentClasses.iconBg,
           )}
         >
@@ -94,29 +93,32 @@ export function StatCard({
       </div>
 
       {(trend || description) && (
-        <div className="relative mt-4 flex items-center gap-2 pt-3 border-t border-border/40 text-xs">
+        <div className="relative mt-4 flex items-center gap-2 pt-3 border-t border-border/40 text-xs overflow-hidden">
           {trend && (
-            <span
-              className={cn(
-                'flex items-center gap-1 font-mono font-medium rounded-full p-1 text-[11px]',
-                trend.isNeutral
-                  ? 'bg-secondary text-muted-foreground'
-                  : trend.isPositive
-                    ? 'bg-emerald-500/10 text-emerald-400'
-                    : 'bg-rose-500/10 text-rose-400',
-              )}
+            <Badge
+              variant={trend.isNeutral ? 'neutral' : trend.isPositive ? 'active' : 'deleted'}
+              size="sm"
+              withDot={false}
+              className="font-mono text-[11px] font-medium gap-1 px-2.5 py-0.5 normal-case tracking-normal whitespace-nowrap shrink-0 inline-flex items-center"
             >
               {trend.isNeutral ? (
-                <Minus className="h-3 w-3" />
+                <Minus className="h-3 w-3 shrink-0" />
               ) : trend.isPositive ? (
-                <TrendingUp className="h-3 w-3" />
+                <TrendingUp className="h-3 w-3 shrink-0" />
               ) : (
-                <TrendingDown className="h-3 w-3" />
+                <TrendingDown className="h-3 w-3 shrink-0" />
               )}
-              {trend.value}
+              <span className="whitespace-nowrap">{trend.value}</span>
+            </Badge>
+          )}
+          {description && (
+            <span
+              className="text-muted-foreground truncate text-[11px] min-w-0"
+              title={description}
+            >
+              {description}
             </span>
           )}
-          {description && <span className="text-muted-foreground truncate">{description}</span>}
         </div>
       )}
     </Card>

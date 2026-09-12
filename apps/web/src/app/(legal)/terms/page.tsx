@@ -52,7 +52,7 @@ export default function TermsPage() {
         </p>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/20 p-4">
             <UserCheck className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
               <h4 className="text-sm font-semibold text-foreground">Credential Confidentiality</h4>
@@ -63,7 +63,7 @@ export default function TermsPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/20 p-4">
             <ShieldAlert className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
               <h4 className="text-sm font-semibold text-foreground">
@@ -86,7 +86,7 @@ export default function TermsPage() {
         </p>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="flex items-start gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-3.5">
+          <div className="flex items-start gap-3 rounded-lg border border-destructive/20 bg-destructive/5 p-3.5">
             <Ban className="mt-0.5 size-4.5 shrink-0 text-destructive" />
             <div className="text-xs leading-relaxed text-muted-foreground">
               <strong className="font-semibold text-foreground">Unauthorized Access:</strong>{' '}
@@ -94,7 +94,7 @@ export default function TermsPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-3.5">
+          <div className="flex items-start gap-3 rounded-lg border border-destructive/20 bg-destructive/5 p-3.5">
             <Ban className="mt-0.5 size-4.5 shrink-0 text-destructive" />
             <div className="text-xs leading-relaxed text-muted-foreground">
               <strong className="font-semibold text-foreground">Malicious Code:</strong> Uploading
@@ -102,7 +102,7 @@ export default function TermsPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-3.5">
+          <div className="flex items-start gap-3 rounded-lg border border-destructive/20 bg-destructive/5 p-3.5">
             <Ban className="mt-0.5 size-4.5 shrink-0 text-destructive" />
             <div className="text-xs leading-relaxed text-muted-foreground">
               <strong className="font-semibold text-foreground">Infrastructure Abuse:</strong>{' '}
@@ -110,7 +110,7 @@ export default function TermsPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-3.5">
+          <div className="flex items-start gap-3 rounded-lg border border-destructive/20 bg-destructive/5 p-3.5">
             <CopyX className="mt-0.5 size-4.5 shrink-0 text-destructive" />
             <div className="text-xs leading-relaxed text-muted-foreground">
               <strong className="font-semibold text-foreground">Content Piracy:</strong>{' '}
@@ -188,14 +188,14 @@ export default function TermsPage() {
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Link
             href="/privacy"
-            className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
+            className="inline-flex items-center gap-2 rounded-lg border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
           >
             <Shield className="size-4 text-primary" />
             <span>Privacy Policy</span>
           </Link>
           <Link
             href="/cookies"
-            className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
+            className="inline-flex items-center gap-2 rounded-lg border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
           >
             <Cookie className="size-4 text-primary" />
             <span>Cookie Policy</span>

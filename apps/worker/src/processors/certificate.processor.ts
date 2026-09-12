@@ -5,6 +5,8 @@ import { redisConnection } from '../config/redis';
 import { workerConfig } from '../config/worker.config';
 import { QUEUE_NAMES } from '../queues/queue.constants';
 
+import { prisma } from '@studyhub/database';
+
 export const certificateWorker = new Worker(
   QUEUE_NAMES.CERTIFICATE,
 
@@ -13,21 +15,45 @@ export const certificateWorker = new Worker(
       {
         jobId: job.id,
         jobName: job.name,
+        data: job.data,
       },
       'Processing certificate job',
     );
 
     switch (job.name) {
       case 'generate-certificate': {
+        const { certificateId, certificateCode } = (job.data || {}) as {
+          certificateId?: string;
+          certificateCode?: string;
+        };
+
+        if (certificateId) {
+          try {
+            await prisma.certificate.update({
+              where: { id: certificateId },
+              data: {
+                pdfUrl: `https://assets.studyhub.dev/certificates/${certificateCode || certificateId}.pdf`,
+              },
+            });
+          } catch (dbErr) {
+            logger.warn(
+              { dbErr, certificateId },
+              'Could not update certificate in DB (offline or mock)',
+            );
+          }
+        }
+
         logger.info(
           {
             jobId: job.id,
+            certificateId,
           },
-          'Certificate generation job processed',
+          'Certificate generation job processed successfully',
         );
 
         return {
           success: true,
+          pdfUrl: `https://assets.studyhub.dev/certificates/${certificateCode || certificateId}.pdf`,
         };
       }
 

@@ -16,7 +16,7 @@ export function LearningCourseCard({ course }: LearningCourseCardProps) {
   return (
     <div
       className={[
-        'group rounded-xl border border-border/60',
+        'group rounded-lg border border-border/60',
         'bg-background p-4',
         'transition-all duration-200',
         'hover:border-primary/20 hover:bg-muted/20',
@@ -24,7 +24,7 @@ export function LearningCourseCard({ course }: LearningCourseCardProps) {
     >
       <div className="flex gap-4">
         {/* Course thumbnail */}
-        <div className="relative hidden size-16 shrink-0 overflow-hidden rounded-xl bg-muted sm:block">
+        <div className="relative hidden size-16 shrink-0 overflow-hidden rounded-lg bg-muted sm:block">
           {course.imageUrl ? (
             <Image
               src={course.imageUrl}

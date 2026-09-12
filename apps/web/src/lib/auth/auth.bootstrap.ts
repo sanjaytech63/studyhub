@@ -47,6 +47,7 @@ async function bootstrapAuthInternal(): Promise<void> {
   const refreshToken = getRefreshToken();
 
   if (!accessToken && !refreshToken) {
+    clearAuthTokens();
     store.clearAuth();
     return;
   }

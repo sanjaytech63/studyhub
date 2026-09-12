@@ -81,7 +81,7 @@ export default function PrivacyPage() {
         </p>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/20 p-4">
             <User className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
               <h4 className="text-sm font-semibold text-foreground">Service Personalization</h4>
@@ -91,7 +91,7 @@ export default function PrivacyPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/20 p-4">
             <ShieldCheck className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
               <h4 className="text-sm font-semibold text-foreground">Account Protection</h4>
@@ -101,7 +101,7 @@ export default function PrivacyPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/20 p-4">
             <BookOpen className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
               <h4 className="text-sm font-semibold text-foreground">Progress Tracking</h4>
@@ -111,7 +111,7 @@ export default function PrivacyPage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/20 p-4">
             <Mail className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
               <h4 className="text-sm font-semibold text-foreground">Platform Communications</h4>
@@ -142,7 +142,7 @@ export default function PrivacyPage() {
 
       {/* 5. Information Sharing */}
       <LegalSection id="sharing" title="5. Information Sharing">
-        <div className="mb-4 flex items-center gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-emerald-900 dark:text-emerald-200">
+        <div className="mb-4 flex items-center gap-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-emerald-900 dark:text-emerald-200">
           <ShieldCheck className="size-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
           <span className="text-xs font-semibold">
             StudyHub does not sell, rent, or trade your personal information to third parties.
@@ -183,14 +183,14 @@ export default function PrivacyPage() {
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Link
             href="/terms"
-            className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
+            className="inline-flex items-center gap-2 rounded-lg border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
           >
             <FileText className="size-4 text-primary" />
             <span>Terms of Service</span>
           </Link>
           <Link
             href="/cookies"
-            className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
+            className="inline-flex items-center gap-2 rounded-lg border border-border/80 bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-accent"
           >
             <Cookie className="size-4 text-primary" />
             <span>Cookie Policy</span>

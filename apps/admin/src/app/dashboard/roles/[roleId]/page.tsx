@@ -152,8 +152,8 @@ export default function RolePermissionsPage() {
     return (
       <div className="space-y-6">
         <div className="h-8 w-48 rounded bg-muted/60 animate-pulse" />
-        <div className="h-28 rounded-xl bg-muted/40 animate-pulse" />
-        <div className="h-106 rounded-xl bg-muted/30 animate-pulse" />
+        <div className="h-28 rounded-lg bg-muted/40 animate-pulse" />
+        <div className="h-106 rounded-lg bg-muted/30 animate-pulse" />
       </div>
     );
   }
@@ -272,7 +272,7 @@ export default function RolePermissionsPage() {
                     <div
                       key={perm.id}
                       onClick={() => handleToggle(perm.id)}
-                      className={`flex items-start justify-between p-3 rounded-xl border transition-all select-none ${
+                      className={`flex items-start justify-between p-3 rounded-lg border transition-all select-none ${
                         isSystem
                           ? 'cursor-default opacity-85'
                           : 'cursor-pointer hover:border-border-hover'

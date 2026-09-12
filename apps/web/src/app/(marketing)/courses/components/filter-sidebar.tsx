@@ -11,8 +11,8 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { CATEGORIES } from '../data/courses';
 import { CourseFilters } from '@/lib/courses/course-types';
+import { useCategories } from '@/lib/courses/course.queries';
 
 interface FilterSidebarProps {
   readonly filters: CourseFilters;
@@ -22,6 +22,7 @@ export function FilterSidebar({ filters }: FilterSidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { data: categories } = useCategories();
 
   const updateParam = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -33,6 +34,15 @@ export function FilterSidebar({ filters }: FilterSidebarProps) {
     params.set('page', '1');
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
+
+  const categoryOptions = [
+    { label: 'All Categories', value: 'all' },
+    ...(categories?.map((c) => ({ label: c.name, value: c.slug || c.id })) ?? [
+      { label: 'Full Stack & Web', value: 'full-stack-and-web' },
+      { label: 'System Design & Microservices', value: 'system-design-and-microservices' },
+      { label: 'Cloud, DevOps & Kubernetes', value: 'cloud-devops-and-kubernetes' },
+    ]),
+  ];
 
   return (
     <aside className="w-full space-y-6">
@@ -52,7 +62,7 @@ export function FilterSidebar({ filters }: FilterSidebarProps) {
               onValueChange={(val) => updateParam('category', val)}
               className="space-y-2.5"
             >
-              {CATEGORIES.map((cat) => (
+              {categoryOptions.map((cat) => (
                 <div key={cat.value} className="flex items-center space-x-2.5">
                   <RadioGroupItem value={cat.value} id={`cat-${cat.value}`} />
                   <Label

@@ -19,7 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { ConfirmModal } from '@/components/ui/confirm-modal';
 import {
   Table,
@@ -119,8 +119,8 @@ export default function UserDetailPage() {
     return (
       <div className="space-y-6">
         <div className="h-8 w-48 rounded bg-muted/60 animate-pulse" />
-        <div className="h-36 rounded-xl bg-muted/40 animate-pulse" />
-        <div className="h-64 rounded-xl bg-muted/30 animate-pulse" />
+        <div className="h-36 rounded-lg bg-muted/40 animate-pulse" />
+        <div className="h-64 rounded-lg bg-muted/30 animate-pulse" />
       </div>
     );
   }
@@ -340,11 +340,15 @@ export default function UserDetailPage() {
       </div>
 
       {/* Active User Sessions Table */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between py-4">
+      <div className="space-y-4">
+        <div className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Connected Device Sessions</CardTitle>
-            <CardDescription>Live authenticated sessions across browser clients</CardDescription>
+            <h2 className="text-base font-bold tracking-tight text-foreground">
+              Connected Device Sessions
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Live authenticated sessions across browser clients
+            </p>
           </div>
           {sessions && sessions.length > 0 && (
             <Button
@@ -356,57 +360,56 @@ export default function UserDetailPage() {
               Revoke All Devices
             </Button>
           )}
-        </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Status</TableHead>
-                <TableHead>Client / Browser</TableHead>
-                <TableHead>IP Address</TableHead>
-                <TableHead>Last Active</TableHead>
-                <TableHead>Expires</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isSessionsLoading ? (
-                <TableSkeleton rows={3} cols={5} />
-              ) : sessions && sessions.length > 0 ? (
-                sessions.map((s) => (
-                  <TableRow key={s.id}>
-                    <TableCell>
-                      <Badge variant={s.status === 'ACTIVE' ? 'active' : 'inactive'} size="sm">
-                        {s.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2 font-mono text-xs">
-                        <Laptop className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                        <span className="truncate max-w-xs">{s.userAgent || 'Unknown Device'}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">
-                      {s.ipAddress || '127.0.0.1'}
-                    </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">
-                      {new Date(s.lastActiveAt).toLocaleString('en-US')}
-                    </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">
-                      {new Date(s.expiresAt).toLocaleDateString('en-US')}
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-xs text-muted-foreground">
-                    No active sessions found for this user.
+        </div>
+
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Status</TableHead>
+              <TableHead>Client / Browser</TableHead>
+              <TableHead>IP Address</TableHead>
+              <TableHead>Last Active</TableHead>
+              <TableHead>Expires</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isSessionsLoading ? (
+              <TableSkeleton rows={3} cols={5} />
+            ) : sessions && sessions.length > 0 ? (
+              sessions.map((s) => (
+                <TableRow key={s.id}>
+                  <TableCell>
+                    <Badge variant={s.status === 'ACTIVE' ? 'active' : 'inactive'} size="sm">
+                      {s.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2 font-mono text-xs">
+                      <Laptop className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                      <span className="truncate max-w-xs">{s.userAgent || 'Unknown Device'}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground">
+                    {s.ipAddress || '127.0.0.1'}
+                  </TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground">
+                    {new Date(s.lastActiveAt).toLocaleString('en-US')}
+                  </TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground">
+                    {new Date(s.expiresAt).toLocaleDateString('en-US')}
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-8 text-xs text-muted-foreground">
+                  No active sessions found for this user.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
       {/* Confirm Revoke Modal */}
       <ConfirmModal

@@ -92,3 +92,41 @@ export const requireAuth: RequestHandler = async (req, _res, next) => {
 
   next();
 };
+
+export const optionalAuth: RequestHandler = async (req, _res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    next();
+    return;
+  }
+
+  try {
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      next();
+      return;
+    }
+
+    const payload = await verifyAccessToken(token);
+    if (payload && typeof payload.sessionId === 'string') {
+      const session = await findSessionById(payload.sessionId);
+
+      if (
+        session &&
+        session.userId === payload.sub &&
+        session.status === 'ACTIVE' &&
+        session.expiresAt > new Date()
+      ) {
+        req.user = {
+          id: payload.sub,
+          sessionId: payload.sessionId,
+          roleId: payload.roleId,
+        };
+      }
+    }
+  } catch {
+    // Ignore invalid tokens for optional auth
+  }
+
+  next();
+};

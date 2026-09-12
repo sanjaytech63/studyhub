@@ -54,3 +54,117 @@ export const OtpStatus = {
 } as const
 
 export type OtpStatus = (typeof OtpStatus)[keyof typeof OtpStatus]
+
+
+export const CourseLevel = {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  ADVANCED: 'ADVANCED',
+  ALL_LEVELS: 'ALL_LEVELS'
+} as const
+
+export type CourseLevel = (typeof CourseLevel)[keyof typeof CourseLevel]
+
+
+export const CourseStatus = {
+  DRAFT: 'DRAFT',
+  REVIEW: 'REVIEW',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type CourseStatus = (typeof CourseStatus)[keyof typeof CourseStatus]
+
+
+export const LessonType = {
+  VIDEO: 'VIDEO',
+  ARTICLE: 'ARTICLE',
+  QUIZ: 'QUIZ',
+  ASSIGNMENT: 'ASSIGNMENT',
+  PROJECT: 'PROJECT',
+  RESOURCE: 'RESOURCE',
+  LIVE_SESSION: 'LIVE_SESSION'
+} as const
+
+export type LessonType = (typeof LessonType)[keyof typeof LessonType]
+
+
+export const EnrollmentStatus = {
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  COMPLETED: 'COMPLETED',
+  REVOKED: 'REVOKED'
+} as const
+
+export type EnrollmentStatus = (typeof EnrollmentStatus)[keyof typeof EnrollmentStatus]
+
+
+export const ProgressStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED'
+} as const
+
+export type ProgressStatus = (typeof ProgressStatus)[keyof typeof ProgressStatus]
+
+
+export const OrderStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const PaymentProvider = {
+  STRIPE: 'STRIPE',
+  RAZORPAY: 'RAZORPAY',
+  MANUAL: 'MANUAL'
+} as const
+
+export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
+
+
+export const DiscountType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED: 'FIXED'
+} as const
+
+export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
+
+
+export const ReviewStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  FLAGGED: 'FLAGGED'
+} as const
+
+export type ReviewStatus = (typeof ReviewStatus)[keyof typeof ReviewStatus]
+
+
+export const NotificationType = {
+  COURSE_ENROLLMENT: 'COURSE_ENROLLMENT',
+  COURSE_PUBLISHED: 'COURSE_PUBLISHED',
+  PAYMENT_SUCCESS: 'PAYMENT_SUCCESS',
+  CERTIFICATE_GENERATED: 'CERTIFICATE_GENERATED',
+  NEW_COURSE: 'NEW_COURSE',
+  ANNOUNCEMENT: 'ANNOUNCEMENT',
+  PROMOTION: 'PROMOTION',
+  SYSTEM: 'SYSTEM'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

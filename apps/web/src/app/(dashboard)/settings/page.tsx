@@ -10,7 +10,7 @@ export default function SettingsPage() {
     <section aria-labelledby="settings-title" className="space-y-8">
       {/* Page header */}
       <div className="flex items-start gap-4">
-        <div className="hidden size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary sm:flex">
+        <div className="hidden size-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary sm:flex">
           <Settings className="size-5" />
         </div>
 

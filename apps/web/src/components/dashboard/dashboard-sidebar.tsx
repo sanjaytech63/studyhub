@@ -54,11 +54,11 @@ export function DashboardSidebar() {
             href="/"
             onClick={closeMobileSidebar}
             className={cn(
-              'group flex items-center gap-3 rounded-xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
+              'group flex items-center gap-3 rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
               isCollapsed && 'w-full justify-center',
             )}
           >
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-primary via-primary/90 to-primary/70 font-bold text-primary-foreground shadow-md shadow-primary/25 transition-transform duration-200 group-hover:scale-105">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-primary via-primary/90 to-primary/70 font-bold text-primary-foreground shadow-md shadow-primary/25 transition-transform duration-200 group-hover:scale-105">
               S
             </div>
             {!isCollapsed && (
@@ -155,7 +155,7 @@ export function DashboardSidebar() {
               type="button"
               onClick={toggleCollapsed}
               aria-label="Expand sidebar"
-              className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-muted/20 text-muted-foreground transition-all hover:bg-muted hover:text-foreground active:scale-95"
+              className="flex size-9 items-center justify-center rounded-lg border border-border/60 bg-muted/20 text-muted-foreground transition-all hover:bg-muted hover:text-foreground active:scale-95"
             >
               <PanelLeftOpen className="size-4" />
             </button>

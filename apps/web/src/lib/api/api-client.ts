@@ -27,11 +27,24 @@ let sessionId: string | null = null;
 let refreshPromise: Promise<string> | null = null;
 
 /* -------------------------------------------------------------------------- */
-/* Storage                                                                    */
+/* -------------------------------------------------------------------------- */
+/* Storage & Cookies                                                          */
 /* -------------------------------------------------------------------------- */
 
 function isBrowser(): boolean {
   return typeof window !== 'undefined';
+}
+
+function writeCookie(name: string, value: string | null, maxAgeSeconds: number = 604800): void {
+  if (!isBrowser()) {
+    return;
+  }
+
+  if (value === null) {
+    document.cookie = `${name}=; path=/; max-age=0; SameSite=Lax`;
+  } else {
+    document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAgeSeconds}; SameSite=Lax`;
+  }
 }
 
 function writeStorage(key: string, value: string | null): void {
@@ -41,10 +54,20 @@ function writeStorage(key: string, value: string | null): void {
 
   if (value === null) {
     sessionStorage.removeItem(key);
+    localStorage.removeItem(key);
     return;
   }
 
   sessionStorage.setItem(key, value);
+  localStorage.setItem(key, value);
+}
+
+function readStorage(key: string): string | null {
+  if (!isBrowser()) {
+    return null;
+  }
+
+  return sessionStorage.getItem(key) || localStorage.getItem(key);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -55,9 +78,17 @@ export function setAccessToken(token: string | null): void {
   accessToken = token;
 
   writeStorage(ACCESS_TOKEN_KEY, token);
+  writeCookie('studyhub_access_token', token);
+  if (token) {
+    writeCookie('studyhub_session', sessionId || token);
+  }
 }
 
 export function getAccessToken(): string | null {
+  if (!accessToken && isBrowser()) {
+    accessToken = readStorage(ACCESS_TOKEN_KEY);
+  }
+
   return accessToken;
 }
 
@@ -65,6 +96,7 @@ export function clearAccessToken(): void {
   accessToken = null;
 
   writeStorage(ACCESS_TOKEN_KEY, null);
+  writeCookie('studyhub_access_token', null);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -78,6 +110,10 @@ export function setRefreshToken(token: string | null): void {
 }
 
 export function getRefreshToken(): string | null {
+  if (!refreshToken && isBrowser()) {
+    refreshToken = readStorage(REFRESH_TOKEN_KEY);
+  }
+
   return refreshToken;
 }
 
@@ -95,9 +131,16 @@ export function setSessionId(value: string | null): void {
   sessionId = value;
 
   writeStorage(SESSION_ID_KEY, value);
+  if (value) {
+    writeCookie('studyhub_session', value);
+  }
 }
 
 export function getSessionId(): string | null {
+  if (!sessionId && isBrowser()) {
+    sessionId = readStorage(SESSION_ID_KEY);
+  }
+
   return sessionId;
 }
 
@@ -105,6 +148,7 @@ export function clearSessionId(): void {
   sessionId = null;
 
   writeStorage(SESSION_ID_KEY, null);
+  writeCookie('studyhub_session', null);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -116,11 +160,16 @@ export function initializeAuthState(): void {
     return;
   }
 
-  accessToken = sessionStorage.getItem(ACCESS_TOKEN_KEY);
+  accessToken = readStorage(ACCESS_TOKEN_KEY);
+  refreshToken = readStorage(REFRESH_TOKEN_KEY);
+  sessionId = readStorage(SESSION_ID_KEY);
 
-  refreshToken = sessionStorage.getItem(REFRESH_TOKEN_KEY);
-
-  sessionId = sessionStorage.getItem(SESSION_ID_KEY);
+  if (accessToken || sessionId) {
+    writeCookie('studyhub_session', sessionId || accessToken || 'active');
+    if (accessToken) {
+      writeCookie('studyhub_access_token', accessToken);
+    }
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -131,6 +180,8 @@ export function clearAuthTokens(): void {
   clearAccessToken();
   clearRefreshToken();
   clearSessionId();
+  writeCookie('studyhub_session', null);
+  writeCookie('studyhub_access_token', null);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -156,8 +207,10 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    const token = accessToken || getAccessToken();
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;

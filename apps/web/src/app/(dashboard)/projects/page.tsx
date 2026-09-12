@@ -11,7 +11,7 @@ export default function ProjectsPage() {
         </p>
       </div>
 
-      <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center">
+      <div className="rounded-lg border border-dashed border-border bg-card p-8 text-center">
         <h2 className="text-sm font-semibold">No projects yet</h2>
 
         <p className="mt-1 text-sm text-muted-foreground">

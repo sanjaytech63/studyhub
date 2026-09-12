@@ -5,12 +5,23 @@ import { ChevronLeft, ChevronRight, Inbox } from 'lucide-react';
 import { cn } from './button';
 import { Button } from './button';
 
-export function Table({ className, children, ...props }: React.HTMLAttributes<HTMLTableElement>) {
+export interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
+  readonly containerClassName?: string;
+}
+
+export function Table({ className, containerClassName, children, ...props }: TableProps) {
   return (
-    <div className="relative w-full overflow-auto rounded-xl border border-border/80 bg-card/50 backdrop-blur-md">
-      <table className={cn('w-full caption-bottom text-sm', className)} {...props}>
-        {children}
-      </table>
+    <div
+      className={cn(
+        'relative w-full overflow-hidden rounded-lg border border-border/80 bg-card shadow-xs',
+        containerClassName,
+      )}
+    >
+      <div className="overflow-x-auto">
+        <table className={cn('w-full caption-bottom text-xs', className)} {...props}>
+          {children}
+        </table>
+      </div>
     </div>
   );
 }
@@ -23,7 +34,7 @@ export function TableHeader({
   return (
     <thead
       className={cn(
-        'border-b border-border/70 bg-secondary/40 text-xs font-semibold text-muted-foreground uppercase tracking-wider',
+        'border-b border-border/60 bg-muted/25 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider font-mono',
         className,
       )}
       {...props}
@@ -53,7 +64,7 @@ export function TableRow({
   return (
     <tr
       className={cn(
-        'transition-colors duration-150 hover:bg-secondary/40 data-[state=selected]:bg-secondary/60',
+        'transition-colors duration-150 hover:bg-muted/30 data-[state=selected]:bg-muted/50',
         className,
       )}
       {...props}

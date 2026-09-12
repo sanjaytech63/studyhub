@@ -1,9 +1,10 @@
-import { BookOpen, FileText, Home, type LucideIcon } from 'lucide-react';
+import { Home, Compass, GraduationCap, Award, type LucideIcon } from 'lucide-react';
 
 export interface NavigationItem {
   label: string;
   href: string;
   icon: LucideIcon;
+  authOnly?: boolean;
 }
 
 export const navItems: NavigationItem[] = [
@@ -13,23 +14,20 @@ export const navItems: NavigationItem[] = [
     icon: Home,
   },
   {
-    label: 'Course',
+    label: 'Courses',
     href: '/courses',
-    icon: BookOpen,
+    icon: Compass,
   },
   {
-    label: 'Feature',
-    href: '/features',
-    icon: FileText,
+    label: 'My Learning',
+    href: '/learning',
+    icon: GraduationCap,
+    authOnly: true,
   },
   {
-    label: 'Pricing',
-    href: '/pricing',
-    icon: FileText,
-  },
-  {
-    label: 'Blog',
-    href: '/blog',
-    icon: FileText,
+    label: 'Certificates',
+    href: '/learning#certificates',
+    icon: Award,
+    authOnly: true,
   },
 ];

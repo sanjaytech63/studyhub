@@ -33,7 +33,7 @@ export function EmptyState({
     <section
       aria-labelledby={titleId}
       className={[
-        'rounded-xl border border-dashed border-border bg-card/50 p-8 text-center',
+        'rounded-lg border border-dashed border-border bg-card/50 p-8 text-center',
         className,
       ]
         .filter(Boolean)
@@ -41,7 +41,7 @@ export function EmptyState({
     >
       <div
         aria-hidden="true"
-        className="mx-auto flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary"
+        className="mx-auto flex size-11 items-center justify-center rounded-lg bg-primary/10 text-primary"
       >
         {icon ?? <Inbox className="size-5" />}
       </div>

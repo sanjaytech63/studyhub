@@ -20,7 +20,7 @@ export function CourseCard({ course, priorityImage = false }: CourseCardProps) {
 
   return (
     <article className="group h-full flex flex-col">
-      <Card className="flex flex-col h-full overflow-hidden border border-border/60 bg-card transition-all duration-200 hover:border-border hover:shadow-xs rounded-xl">
+      <Card className="flex flex-col h-full overflow-hidden border border-border/60 bg-card transition-all duration-200 hover:border-border hover:shadow-xs rounded-lg">
         {/* Course Thumbnail Wrapper */}
         <Link
           href={`/courses/${course.slug}`}

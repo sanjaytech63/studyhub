@@ -43,7 +43,7 @@ export function DashboardMetricCard({
         <div className="flex items-start justify-between gap-4">
           <div
             className={[
-              'flex size-10 shrink-0 items-center justify-center rounded-xl',
+              'flex size-10 shrink-0 items-center justify-center rounded-lg',
               highlight ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground',
             ].join(' ')}
           >

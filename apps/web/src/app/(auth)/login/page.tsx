@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -17,7 +17,6 @@ import { useLoginMutation } from '@/lib/auth/auth.mutations';
 import { getApiErrorMessage } from '@/lib/api/api-error';
 
 export default function LoginPage() {
-  const router = useRouter();
   const mutation = useLoginMutation();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
@@ -36,7 +35,8 @@ export default function LoginPage() {
     try {
       const response = await mutation.mutateAsync(values);
       toast.success(`Welcome back, ${response.user.firstName}!`);
-      router.replace(callbackUrl);
+      // Use window.location.assign to guarantee Next.js middleware receives the fresh cookies on the initial request
+      window.location.assign(callbackUrl);
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Unable to sign in. Please check your credentials.'));
     }

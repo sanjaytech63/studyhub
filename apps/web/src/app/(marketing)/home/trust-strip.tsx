@@ -95,7 +95,7 @@ function TrustMetricItem({ metric }: TrustMetricItemProps) {
       {/* Icon */}
       <div
         aria-hidden="true"
-        className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:border-primary/40 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-lg group-hover:shadow-primary/20 sm:size-11 lg:size-12"
+        className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:border-primary/40 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-lg group-hover:shadow-primary/20 sm:size-11 lg:size-12"
       >
         <Icon className="size-4.5 sm:size-5 lg:size-6" />
       </div>

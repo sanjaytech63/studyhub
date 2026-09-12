@@ -185,7 +185,7 @@ function BenefitRow({ benefit }: BenefitRowProps) {
     <div className="group flex min-w-0 items-start gap-3 sm:gap-4">
       <div
         aria-hidden="true"
-        className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground sm:size-11 sm:rounded-2xl"
+        className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground sm:size-11 sm:rounded-2xl"
       >
         <Icon className="size-4.5 sm:size-5" />
       </div>
@@ -219,11 +219,11 @@ function InstructorStudioPreview() {
   return (
     <div className="relative flex min-w-0 flex-col justify-center border-t border-border/60 bg-muted/30 p-4 sm:p-8 lg:border-l lg:border-t-0 lg:p-10 xl:p-12">
       {/* Studio Mockup */}
-      <div className="relative min-w-0 rounded-xl border border-border/80 bg-card/90 p-3.5 shadow-xl backdrop-blur-md sm:rounded-2xl sm:p-5">
+      <div className="relative min-w-0 rounded-lg border border-border/80 bg-card/90 p-3.5 shadow-xl backdrop-blur-md sm:rounded-2xl sm:p-5">
         {/* Studio Header */}
         <div className="flex min-w-0 items-center justify-between gap-3 border-b border-border/60 pb-3 sm:pb-4">
           <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary sm:size-9 sm:rounded-xl">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary sm:size-9 sm:rounded-lg">
               <Video aria-hidden="true" className="size-3.5 sm:size-4" />
             </div>
 
@@ -252,7 +252,7 @@ function InstructorStudioPreview() {
           {QUICK_STATS.map((stat) => (
             <div
               key={stat.label}
-              className="min-w-0 rounded-lg border border-border/50 bg-background/50 p-3 backdrop-blur-xs sm:rounded-xl sm:p-3.5"
+              className="min-w-0 rounded-lg border border-border/50 bg-background/50 p-3 backdrop-blur-xs sm:rounded-lg sm:p-3.5"
             >
               <p className="truncate text-[9px] font-medium text-muted-foreground sm:text-[11px]">
                 {stat.label}
@@ -273,7 +273,7 @@ function InstructorStudioPreview() {
         </div>
 
         {/* Course Progress */}
-        <div className="mt-3 rounded-lg border border-border/50 bg-background/50 p-3 sm:mt-4 sm:rounded-xl sm:p-4">
+        <div className="mt-3 rounded-lg border border-border/50 bg-background/50 p-3 sm:mt-4 sm:rounded-lg sm:p-4">
           <div className="flex items-center justify-between gap-2 text-[10px] font-bold sm:text-xs">
             <span className="truncate text-foreground">Course Completion Rate</span>
 
@@ -289,7 +289,7 @@ function InstructorStudioPreview() {
         </div>
 
         {/* Recent Activity */}
-        <div className="mt-3 flex min-w-0 items-center justify-between gap-2 rounded-lg border border-primary/20 bg-primary/5 p-2.5 sm:mt-4 sm:rounded-xl sm:p-3">
+        <div className="mt-3 flex min-w-0 items-center justify-between gap-2 rounded-lg border border-primary/20 bg-primary/5 p-2.5 sm:mt-4 sm:rounded-lg sm:p-3">
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground sm:size-8">
               <Zap aria-hidden="true" className="size-3.5 sm:size-4" />
@@ -313,7 +313,7 @@ function InstructorStudioPreview() {
       </div>
 
       {/* Trust Note */}
-      <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-border/60 bg-card/40 p-3 backdrop-blur-sm sm:mt-6 sm:items-center sm:gap-3 sm:rounded-2xl sm:p-4">
+      <div className="mt-4 flex items-start gap-2.5 rounded-lg border border-border/60 bg-card/40 p-3 backdrop-blur-sm sm:mt-6 sm:items-center sm:gap-3 sm:rounded-2xl sm:p-4">
         <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Check aria-hidden="true" className="size-4 stroke-[2.5]" />
         </div>

@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from './button';
 
 const badgeVariants = cva(
-  'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium tracking-wide uppercase font-mono transition-colors border',
+  'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium tracking-wide uppercase font-mono transition-colors border whitespace-nowrap shrink-0',
   {
     variants: {
       variant: {
@@ -59,14 +59,14 @@ export function Badge({
   return (
     <span className={cn(badgeVariants({ variant, size, className }))} {...props}>
       {withDot && (
-        <span className="relative flex h-1.5 w-1.5 items-center justify-center">
+        <span className="relative flex h-1.5 w-1.5 shrink-0 items-center justify-center">
           {variant === 'active' && (
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
           )}
           <span className={cn('relative inline-flex h-1.5 w-1.5 rounded-full', dotColorClass)} />
         </span>
       )}
-      <span>{children}</span>
+      <span className="inline-flex items-center gap-1 whitespace-nowrap">{children}</span>
     </span>
   );
 }

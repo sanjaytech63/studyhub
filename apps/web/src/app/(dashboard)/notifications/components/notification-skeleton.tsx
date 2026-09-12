@@ -6,7 +6,7 @@ export function NotificationSkeleton() {
       <div className="divide-y divide-border/60">
         {Array.from({ length: 5 }).map((_, index) => (
           <div key={index} className="flex gap-4 px-4 py-4 sm:px-5">
-            <Skeleton className="size-10 shrink-0 rounded-xl" />
+            <Skeleton className="size-10 shrink-0 rounded-lg" />
 
             <div className="min-w-0 flex-1 space-y-2">
               <Skeleton className="h-4 w-2/5" />

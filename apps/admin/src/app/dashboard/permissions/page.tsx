@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { KeyRound, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import {
   Table,
   TableHeader,
@@ -87,88 +87,86 @@ export default function PermissionsDirectoryPage() {
       </div>
 
       {/* Search Toolbar */}
-      <div className="w-full sm:max-w-sm">
-        <Input
-          placeholder="Search by capability or description..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          leftIcon={<Search className="h-4 w-4" />}
-        />
-      </div>
+      <Card className="p-4">
+        <div className="w-full sm:max-w-sm">
+          <Input
+            placeholder="Search by capability or description..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            leftIcon={<Search className="h-4 w-4" />}
+          />
+        </div>
+      </Card>
 
       {/* Permissions Table */}
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[30%]">Capability Key</TableHead>
-                <TableHead className="w-[40%]">Scope & Description</TableHead>
-                <TableHead className="w-[30%]">Authorized Roles</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isPermsLoading || isRolesLoading ? (
-                <TableSkeleton rows={10} cols={3} />
-              ) : filtered.length > 0 ? (
-                filtered.map((p) => {
-                  const assignedRoles = rolesByPermission.get(p.name) || [];
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[30%]">Capability Key</TableHead>
+            <TableHead className="w-[40%]">Scope & Description</TableHead>
+            <TableHead className="w-[30%]">Authorized Roles</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {isPermsLoading || isRolesLoading ? (
+            <TableSkeleton rows={10} cols={3} />
+          ) : filtered.length > 0 ? (
+            filtered.map((p) => {
+              const assignedRoles = rolesByPermission.get(p.name) || [];
 
-                  return (
-                    <TableRow key={p.id}>
-                      {/* Permission Name */}
-                      <TableCell>
-                        <div className="flex items-center gap-2.5">
-                          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20 shrink-0">
-                            <KeyRound className="h-3.5 w-3.5" />
-                          </div>
-                          <span className="font-mono text-xs font-semibold text-foreground">
-                            {p.name}
-                          </span>
-                        </div>
-                      </TableCell>
+              return (
+                <TableRow key={p.id}>
+                  {/* Permission Name */}
+                  <TableCell>
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20 shrink-0">
+                        <KeyRound className="h-3.5 w-3.5" />
+                      </div>
+                      <span className="font-mono text-xs font-semibold text-foreground">
+                        {p.name}
+                      </span>
+                    </div>
+                  </TableCell>
 
-                      {/* Description */}
-                      <TableCell className="text-xs text-muted-foreground">
-                        {p.description || 'System operation privilege'}
-                      </TableCell>
+                  {/* Description */}
+                  <TableCell className="text-xs text-muted-foreground">
+                    {p.description || 'System operation privilege'}
+                  </TableCell>
 
-                      {/* Assigned Roles */}
-                      <TableCell>
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          {assignedRoles.length > 0 ? (
-                            assignedRoles.map((r) => (
-                              <Link key={r.id} href={`/dashboard/roles/${r.id}`}>
-                                <Badge
-                                  variant={r.type === 'SYSTEM' ? 'system' : 'custom'}
-                                  size="sm"
-                                  className="hover:scale-105 transition-transform cursor-pointer"
-                                >
-                                  {r.name}
-                                </Badge>
-                              </Link>
-                            ))
-                          ) : (
-                            <span className="text-[11px] font-mono text-muted-foreground/60">
-                              Unassigned
-                            </span>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              ) : (
-                <TableEmpty
-                  title="No privileges found"
-                  description="No capabilities matched your filter query."
-                  colSpan={3}
-                />
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+                  {/* Assigned Roles */}
+                  <TableCell>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {assignedRoles.length > 0 ? (
+                        assignedRoles.map((r) => (
+                          <Link key={r.id} href={`/dashboard/roles/${r.id}`}>
+                            <Badge
+                              variant={r.type === 'SYSTEM' ? 'system' : 'custom'}
+                              size="sm"
+                              className="hover:scale-105 transition-transform cursor-pointer"
+                            >
+                              {r.name}
+                            </Badge>
+                          </Link>
+                        ))
+                      ) : (
+                        <span className="text-[11px] font-mono text-muted-foreground/60">
+                          Unassigned
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })
+          ) : (
+            <TableEmpty
+              title="No privileges found"
+              description="No capabilities matched your filter query."
+              colSpan={3}
+            />
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 }

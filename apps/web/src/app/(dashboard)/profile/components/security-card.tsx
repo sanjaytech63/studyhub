@@ -104,7 +104,7 @@ export function SecurityCard() {
           ) : sessions.length === 0 ? (
             <p className="text-xs text-muted-foreground">No active sessions found.</p>
           ) : (
-            <div className="divide-y divide-border/50 rounded-xl border border-border/60 bg-muted/20">
+            <div className="divide-y divide-border/50 rounded-lg border border-border/60 bg-muted/20">
               {sessions.map((session) => {
                 const isCurrent = session.id === currentSessionId;
                 return (

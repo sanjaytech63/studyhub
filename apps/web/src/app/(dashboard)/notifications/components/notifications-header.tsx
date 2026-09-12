@@ -53,7 +53,7 @@ export function NotificationsHeader({ unreadCount, onMarkAllAsRead }: Notificati
       </div>
 
       {unreadCount > 0 && (
-        <div className="flex items-center justify-between rounded-xl border border-primary/10 bg-primary/[0.035] px-4 py-3">
+        <div className="flex items-center justify-between rounded-lg border border-primary/10 bg-primary/[0.035] px-4 py-3">
           <div>
             <p className="text-sm font-medium">You have unread notifications</p>
 

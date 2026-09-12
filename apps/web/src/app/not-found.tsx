@@ -110,7 +110,7 @@ export default function NotFound() {
           <div className="-mt-2 flex flex-col items-center sm:-mt-4">
             <div
               aria-hidden="true"
-              className="mb-4 flex size-11 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary shadow-inner backdrop-blur-md sm:mb-5 sm:size-12 sm:rounded-2xl"
+              className="mb-4 flex size-11 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary shadow-inner backdrop-blur-md sm:mb-5 sm:size-12 sm:rounded-2xl"
             >
               <Sparkles className="size-5 sm:size-6" />
             </div>
@@ -133,7 +133,7 @@ export default function NotFound() {
             <Button
               asChild
 
-              className="group h-11 w-full rounded-xl px-6 font-semibold shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-primary/30 active:scale-[0.98] sm:w-auto"
+              className="group h-11 w-full rounded-lg px-6 font-semibold shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-primary/30 active:scale-[0.98] sm:w-auto"
             >
               <Link href="/">
                 <Home aria-hidden="true" className="size-4" />
@@ -149,7 +149,7 @@ export default function NotFound() {
               asChild
               variant="outline"
 
-              className="h-11 w-full rounded-xl border-border/80 px-6 font-semibold transition-all duration-300 hover:bg-muted/60 active:scale-[0.98] sm:w-auto"
+              className="h-11 w-full rounded-lg border-border/80 px-6 font-semibold transition-all duration-300 hover:bg-muted/60 active:scale-[0.98] sm:w-auto"
             >
               <Link href="/courses">
                 <Compass aria-hidden="true" className="size-4" />
@@ -162,7 +162,7 @@ export default function NotFound() {
               variant="ghost"
 
               onClick={() => window.history.back()}
-              className="h-11 w-full rounded-xl px-6 font-semibold text-muted-foreground transition-all duration-300 hover:text-foreground sm:w-auto"
+              className="h-11 w-full rounded-lg px-6 font-semibold text-muted-foreground transition-all duration-300 hover:text-foreground sm:w-auto"
             >
               <ArrowLeft aria-hidden="true" className="size-4" />
               <span>Go Back</span>
@@ -203,9 +203,9 @@ export default function NotFound() {
                   <Link
                     key={link.title}
                     href={link.href}
-                    className="group flex min-w-0 items-center gap-3 rounded-xl border border-border/60 bg-card/60 p-4 text-left backdrop-blur-md transition-all duration-200 hover:border-primary/40 hover:bg-card hover:shadow-lg sm:flex-col sm:items-center sm:p-5 sm:text-center"
+                    className="group flex min-w-0 items-center gap-3 rounded-lg border border-border/60 bg-card/60 p-4 text-left backdrop-blur-md transition-all duration-200 hover:border-primary/40 hover:bg-card hover:shadow-lg sm:flex-col sm:items-center sm:p-5 sm:text-center"
                   >
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary transition-transform duration-200 group-hover:scale-105 sm:size-10">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary transition-transform duration-200 group-hover:scale-105 sm:size-10">
                       <Icon className="size-4 sm:size-5" />
                     </div>
 

@@ -37,7 +37,7 @@ export function AuthShell({ children }: AuthShellProps) {
             aria-label="StudyHub home"
             className="group flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
           >
-            <div className="flex size-9 items-center justify-center rounded-xl bg-primary shadow-sm shadow-primary/20 transition-transform group-hover:scale-105 active:scale-95">
+            <div className="flex size-9 items-center justify-center rounded-lg bg-primary shadow-sm shadow-primary/20 transition-transform group-hover:scale-105 active:scale-95">
               <BookOpen className="size-5 text-primary-foreground" />
             </div>
             <span className="text-lg font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">

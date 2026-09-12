@@ -9,9 +9,9 @@ export function Card({ className, gradientBorder = false, children, ...props }: 
   return (
     <div
       className={cn(
-        'relative rounded-xl border border-border bg-card backdrop-blur-xl transition-all duration-200 overflow-hidden',
+        'relative rounded-lg border border-border/80 bg-card transition-all duration-200 overflow-hidden shadow-xs',
         // Top specular hairline highlight
-        'before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/12 before:to-transparent',
+        'before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent',
         gradientBorder && 'border-primary/30 shadow-primary/5',
         className,
       )}

@@ -334,7 +334,7 @@ function TestimonialsEmptyState() {
 
         <Button
           variant="outline"
-          className="mt-6 rounded-xl border-border/80 bg-background/50 hover:bg-card"
+          className="mt-6 rounded-lg border-border/80 bg-background/50 hover:bg-card"
         >
           <Link href="/courses" className="inline-flex items-center gap-2 font-semibold">
             <span>Explore Courses</span>

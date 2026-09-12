@@ -34,7 +34,7 @@ export function NotificationItem({ notification, onRead }: NotificationItemProps
       <div
         className={cn(
           'flex size-10 shrink-0 items-center justify-center',
-          'rounded-xl',
+          'rounded-lg',
           'border',
           notification.isRead
             ? 'border-border/70 bg-muted text-muted-foreground'

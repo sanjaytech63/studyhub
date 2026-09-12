@@ -272,7 +272,7 @@ function CoursePlatformShowcase() {
     <Card className="group relative w-full max-w-xl mx-auto overflow-hidden rounded-3xl border border-border/80 bg-card/90 p-5 shadow-2xl shadow-primary/5 backdrop-blur-2xl transition-all hover:border-border sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <BookOpen className="size-5" />
           </div>
           <div>
@@ -296,7 +296,7 @@ function CoursePlatformShowcase() {
               type="button"
               onClick={() => setSelectedTrack(track.id)}
               className={cn(
-                'flex items-center justify-center gap-1.5 rounded-xl px-2.5 py-2.5 text-xs font-semibold transition-all',
+                'flex items-center justify-center gap-1.5 rounded-lg px-2.5 py-2.5 text-xs font-semibold transition-all',
                 isSelected
                   ? 'bg-primary text-primary-foreground shadow-md'
                   : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground',
@@ -327,7 +327,7 @@ function CoursePlatformShowcase() {
             </p>
           </div>
 
-          <Button size="sm" className="rounded-xl font-bold shadow-md">
+          <Button size="sm" className="rounded-lg font-bold shadow-md">
             <span>Explore Track</span>
             <ArrowRight className="ml-1.5 size-3.5" />
           </Button>

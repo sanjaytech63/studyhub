@@ -16,6 +16,10 @@ import {
   Clock,
   Server,
   Lock,
+  BookOpen,
+  DollarSign,
+  GraduationCap,
+  TrendingUp,
 } from 'lucide-react';
 import { StatCard } from '@/components/ui/stat-card';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -33,6 +37,7 @@ import {
 } from '@/components/ui/data-table';
 import { adminStatsQueryOptions, adminUsersQueryOptions } from '@/lib/admin/users.queries';
 import { rolesQueryOptions } from '@/lib/admin/roles.queries';
+import { useAdminAnalytics } from '@/lib/admin/lms.queries';
 
 export default function DashboardOverviewPage() {
   const {
@@ -47,11 +52,31 @@ export default function DashboardOverviewPage() {
   );
 
   const { data: roles } = useQuery(rolesQueryOptions);
+  const {
+    data: analytics,
+    isLoading: isAnalyticsLoading,
+    refetch: refetchAnalytics,
+    isRefetching: isAnalyticsRefetching,
+  } = useAdminAnalytics();
+
+  const handleRefreshAll = () => {
+    void refetchStats();
+    void refetchAnalytics();
+  };
 
   const verifiedPercent =
     stats && stats.users.total > 0
       ? Math.round((stats.users.verified / stats.users.total) * 100)
       : 0;
+
+  const kpis = analytics?.kpis ?? {
+    totalRevenue: 0,
+    totalStudents: 0,
+    totalCourses: 0,
+    publishedCourses: 0,
+    totalEnrollments: 0,
+    completionRate: 0,
+  };
 
   return (
     <div className="space-y-8">
@@ -66,33 +91,88 @@ export default function DashboardOverviewPage() {
             </span>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            Real-time aggregate platform metrics, active security sessions, and RBAC governance.
+            Real-time aggregate platform metrics, LMS revenue telemetry, and RBAC governance.
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
           <Button
             variant="outline"
-            onClick={() => refetchStats()}
-            isLoading={isStatsRefetching}
+            onClick={handleRefreshAll}
+            isLoading={isStatsRefetching || isAnalyticsRefetching}
             className="w-full sm:w-auto"
             leftIcon={<RefreshCw className="h-4 w-4" />}
           >
-            Refresh Metrics
+            Refresh Telemetry
           </Button>
-          <Link href="/dashboard/users" className="w-full sm:w-auto">
+          <Link href="/dashboard/courses/new" className="w-full sm:w-auto">
             <Button
               variant="primary"
               className="w-full sm:w-auto"
-              leftIcon={<UserPlus className="h-4 w-4" />}
+              leftIcon={<BookOpen className="h-4 w-4" />}
             >
-              Manage Users
+              New Course
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* KPI Stats Grid */}
+      {/* Row 1: LMS Commerce KPIs */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="Total Gross Revenue"
+          value={isAnalyticsLoading ? '...' : `₹${kpis.totalRevenue.toLocaleString()}`}
+          icon={<DollarSign className="h-5 w-5" />}
+          accentColor="emerald"
+          trend={{
+            value: 'Real-time',
+            label: 'GMV',
+            isPositive: true,
+          }}
+          description="Total settled course checkouts"
+        />
+
+        <StatCard
+          title="Enrolled Learners"
+          value={isAnalyticsLoading ? '...' : kpis.totalStudents.toLocaleString()}
+          icon={<GraduationCap className="h-5 w-5" />}
+          accentColor="indigo"
+          trend={{
+            value: `${kpis.totalEnrollments} enrollments`,
+            label: 'active',
+            isPositive: true,
+          }}
+          description="Students enrolled across courses"
+        />
+
+        <StatCard
+          title="Courses in Catalog"
+          value={isAnalyticsLoading ? '...' : `${kpis.publishedCourses} / ${kpis.totalCourses}`}
+          icon={<BookOpen className="h-5 w-5" />}
+          accentColor="purple"
+          trend={{
+            value: `${kpis.publishedCourses} Published`,
+            label: 'ready',
+            isNeutral: true,
+          }}
+          description="Catalog curriculum inventory"
+        />
+
+        <StatCard
+          title="Completion Funnel"
+          value={isAnalyticsLoading ? '...' : `${kpis.completionRate}%`}
+          icon={<TrendingUp className="h-5 w-5" />}
+          accentColor="cyan"
+          trend={{
+            value: 'Platform average',
+            label: 'rate',
+            isPositive: kpis.completionRate >= 50,
+          }}
+          description="Average student curriculum progress"
+        />
+      </div>
+
+      {/* Row 2: User Security & Platform Health */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Registered Users"
@@ -152,7 +232,7 @@ export default function DashboardOverviewPage() {
         {/* Left 2 Cols: Recent Signups */}
         <div className="lg:col-span-2 space-y-6">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between py-4">
+            <CardHeader className="flex flex-row items-center justify-between py-4 border-b border-border/40">
               <div>
                 <CardTitle>Recent User Registrations</CardTitle>
                 <CardDescription>
@@ -168,7 +248,7 @@ export default function DashboardOverviewPage() {
               </Link>
             </CardHeader>
             <CardContent className="p-0">
-              <Table>
+              <Table containerClassName="rounded-none border-0 bg-transparent shadow-none">
                 <TableHeader>
                   <TableRow>
                     <TableHead>User</TableHead>
@@ -257,7 +337,7 @@ export default function DashboardOverviewPage() {
             </CardHeader>
             <CardContent className="space-y-2.5">
               <Link href="/dashboard/users" className="block">
-                <div className="group flex items-center justify-between rounded-xl border border-border/70 bg-secondary/30 p-3 text-xs transition-all hover:border-primary/40 hover:bg-secondary/60">
+                <div className="group flex items-center justify-between rounded-lg border border-border/70 bg-secondary/30 p-3 text-xs transition-all hover:border-primary/40 hover:bg-secondary/60">
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
                       <UserPlus className="h-4 w-4" />
@@ -274,7 +354,7 @@ export default function DashboardOverviewPage() {
               </Link>
 
               <Link href="/dashboard/roles" className="block">
-                <div className="group flex items-center justify-between rounded-xl border border-border/70 bg-secondary/30 p-3 text-xs transition-all hover:border-purple-500/40 hover:bg-secondary/60">
+                <div className="group flex items-center justify-between rounded-lg border border-border/70 bg-secondary/30 p-3 text-xs transition-all hover:border-purple-500/40 hover:bg-secondary/60">
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
                       <ShieldPlus className="h-4 w-4" />
@@ -291,7 +371,7 @@ export default function DashboardOverviewPage() {
               </Link>
 
               <Link href="/dashboard/permissions" className="block">
-                <div className="group flex items-center justify-between rounded-xl border border-border/70 bg-secondary/30 p-3 text-xs transition-all hover:border-cyan-500/40 hover:bg-secondary/60">
+                <div className="group flex items-center justify-between rounded-lg border border-border/70 bg-secondary/30 p-3 text-xs transition-all hover:border-cyan-500/40 hover:bg-secondary/60">
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                       <KeyRound className="h-4 w-4" />
@@ -315,8 +395,8 @@ export default function DashboardOverviewPage() {
               <CardTitle>Platform Security</CardTitle>
               <CardDescription>Subsystem operational integrity</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3 text-xs">
-              <div className="flex items-center justify-between py-1.5 border-b border-border/40">
+            <CardContent className=" text-xs space-y-4">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Lock className="h-3.5 w-3.5 text-muted-foreground" />
                   <span className="text-muted-foreground">Argon2id Hashing</span>
@@ -326,7 +406,7 @@ export default function DashboardOverviewPage() {
                 </span>
               </div>
 
-              <div className="flex items-center justify-between py-1.5 border-b border-border/40">
+              <div className="flex items-center justify-between ">
                 <div className="flex items-center gap-2">
                   <Server className="h-3.5 w-3.5 text-muted-foreground" />
                   <span className="text-muted-foreground">RBAC Redis Cache</span>
@@ -336,7 +416,7 @@ export default function DashboardOverviewPage() {
                 </span>
               </div>
 
-              <div className="flex items-center justify-between py-1.5">
+              <div className="flex items-center justify-between ">
                 <div className="flex items-center gap-2">
                   <Clock className="h-3.5 w-3.5 text-muted-foreground" />
                   <span className="text-muted-foreground">Token Rotation</span>
