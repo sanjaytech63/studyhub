@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { Lesson } from '@studyhub/types';
+import type { CourseModule, Lesson } from '@studyhub/types';
 
 export default function CourseDetailsPage() {
   const params = useParams();
@@ -34,8 +34,9 @@ export default function CourseDetailsPage() {
 
   const handleOpenPreview = (lesson?: Lesson) => {
     const firstPreviewableLesson =
-      course?.modules?.flatMap((m) => m.lessons || []).find((l) => l.isFreePreview || l.videoUrl) ||
-      null;
+      course?.modules
+        ?.flatMap((m: CourseModule) => m.lessons || [])
+        .find((l: Lesson) => l.isFreePreview || l.videoUrl) || null;
     setSelectedPreviewLesson(lesson || firstPreviewableLesson);
     setIsPreviewOpen(true);
   };

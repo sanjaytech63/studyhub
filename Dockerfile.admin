@@ -17,6 +17,8 @@ COPY apps/admin/package.json ./apps/admin/
 
 COPY packages/config/package.json ./packages/config/
 COPY packages/tsconfig/package.json ./packages/tsconfig/
+COPY packages/types/package.json ./packages/types/
+COPY packages/validation/package.json ./packages/validation/
 
 # Root prepare script
 COPY scripts ./scripts

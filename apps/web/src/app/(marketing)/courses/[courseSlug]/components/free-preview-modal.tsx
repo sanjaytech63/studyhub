@@ -37,8 +37,8 @@ export function FreePreviewModal({
   if (!isOpen) return null;
 
   // Find all free preview lessons in the curriculum
-  const freeLessons = modules.flatMap((m) =>
-    (m.lessons || []).filter((l) => l.isFreePreview || l.videoUrl),
+  const freeLessons = modules.flatMap((m: CourseModule) =>
+    (m.lessons || []).filter((l: Lesson) => l.isFreePreview || l.videoUrl),
   );
 
   // Active video source: prioritizes lesson video, falls back to course trailer

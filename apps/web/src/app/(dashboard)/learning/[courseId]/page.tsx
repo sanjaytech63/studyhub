@@ -22,6 +22,7 @@ import { useLessonContent, useUpdateLessonProgress } from '@/lib/learning/learni
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { VideoPlayer } from '@/components/ui/video-player';
+import type { CourseModule, Lesson } from '@studyhub/types';
 
 export default function CoursePlayerPage() {
   const params = useParams();
@@ -33,7 +34,7 @@ export default function CoursePlayerPage() {
   // Flattened lessons for navigation
   const allLessons = useMemo(() => {
     if (!course?.modules) return [];
-    return course.modules.flatMap((m) => m.lessons || []);
+    return course.modules.flatMap((m: CourseModule) => m.lessons || []);
   }, [course]);
 
   const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
@@ -47,12 +48,12 @@ export default function CoursePlayerPage() {
   const { data: lessonDetail } = useLessonContent(activeLessonId);
 
   const activeLesson = useMemo(() => {
-    return allLessons.find((l) => l.id === activeLessonId) || allLessons[0] || null;
+    return allLessons.find((l: Lesson) => l.id === activeLessonId) || allLessons[0] || null;
   }, [allLessons, activeLessonId]);
 
   const activeIndex = useMemo(() => {
     if (!activeLesson) return 0;
-    return allLessons.findIndex((l) => l.id === activeLesson.id);
+    return allLessons.findIndex((l: Lesson) => l.id === activeLesson.id);
   }, [allLessons, activeLesson]);
 
   const hasPrevious = activeIndex > 0;
@@ -203,11 +204,11 @@ export default function CoursePlayerPage() {
           </div>
 
           <div className="divide-y divide-border/40">
-            {course.modules?.map((module) => (
+            {course.modules?.map((module: CourseModule) => (
               <div key={module.id} className="p-2 space-y-1">
                 <div className="px-3 py-1.5 text-xs font-bold text-foreground">{module.title}</div>
                 <div className="space-y-0.5">
-                  {module.lessons?.map((lesson) => {
+                  {module.lessons?.map((lesson: Lesson) => {
                     const isActive = lesson.id === activeLessonId;
                     const isDone = Boolean(completedIds[lesson.id]);
 
